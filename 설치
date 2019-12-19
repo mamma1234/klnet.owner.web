@@ -1,0 +1,18 @@
+node 설치
+
+yarn 설치
+
+yarn install
+
+yarn add nodemon
+
+/*
+yarn add sqlite3
+yarn add oracledb
+yarn add pg
+yarn add md5
+*/
+
+cd material-react-mobx
+
+yarn install

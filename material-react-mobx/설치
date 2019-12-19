@@ -1,0 +1,40 @@
+cd material-react-mobx
+
+--- MobX 설정
+# MobX 추가
+yarn add mobx react-mobx
+
+# react-app-rewired 추가
+yarn add react-app-rewired
+
+# 추가 사용할 웹팩 패키지 설치 (데코레이터를 위한 모듈)
+yarn add @babel/plugin-proposal-decorators --dev
+
+# package.json 스크립트 변경
+package.json 
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test"
+  },
+
+#데코레이터 바벨 설정 추가  
+config-overrides.js 
+
+#리액트 라우터 설치
+yarn add react-router-dom
+
+#visual studio code - experimentalDecorators
+jsconfig.json 
+
+yarn start
+
+
+--- 참조
+ES6 (https://blog.asamaru.net/2017/08/14/top-10-es6-features/, https://velog.io/@ashnamuh/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-ES6-Map-%ED%83%80%EC%9E%85)
+JSX
+react (https://reactjs-kr.firebaseapp.com/tutorial/tutorial.html, https://velopert.com/3629)
+react-router
+material (https://material-ui.com/, https://material-ui.com/components/box/, https://www.youtube.com/watch?v=nF9q_fRV-1A&list=PLcCp4mjO-z98WAu4sd0eVha1g-NMfzHZk&index=4)
+mobx (기타)
+

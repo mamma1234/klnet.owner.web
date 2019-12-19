@@ -1,0 +1,22 @@
+{
+  "name": "management",
+  "version": "1.0.0",
+  "scripts": {
+    "client": "cd material-react-mobx && yarn start",
+    "server": "nodemon server.js",
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.16.4",
+    "md5": "^2.2.1",
+    "mkdirp": "^0.5.1",
+    "nodemon": "^2.0.0",
+    "oracledb": "^4.0.1",
+    "pg": "^7.14.0"
+  },
+  "devDependencies": {
+    "concurrently": "^4.0.1"
+  }
+}
