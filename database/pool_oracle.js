@@ -39,18 +39,21 @@ const oracledb = require('oracledb');
 const pool = oracledb.createPool({
   user          : "nplism",
   password      : "wjrgkahrfhr_1",  // mypw contains the hr schema password
-  // connectString : "MKLDB/ORAKLDB"
-  // connectString : "jdbc:oracle:thisn:@172.21.1.202:7527/ORAKLDB"
+  //connectString : "172.21.1.202:7527/ORAKLDB",
   connectString : "172.21.1.202:7527/ORAKLDB",
-  poolAlias:'oracle1'
+  // poolAlias:'oracle1',
+  poolMax: 30,
+  poolMin: 10,
+  poolIncrement: 5,
+  poolTimeout: 4
 });
-   
 // }catch(err){
 //   console.error('init error: ' + err.message);
 // }
 
+// const oraPool = oracledb.getPool();
 
-
+console.log("oracle pool creating...");
 
 /*
 async function run() {
