@@ -1,12 +1,16 @@
 const oracledb = require('oracledb');
-const pgsqldb = require('pg');
+// const pgsqldb = require('pg');
 
 const pgsqlPool = require('./pool_postgresql.js');
-const oraclePool = require('./pool_oracle.js');
+require('./pool_oracle.js');
 
-
+// const oraclePool1 = oracledb.getPool();
 // const oraPool = oracledb.getPool('oracle1');
+// const oraclePool = await oracledb.getPool('oracle1');
+// const oraclePool = oracledb.getPool('oracle1');
+// const connection = await oracledb.getConnection();
 
+// console.log(oraclePool);
 
-module.exports.oraclePool = oraclePool
+module.exports.oraclePool = oracledb
 module.exports.pgsqlPool = pgsqlPool

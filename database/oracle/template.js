@@ -1,6 +1,7 @@
 'use strict';
 
 const oraclePool = require("../pool.js").oraclePool
+// const oracledb = require('oracledb');
 
 const getTestSimple = (request, response) => {
     response.send([    
@@ -34,29 +35,45 @@ const getTestSimple = (request, response) => {
 
 
 const getTestQuerySample = (request, response) => {
-    const sql = "SELECT * FROM customer order by id asc limit 100";
-    oraclePool.connect(function(err,conn,done) {
+    const sql = "SELECT sysdate, sysdate FROM dual";
+    oraclePool.getConnection(function (err, conn) {
+        conn.execute(sql, (error, results) => {
+            if (error) {
+            response.status(400).json({ "error": error.message });
+            return;
+            }
+            // response.send(results);
+            response.send(results.rows);
+        });  
+    });
+
+}
+
+
+const getTestQueryParamSample = (request, response) => {
+    const sql = "SELECT * FROM NCS_EXP_MRN where dpt_date = :1 and dpt_date = :2 "
+
+    oraclePool.getConnection(function(err,conn,done) {
         if(err){
             console.log("err" + err);
             response.status(400).send(err);
         }
 
-        conn.query(sql, function(err,result){
-            done();
-            if(err){
-                console.log(err);
-                response.status(400).send(err);
+        conn.execute(sql, ['20111218', '20111218'], (error, results) => {
+            if (error) {
+                response.status(400).json({ "error": error.message });
+                return;
             }
-            // response.status(200).send(result.rows);
-            response.status(200).json(result.rows);
-        });
+            // response.send(results);
+            response.send(results.rows);
+        });  
 
         // conn.release();
     });
 }
 
-
 module.exports = {
     getTestSimple,
     getTestQuerySample,
+    getTestQueryParamSample,
 }
