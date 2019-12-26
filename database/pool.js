@@ -12,5 +12,7 @@ require('./pool_oracle.js');
 
 // console.log(oraclePool);
 
+oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
+
 module.exports.oraclePool = oracledb
 module.exports.pgsqlPool = pgsqlPool

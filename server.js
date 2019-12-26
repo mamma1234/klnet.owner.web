@@ -6,15 +6,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-// const oracleConfig = require('./config_oracle.js');
-// const pgsqlConfig = require('./config_postgresql.js');
-
 const dao = require('./database/');
 
-// const tmp = require('./database/conntionpool.js');
-
-// console.log("oraclePool:" + oraclePool);
-// console.log("oracledb:" + oracledb);
+// ORACLE API https://oracle.github.io/node-oracledb/doc/api.html
+// POSTGRES API https://node-postgres.com/api
 
 
 app.get("/pg/getTestSimple", dao.postgresql.getTestSimple);

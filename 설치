@@ -16,3 +16,8 @@ yarn add md5
 cd material-react-mobx
 
 yarn install
+
+yarn install passport-facebook --save
+yarn install passport-kakao --save
+yarn install passport-naver --save
+yarn install passport-google-oauth
