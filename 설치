@@ -17,7 +17,9 @@ cd material-react-mobx
 
 yarn install
 
-yarn install passport-facebook --save
-yarn install passport-kakao --save
-yarn install passport-naver --save
-yarn install passport-google-oauth
+yarn add passport
+yarn add passport-local
+yarn add passport-facebook
+yarn add passport-kakao
+yarn add passport-naver
+yarn add passport-google

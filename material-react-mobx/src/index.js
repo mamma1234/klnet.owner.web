@@ -35,6 +35,7 @@ import Home from "./pages/Home.js";
 import Django from "./pages/Django.js";
 import nodeExpress from "./pages/nodeExpress.js";
 
+import Service from "layouts/Service.js";
 
 const hist = createBrowserHistory();
 
@@ -48,6 +49,7 @@ ReactDOM.render(
         <Route path="/home" component={Home} />
         <Route path="/django" component={Django} />
         <Route path="/express" component={nodeExpress} />
+        <Route path="/service" component={Service} />
         <Redirect from="/" to="/admin/dashboard" />
       </Switch>
     </Router>
