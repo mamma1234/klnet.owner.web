@@ -53,7 +53,7 @@ async function dostuff(){
       console.log(connection)
       if (connection) {
           try {
-              await connnection.close();
+              await connection.close();
           } catch(err) {
               console.error(err);
           }

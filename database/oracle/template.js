@@ -64,8 +64,11 @@ const getTestQueryParamSample = (request, response) => {
                 response.status(400).json({ "error": error.message });
                 return;
             }
-            // response.send(results);
-            response.send(results.rows);
+
+            // console.log(results.json);
+            // console.log(results);
+            // response.send(results.rows);
+            response.status(200).json(results.rows);
         });  
 
         // conn.release();
