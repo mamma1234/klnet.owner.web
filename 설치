@@ -16,3 +16,10 @@ yarn add md5
 cd material-react-mobx
 
 yarn install
+
+yarn add passport
+yarn add passport-local
+yarn add passport-facebook
+yarn add passport-kakao
+yarn add passport-naver
+yarn add passport-google

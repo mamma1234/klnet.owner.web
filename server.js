@@ -6,6 +6,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
+<<<<<<< HEAD
 
 const dao = require('./database/');
 
@@ -19,6 +20,12 @@ const dao = require('./database/');
 // klnet.owner.web\database\oracle\template.js
 // klnet.owner.web\database\postgresql\template.js 
 
+=======
+const dao = require('./database/');
+
+// ORACLE API https://oracle.github.io/node-oracledb/doc/api.html
+// POSTGRES API https://node-postgres.com/api
+>>>>>>> dcef8e3822cae1aa3a3faca1c164d42538f6cfd3
 
 
 app.get("/pg/getTestSimple", dao.postgresql.getTestSimple);
