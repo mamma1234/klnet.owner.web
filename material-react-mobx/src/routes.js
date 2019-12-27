@@ -38,11 +38,14 @@ import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 import RTLPage from "views/RTLPage/RTLPage.js";
 import iconDirectionsBoat from "@material-ui/icons/DirectionsBoat";
 import SchedulePage from "views/Schedule/Schedule.js";
+import FCLSchedulePage from "views/Schedule/FclScheduleList.js";
 import MapTrackingPage from "views/MapTracking/MapTracking.js";
 import iconRouter from "@material-ui/icons/Router";
 import Calendar from "views/Calendar/Calendar.js";
 import ExportDemDetBkg from "views/DemDet/exportDemDetBkg.js";
 import ExportDemDetCntr from "views/DemDet/exportDemDetCntr.js";
+
+import WebScrp from "views/WebScrap/WebScrap.js";
 
 
 const dashboardRoutes = [
@@ -53,6 +56,14 @@ const dashboardRoutes = [
     icon: iconDirectionsBoat,
     component: SchedulePage,
     layout: "/admin"
+  },
+  {
+	    path: "/fclschedule",
+	    name: "Fcl Schedule",
+	    rtlName: "FCL Schedule",
+	    icon: iconDirectionsBoat,
+	    component: FCLSchedulePage,
+	    layout: "/admin"
   },
   {
     path: "/maps-tracking",
@@ -156,6 +167,14 @@ const dashboardRoutes = [
     rtlName: "EXPORT DEM/DET",
     icon: Unarchive,
     component: ExportDemDetCntr,
+    layout: "/admin"
+  },
+  {
+    path: "/web_scraping",
+    name: "WEB SCRAPING",
+    rtlName: "WEB SCRAPING",
+    icon: iconDirectionsBoat,
+    component: WebScrp,
     layout: "/admin"
   }
 ];

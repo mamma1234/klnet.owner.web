@@ -112,21 +112,21 @@ ToggleTable.propTypes = {
     const { data } = this.props;
      const { port } = this.state;
      let obj = [];
-    port.map((port,index) => (
-      obj[index] = [port.route_date,port.route_code,port.tt+" Day"]
+     port.map((port,index) => (
+      obj[index] = [port.start_route_date,port.route_code,port.tt+" Day"]
 
     ))
     return [
       <TableRow  key={this.props.index} onClick={this.toggleExpander} >
-        <TableCell >{data.line_code}</TableCell>
-        <TableCell >{data.vessel_name}</TableCell>
-        <TableCell >{data.voyage_no}</TableCell>
-        <TableCell >{data.line_portcd}</TableCell>
-        <TableCell >{data.route_code}</TableCell>
+        <TableCell >{data.LINE_CODE}</TableCell>
+        <TableCell >{data.VESSEL_NAME}</TableCell>
+        <TableCell >{data.VOYAGE_NO}</TableCell>
+        <TableCell >{data.LINE_PORTCD}</TableCell>
+        <TableCell >{data.ROUTE_CODE}</TableCell>
       </TableRow>,
       this.state.expanded && (
         <TableRow key = {this.props.index+1}>
-          <TableCell><img src={require('../../images/carrier/'+data.line_code+'.gif')} /></TableCell>
+          <TableCell><img src={require('../../images/carrier/'+data.LINE_CODE+'.gif')} /></TableCell>
           <TableCell colSpan={2}>
             <div ref="expanderBody"> 
               <ExpandTable

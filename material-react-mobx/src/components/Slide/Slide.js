@@ -38,7 +38,6 @@ function startAnimationLoop({
 }
 
 function getStyles(element, props) {
-  console.log(">>>element:"+element);
   const computed = window.getComputedStyle(element);
   return props.reduce((obj, prop) => {
     obj[prop] = computed[prop];

@@ -16,10 +16,13 @@ import FormControl from "@material-ui/core/FormControl";
 export default function MaterialUIPickers(props) {
   //const classes = useStyles();
   // The first commit of Material-UI
-  const {formControlProps,labelText,id,format,selectedDate,setSelectedDate} = props;
+  const {formControlProps,labelText,id,format,inputProps} = props;
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
 
+  // data1 = selectedDate;
   const handleDateChange = date => {
     setSelectedDate(date);
+    inputProps(date);
   };
 
   return (
@@ -35,6 +38,7 @@ export default function MaterialUIPickers(props) {
           label={labelText}
           value={selectedDate}
           onChange={handleDateChange}
+          {...inputProps}
           KeyboardButtonProps={{
             'aria-label': 'change date',
           }}

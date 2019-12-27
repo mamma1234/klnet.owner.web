@@ -43,6 +43,7 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 export default function TableList() {
+
   const classes = useStyles();
   return (
     <GridContainer>
@@ -53,6 +54,7 @@ export default function TableList() {
             <p className={classes.cardCategoryWhite}>
               Here is a subtitle for this table
             </p>
+
           </CardHeader>
           <CardBody>
             <Table

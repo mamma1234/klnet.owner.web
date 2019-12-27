@@ -1,4 +1,5 @@
 import React from "react";
+
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -24,7 +25,7 @@ import CalendarBox from "components/CustomInput/CustomCalendar.js";
 
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-
+import Radio from '@material-ui/core/Radio';
 
 const styles = {
   cardCategoryWhite: {
@@ -87,7 +88,7 @@ class SearchToSchedule extends React.Component {
     this.scheduleToSearch();
   }
   scheduleToSearch = (vVal) => {
-    return fetch('/api/schedule')
+    return fetch('/api/getScheduleList')
       .then(res => res.json())
       .then(scheduleData => this.setState({scheduleData}));
   }
@@ -150,6 +151,7 @@ class SearchToSchedule extends React.Component {
 
     const { carrierData, portData, scheduleData } = this.state;
     const classes = makeStyles(styles);
+    const selectedValue ="a";
     return(
       <form>
         <Card>
@@ -158,71 +160,78 @@ class SearchToSchedule extends React.Component {
                       <GridItem xs={12} sm={12} md={10}>
                         <Grid container spacing={2}>
                           <Grid item xs={12} sm={3}>
-                            <CalendarBox
-                              labelText ="출발일"
-                              id="startDay"
-                              format="yyyy-MM-dd"
-                              selectedDate = {new Date()}
-                              setSelectedDate = {new Date()}
-                              formControlProps={{
-                                            fullWidth: true
-                              }}
-                            />
+                          <Autocomplete
+                          options = {carrierData}
+                          getOptionLabel = { option => option.LINE_NAME }
+                          id="carrierCode"
+                          onChange={this.onCarrierCodeChange}
+                          renderInput={params => (
+                            <TextField {...params} label="선사" fullWidth />
+                          )}
+                        />
+                           
                           </Grid>
                           <Grid item xs={12} sm={4}>
-                            <Autocomplete
-                                options = {portData}
-                                getOptionLabel = { option => option.port_code != undefined?"["+option.port_code+"] "+option.port_name:"두글자 이상 입력하세요."}
-                                id="pod"
-                                onChange={this.onPodCodeChange}
-                                renderInput={params => (
-                                  <TextField {...params} label="출발지" onKeyUp={this.onPortSearch} fullWidth />
-                                )}
-                              />
+                          <CalendarBox
+                          labelText ="출발일"
+                          id="startDay"
+                          format="yyyy-MM-dd"
+                          selectedDate = {new Date()}
+                          setSelectedDate = {new Date()}
+                          formControlProps={{
+                                        fullWidth: true
+                          }}
+                        />
+                            
                           </Grid>
                           <Grid item xs={12} sm={5}>
-                            <Autocomplete
-                                options = {carrierData}
-                                getOptionLabel = { option => option.LINE_NAME }
-                                id="carrierCode"
-                                onChange={this.onCarrierCodeChange}
-                                renderInput={params => (
-                                  <TextField {...params} label="선사" fullWidth />
-                                )}
-                              />
+                          <CustomInput
+                          labelText="Vessel Name"
+                          id="vesselName"
+                          inputProps={{onBlur:this.onChangeValue}}
+                          formControlProps={{
+                            fullWidth: true
+                          }}
+                    />
+                          
                           </Grid>
                           <Grid item xs={12} sm={3} >
-                            <CalendarBox
-                                        labelText ="도착일"
-                                        id="stopDay"
-                                        format="yyyy-MM-dd"
-                              selectedDate = {null}
-                              setSelectedDate = {null}
-                                        formControlProps={{
-                                            fullWidth: true
-                                          }}
-                            />
+                          	<Radio
+                          		checked={selectedValue === 'a'}
+                          		onChange={this.onCarrierCodeChange}
+                          		value="A"
+                          		name="radio-buttond-demo"
+                          		inputProps={{'aria-label':'A'}}
+                          	/>입항일(ETA)
+                          	<Radio
+                          		checked={selectedValue === 'a'}
+                          		onChange={this.onCarrierCodeChange}
+                          		value="B"
+                          		name="radio-buttond-demo"
+                          		inputProps={{'aria-label':'C'}}
+                          	/>출항일(ETA)
                           </Grid> 
                           <Grid item xs={12} sm={4}>
                             <Autocomplete
-                                options = {portData}
-                                getOptionLabel = { option => "["+option.port_code+"] "+option.port_name}
-                                id="pld"
-                                onChange={this.onPldCodeChange}
-                                renderInput={params => (
-                                  <TextField {...params} label="도착지" onKeyUp={this.onPortSearch} fullWidth />
-                                )}
-                              />
+                          options = {portData}
+                          getOptionLabel = { option => option.port_code != undefined?"["+option.port_code+"] "+option.port_name:"두글자 이상 입력하세요."}
+                          id="pod"
+                          onChange={this.onPodCodeChange}
+                          renderInput={params => (
+                            <TextField {...params} label="출발지" onKeyUp={this.onPortSearch} fullWidth />
+                          )}
+                        />
                           </Grid>
                           <Grid item xs={12} sm={5}>
-                            <CustomInput
-                                  labelText="Vessel Name"
-                                  id="vesselName"
-                                  inputProps={{onBlur:this.onChangeValue}}
-                                  formControlProps={{
-                                    fullWidth: true
-                                  }}
-                            />
+                          <Autocomplete
+                          options = {portData}
+                          getOptionLabel = { option => "["+option.port_code+"] "+option.port_name}
+                          id="pld"
+                          onChange={this.onPldCodeChange}
+                          renderInput={params => (
+                            <TextField {...params} label="도착지" onKeyUp={this.onPortSearch} fullWidth />
+                          )}
+                        />
                           </Grid>
                         </Grid>
                       </GridItem>

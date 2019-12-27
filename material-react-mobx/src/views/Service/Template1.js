@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -72,9 +73,38 @@ const Counter = () => {
     };
   }, [value]);
   
-  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // setUsername(e.target.elements.form1.value);
+    axios.post("/ora/getTestQueryAttibuteSample", { param1:e.target.elements.form1.value, param2: e.target.elements.form2.value })
+    .then(setTableHead(["Carrier", "Ship Type", "CVessel Name", "Voyage", "Origin", "Destination"]))
+    .then(res => setTableData(res.data));
+  }
+  const handleSubmit2 = (e) => {
+    e.preventDefault();
+    // setUsername(e.target.elements.form1.value);
+    axios.post("/pg/getTestQueryAttibuteSample", { param1:e.target.elements.form1.value, param2:e.target.elements.form2.value })
+    // .then(res => console.log(res.data))
+    .then(res => {setTableHead(res.data.field); setTableData(res.data.record)});
+    // .then(res => setTableData(res.data.record));
+  } 
+
   return (
     <GridContainer>
+      <Card>
+        <div>
+            <form onSubmit={handleSubmit}>
+                <input type="text" name="form1" placeholder="Enter 20111218:" />
+                <input type="text" name="form2" placeholder="Enter 20111218:" />
+                <button type="submit">oracle</button>
+            </form>
+            <form onSubmit={handleSubmit2}>
+                <input type="text" name="form1" placeholder="Enter APL:" />
+                <input type="text" name="form2" placeholder="Enter N:" />
+                <button type="submit">postgresql</button>
+            </form>
+        </div >
+      </Card>
       <Card>
         <CardBody>
         <p>
