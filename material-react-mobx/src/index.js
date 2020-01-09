@@ -36,6 +36,8 @@ import Django from "./pages/Django.js";
 import nodeExpress from "./pages/nodeExpress.js";
 
 import Service from "layouts/Service.js";
+import Login from "views/LoginPage/LoginPage.js";
+import Landing from "views/LandingPage/LandingPage.js";
 
 const hist = createBrowserHistory();
 
@@ -45,12 +47,14 @@ ReactDOM.render(
       <Switch>
         <Route path="/admin" component={Admin} />
         {/* <Route path="/rtl" component={RTL} /> */}
+        <Route path="/login" component={Login} />
+        <Route path="/Landing" component={Landing} />
         <Route path="/mobx" component={Mobx} />
         <Route path="/home" component={Home} />
         <Route path="/django" component={Django} />
         <Route path="/express" component={nodeExpress} />
         <Route path="/service" component={Service} />
-        <Redirect from="/" to="/admin/dashboard" />
+        <Redirect from="/" to="/Landing" />
       </Switch>
     </Router>
   </Provider>,

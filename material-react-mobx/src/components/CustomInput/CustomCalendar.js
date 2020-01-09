@@ -14,16 +14,11 @@ import FormControl from "@material-ui/core/FormControl";
 //const useStyles = makeStyles(styles);
 
 export default function MaterialUIPickers(props) {
+
+
   //const classes = useStyles();
   // The first commit of Material-UI
-  const {formControlProps,labelText,id,format,inputProps} = props;
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
-
-  // data1 = selectedDate;
-  const handleDateChange = date => {
-    setSelectedDate(date);
-    inputProps(date);
-  };
+  const {formControlProps,labelText,id,format,onChangeValue,setValue} = props;
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -31,14 +26,14 @@ export default function MaterialUIPickers(props) {
       {...formControlProps}
     >
         <KeyboardDatePicker
-          disableToolbar
-          variant="inline"
+          //disableToolbar
+          //variant="inline"
           format={format}
           id={id}
           label={labelText}
-          value={selectedDate}
-          onChange={handleDateChange}
-          {...inputProps}
+          value={setValue}
+          onChange={onChangeValue}
+         /* {...inputProps}*/
           KeyboardButtonProps={{
             'aria-label': 'change date',
           }}

@@ -79,15 +79,13 @@ const getTestQueryParamSample = (request, response) => {
 const getSnkMasterList = (request, response) => {
     const bl_no = request.body.bl_no
     const search_date = request.body.search_date
-    // console.log(req)
-    console.log( bl_no, search_date)
+
     bl_no == "" ? console.log("o") : console.log(" x" );
     let sql = "SELECT web_seq, line_code, bl_no, cntr_no, sz_tp, coc_soc, recipient, departure, etd, arrival, eta, delivery, vessel, voyage_no FROM own_web_master_snk "
         sql += " where 1=1 "
         sql += " and web_seq like '"+ search_date+"%'"
         bl_no == "" ? sql += "" : sql += " and bl_no= '"+bl_no +"'";
-                
-    console.log( sql )
+
     pgsqlPool.connect(function(err,client,done) {
       if(err){
         console.log("err" + err);
@@ -109,8 +107,7 @@ const getSnkMasterList = (request, response) => {
   const getKmdMasterList = (request, response) => {
     const bl_no = request.body.bl_no
     const search_date = request.body.search_date
-    // console.log(req)
-    console.log( bl_no, search_date)
+
     let sql = "SELECT web_seq, line_code, bl_no, booking_no, cntr_no, cntr_trace FROM own_web_master_kmd "
         sql += " where 1=1 "
         sql += " and web_seq like '"+ search_date+"%'"
@@ -136,8 +133,7 @@ const getSnkMasterList = (request, response) => {
   const getYmlMasterList = (request, response) => {
     const bl_no = request.body.bl_no
     const search_date = request.body.search_date
-    // console.log(req)
-    console.log( bl_no, search_date)
+
     let sql = "SELECT web_seq, line_code, bl_no, cntr_no, recipient, loading, discharge, delivery, vessel, voyage_no, no_of_packages, on_board_date, gross_cargo_weight, no_of_containsers, measurement, service_requirement, cntr_size, cntr_type, seal_no, move_type, date_time, latest_event, place, vgm FROM own_web_master_yml "
           sql += " where 1=1 "
           sql += " and web_seq like '"+ search_date+"%'"

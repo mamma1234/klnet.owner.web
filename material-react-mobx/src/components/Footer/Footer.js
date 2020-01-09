@@ -19,17 +19,17 @@ export default function Footer(props) {
           <List className={classes.list}>
             <ListItem className={classes.inlineBlock}>
               <a href="#home" className={classes.block}>
-                Home
+                이용약관
               </a>
             </ListItem>
             <ListItem className={classes.inlineBlock}>
               <a href="#company" className={classes.block}>
-                Company
+                개인정보처리방침
               </a>
             </ListItem>
             <ListItem className={classes.inlineBlock}>
               <a href="#portfolio" className={classes.block}>
-                Portfolio
+                About Us
               </a>
             </ListItem>
             <ListItem className={classes.inlineBlock}>
@@ -37,21 +37,37 @@ export default function Footer(props) {
                 Blog
               </a>
             </ListItem>
-          </List>
-        </div>
-        <p className={classes.right}>
-          <span>
-            &copy; {1900 + new Date().getYear()}{" "}
-            <a
-              href="https://www.creative-tim.com?ref=mdr-footer"
-              target="_blank"
-              className={classes.a}
-            >
-              Creative Tim
+            <ListItem className={classes.inlineBlock}>
+            <a href="#blog" className={classes.block}>
+              Q&A
             </a>
-            , made with love for a better web
-          </span>
-        </p>
+          </ListItem>
+          <ListItem className={classes.inlineBlock}>
+          <a href="#blog" className={classes.block}>
+            FAQ
+          </a>
+        </ListItem>
+        <ListItem className={classes.inlineBlock}>
+        <a href="#blog" className={classes.block}>
+          고객지원센터(1577-1172)
+        </a>
+      </ListItem>
+          </List>
+          <p className={classes.left}>
+          <span>
+          고객지원센터 157701172 (06264) 서울시 강남구 역삼로 153 케이엘넷 빌딩<br/>
+          &copy; {1900 + new Date().getYear()}{" "}
+          <a
+            href="https://www.creative-tim.com?ref=mdr-footer"
+            target="_blank"
+            className={classes.a}
+          >
+            KL-Net
+            </a>
+            	,Ltd. All Rigths Reserved.
+          	</span>
+          </p>
+        </div>
       </div>
     </footer>
   );

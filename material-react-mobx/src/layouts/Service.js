@@ -34,7 +34,7 @@ const switchRoutes = (
       }
       return null;
     })}
-    <Redirect from="/service" to="/service/schedule" />
+    <Redirect from="/service" to="/service/template1" />
   </Switch>
 );
 

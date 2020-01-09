@@ -40,7 +40,9 @@ app.post("/api/kmdMasterList", dao.postgresql.getKmdMasterList );
 app.post("/api/ymlMasterList", dao.postgresql.getYmlMasterList );
 
 
-app.get("/api/getCarrierInfo", dao.oracle.getCarrierInfo);
-app.get("/api/getScheduleList", dao.oracle.getScheduleList);
+app.post("/api/getCarrierInfo", dao.oracle.getCarrierInfo);
+app.post("/api/getScheduleList", dao.oracle.getScheduleList);
+app.post("/api/getPortCodeInfo", dao.oracle.getPortCodeInfo);
+app.post("/api/getScheduleDetailList", dao.oracle.getScheduleDetailList);
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

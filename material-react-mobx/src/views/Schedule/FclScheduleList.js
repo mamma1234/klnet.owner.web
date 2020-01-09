@@ -10,7 +10,7 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 
-import ScheduleToggleTable from "views/Schedule/ScheduleToggleTable.js";
+import ScheduleToggleTable from "views/Schedule/ScheduleDetailTable.js";
 
 import CardContent from '@material-ui/core/CardContent';
 import Button from "components/CustomButtons/Button.js";
@@ -26,6 +26,9 @@ import CalendarBox from "components/CustomInput/CustomCalendar.js";
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Radio from '@material-ui/core/Radio';
+import axios from 'axios';
+
+import moment from 'moment';
 
 const styles = {
   cardCategoryWhite: {
@@ -60,6 +63,7 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
+
 class SearchToSchedule extends React.Component {
  
   constructor() {
@@ -69,42 +73,72 @@ class SearchToSchedule extends React.Component {
                    scheduleData:[], 
                    vesselName: "" ,
                    carrierCode: "", 
-                   pldPortCode: "", 
-                   podPortCode: "",
-                   portCode:"" };
+                   endPort: "", 
+                   startPort: "",
+                   portCode:"",
+                   setStartDate : new Date(),
+    			   setEndDate : ""
+                	   };
+    const selectdVal = "ETA";
+    const selectVal ="";
+ 
   }
   
 
 
   handleOnChange = (e) => {
 
-    const vesselName = this.state.vesselName;
-    const carrierCode = this.state.carrierCode;
-    const podPortCode = this.state.pldPortCode;
-    const pldPortCode =this.state.podPortCode;
 
-    alert("선택한 값들: (출발지:"+podPortCode+"/도착지:"+pldPortCode+"/vesselName:"+vesselName+"/Carrier:"+carrierCode + " 데이터 조회 시작");
+	  if(this.state.carrierCode == "") {
+	    	alert("선사코드는 필수 입력 값입니다.");
+	    	return false;
+	    }
+	  
+    if(this.state.startPort == "") {
+    	alert("출발지는 필수 입력 값입니다.");
+    	return false;
+    }
     
-    this.scheduleToSearch();
+    if (this.state.endPort == "") {
+    	alert("도착지는 필수 입력 값입니다.");
+    	return false;
+    }
+    
+	    if(this.state.carrierCode != "" && this.state.startPort != "" && this.state.endPort != "") {
+	    
+		    return axios ({
+				url:'/api/getScheduleList',
+				method:'POST',
+				data: {carrierCode : this.state.carrierCode,
+					   startDate : moment(this.state.setStartDate).format('YYYYMM'),
+					   endDate : moment(this.state.setEndDate).format('YYYYMM'),
+					   startPort : this.state.startPort,
+					   endPort : this.state.endPort,
+					   vesselName : this.state.vesselName
+					   }
+			}).then(response => this.setState({scheduleData:response.data}));
+	    }
+ 
   }
-  scheduleToSearch = (vVal) => {
-    return fetch('/api/getScheduleList')
-      .then(res => res.json())
-      .then(scheduleData => this.setState({scheduleData}));
+  
+  carrierToSearch = () => {
+	return axios ({
+		url:'/api/getCarrierInfo',
+		method:'POST',
+	}).then(response => this.setState({carrierData:response.data}));
+	//.then(response => console.log(JSON.stringify(response.data)));
   }
 
-  carrierToSearch = () => {
-    return fetch('/api/getCarrierInfo')
-        .then(res => res.json())
-        .then(carrierData => this.setState({carrierData}));
-        //.then(carrierData => console.log(JSON.stringify(carrierData)));
-  }
 
   portToSearch = (vVal) => {
-    return fetch('/api/port?portCode='+vVal)
-        .then(res => res.json())
-      .then(portData => this.setState({portData}));
-  }
+  
+	  return axios ({
+			url:'/api/getPortCodeInfo',
+			method:'POST',
+			data: {portCode : vVal }
+		}).then(response => this.setState({portData:response.data}));
+		//.then(response => console.log(JSON.stringify(response.data)));
+	}
 
   onChangeValue = (event) => {
     this.setState({vesselName:event.target.value})
@@ -113,45 +147,62 @@ class SearchToSchedule extends React.Component {
   onCarrierCodeChange = (event,values) => {
     if(values) { 
       this.setState({
-        carrierCode: values.LINE_CODE
+    	  carrierCode: values.LINE_CODE
       })
     }
   }
 
-  onPldCodeChange = (event,values) => {
+  onStartChange = (event,values) => {
+
     if(values) {
       this.setState({
-        pldPortCode: values.port_code
+    	  startPort: values.PORT_CODE
       })
     }
   }
 
-  onPodCodeChange = (event,values) => {
+  onEndChange = (event,values) => {
     if(values) {
       this.setState({
-        podPortCode: values.port_code
+    	  endPort: values.PORT_CODE
       })
     } 
   }
 
   onPortSearch = (event,values) => {
     const portCode = event.target.value;
-    if(portCode.length > 1) {this.portToSearch(portCode);}    
+    if(portCode.length > 2) {this.portToSearch(portCode);}  
+  }
+  
+  onHandleChange = event => {
+	  this.setState({
+		  inOutGb: event.target.value,
+		      });
+  }
+  
+ 
+  onStartDate = date => {
+	 this.setState({
+		 setStartDate: date,
+	      });
   }
 
+  onEndDate = date => {
+		 this.setState({
+			 setEndDate: date,
+		      });
+	  }
   
 
   componentDidMount() {
     this.carrierToSearch();
-    //this.portToSearch();
-    
   }
 
   render() {
 
-    const { carrierData, portData, scheduleData } = this.state;
+    const { carrierData, portData, scheduleData,inOutGb } = this.state;
     const classes = makeStyles(styles);
-    const selectedValue ="a";
+
     return(
       <form>
         <Card>
@@ -160,6 +211,30 @@ class SearchToSchedule extends React.Component {
                       <GridItem xs={12} sm={12} md={10}>
                         <Grid container spacing={2}>
                           <Grid item xs={12} sm={3}>
+                          <CalendarBox
+                          labelText ="출항일자"
+                          id="portDate"
+                          format="yyyy-MM-dd"
+                          setValue={this.state.setStartDate}
+                          onChangeValue={this.onStartDate}
+                          formControlProps={{
+                                        fullWidth: true
+                          }}
+                        />
+                          
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+	                          <Autocomplete
+	                          options = {portData}
+	                          getOptionLabel = { option => option.PORT_CODE != undefined?"["+option.PORT_CODE+"] "+option.PORT_NAME:"두글자 이상 입력하세요."}
+	                          id="start"
+	                          onChange={this.onStartChange}
+	                          renderInput={params => (
+	                            <TextField {...params} label="출발지" onKeyUp={this.onPortSearch} fullWidth />
+	                          )}
+	                        />
+                          </Grid>
+                          <Grid item xs={12} sm={5}>
                           <Autocomplete
                           options = {carrierData}
                           getOptionLabel = { option => option.LINE_NAME }
@@ -169,69 +244,40 @@ class SearchToSchedule extends React.Component {
                             <TextField {...params} label="선사" fullWidth />
                           )}
                         />
-                           
+                          
                           </Grid>
-                          <Grid item xs={12} sm={4}>
+                          <Grid item xs={12} sm={3} >
                           <CalendarBox
-                          labelText ="출발일"
-                          id="startDay"
+                          labelText ="도착일자"
+                          id="portDate"
                           format="yyyy-MM-dd"
-                          selectedDate = {new Date()}
-                          setSelectedDate = {new Date()}
+                          setValue={this.state.setEndDate}
+                          onChangeValue={this.onEndDate}
                           formControlProps={{
                                         fullWidth: true
                           }}
                         />
-                            
+                          </Grid> 
+                          <Grid item xs={12} sm={4}>
+                          <Autocomplete
+	                          options = {portData}
+	                          getOptionLabel = { option => "["+option.PORT_CODE+"] "+option.PORT_NAME}
+	                          id="end"
+	                          onChange={this.onEndChange}
+	                          renderInput={params => (
+	                            <TextField {...params} label="도착지" onKeyUp={this.onPortSearch} fullWidth />
+	                          )}
+                          />
                           </Grid>
                           <Grid item xs={12} sm={5}>
                           <CustomInput
-                          labelText="Vessel Name"
-                          id="vesselName"
-                          inputProps={{onBlur:this.onChangeValue}}
-                          formControlProps={{
-                            fullWidth: true
-                          }}
-                    />
-                          
-                          </Grid>
-                          <Grid item xs={12} sm={3} >
-                          	<Radio
-                          		checked={selectedValue === 'a'}
-                          		onChange={this.onCarrierCodeChange}
-                          		value="A"
-                          		name="radio-buttond-demo"
-                          		inputProps={{'aria-label':'A'}}
-                          	/>입항일(ETA)
-                          	<Radio
-                          		checked={selectedValue === 'a'}
-                          		onChange={this.onCarrierCodeChange}
-                          		value="B"
-                          		name="radio-buttond-demo"
-                          		inputProps={{'aria-label':'C'}}
-                          	/>출항일(ETA)
-                          </Grid> 
-                          <Grid item xs={12} sm={4}>
-                            <Autocomplete
-                          options = {portData}
-                          getOptionLabel = { option => option.port_code != undefined?"["+option.port_code+"] "+option.port_name:"두글자 이상 입력하세요."}
-                          id="pod"
-                          onChange={this.onPodCodeChange}
-                          renderInput={params => (
-                            <TextField {...params} label="출발지" onKeyUp={this.onPortSearch} fullWidth />
-                          )}
-                        />
-                          </Grid>
-                          <Grid item xs={12} sm={5}>
-                          <Autocomplete
-                          options = {portData}
-                          getOptionLabel = { option => "["+option.port_code+"] "+option.port_name}
-                          id="pld"
-                          onChange={this.onPldCodeChange}
-                          renderInput={params => (
-                            <TextField {...params} label="도착지" onKeyUp={this.onPortSearch} fullWidth />
-                          )}
-                        />
+	                          labelText="Vessel Name"
+	                          id="vesselName"
+	                          inputProps={{onChange:this.onChangeValue}}
+	                          formControlProps={{
+	                            fullWidth: true
+	                          }}
+                          	/>  
                           </Grid>
                         </Grid>
                       </GridItem>

@@ -100,7 +100,12 @@ class SearchToSchedule extends React.Component {
   }
 
   portToSearch = (vVal) => {
-    return fetch('/api/port?portCode='+vVal)
+    return fetch('/api/getPortCodeInfo',
+    		{method:'POST', 
+    	       body: JSON.stringify({
+    	       		portCode : vVal
+             })
+             ,headers: {"Content-Type":"application/json"}})
         .then(res => res.json())
       .then(portData => this.setState({portData}));
   }

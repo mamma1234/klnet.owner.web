@@ -24,6 +24,7 @@ import LocationOn from "@material-ui/icons/LocationOn";
 import Notifications from "@material-ui/icons/Notifications";
 import Unarchive from "@material-ui/icons/Unarchive";
 import Language from "@material-ui/icons/Language";
+import ScheduleIcon from "@material-ui/icons/Schedule";
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
@@ -47,6 +48,8 @@ import ExportDemDetCntr from "views/DemDet/exportDemDetCntr.js";
 
 import WebScrp from "views/WebScrap/WebScrap.js";
 
+import Login from "views/LoginPage/LoginPage.js";
+
 
 const dashboardRoutes = [
   {
@@ -61,7 +64,7 @@ const dashboardRoutes = [
 	    path: "/fclschedule",
 	    name: "Fcl Schedule",
 	    rtlName: "FCL Schedule",
-	    icon: iconDirectionsBoat,
+	    icon: ScheduleIcon,
 	    component: FCLSchedulePage,
 	    layout: "/admin"
   },
@@ -87,14 +90,6 @@ const dashboardRoutes = [
     rtlName: "ملف تعريفي للمستخدم",
     icon: Person,
     component: UserProfile,
-    layout: "/admin"
-  },
-  {
-    path: "/fclschedule",
-    name: "Schedule",
-    rtlName: "선박스케줄",
-    icon: iconDirectionsBoat,
-    component: SchedulePage2,
     layout: "/admin"
   },
   {
@@ -176,7 +171,7 @@ const dashboardRoutes = [
     icon: iconDirectionsBoat,
     component: WebScrp,
     layout: "/admin"
-  }
+  },
 ];
 
 export default dashboardRoutes;
