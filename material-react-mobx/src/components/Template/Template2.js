@@ -53,12 +53,12 @@ const CounterSubmit = (props) => {
           <form onSubmit={handleSubmit}>
               <input type="text" name="form1" placeholder={form1} />
               <input type="text" name="form2" placeholder={form2} />
-              <button type="submit">조회</button>
+              <button type="submit">이벤트전달</button>
           </form>
           <form onSubmit={handleSubmit2}>
               <input type="text" name="form1" placeholder={form1} />
               <input type="text" name="form2" placeholder={form2} />
-              <button type="submit">조회</button>
+              <button type="submit">이벤트전달spread</button>
           </form>
       </div >
     </Card>
