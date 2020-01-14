@@ -30,13 +30,14 @@ function getSteps() {
 }
 
 export default function HorizontalNonLinearAlternativeLabelStepper(props) {
-	const { stepData, setDate } = props;
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
+  const { stepData, setDate, active} = props;
+  const [activeStep, setActiveStep] = React.useState(active);
   const [completed, setCompleted] = React.useState(new Set());
   const [skipped, setSkipped] = React.useState(new Set());
-  const steps = stepData;
-    
+  const steps = stepData;  
+  
+
   const totalSteps = () => {
     return getSteps().length;
   };
@@ -130,13 +131,13 @@ export default function HorizontalNonLinearAlternativeLabelStepper(props) {
         {steps.map((label, index) => {
           const stepProps = {};
           const buttonProps = {};
-          //if (isStepOptional(index)) {
-          //buttonProps.optional = <Typography variant="caption">Optional1</Typography>;
-          //}
+          {/*if (isStepOptional(index)) {
+          buttonProps.optional = <Typography variant="caption">Optional1</Typography>;
+          }
           if (isStepSkipped(index)) {
             stepProps.completed = false;
-          }
-          
+            }*/}
+
           return (
             <Step key={label} {...stepProps}>
               <StepButton
@@ -144,16 +145,12 @@ export default function HorizontalNonLinearAlternativeLabelStepper(props) {
                 completed={isStepComplete(index)}
                 {...buttonProps}
               >
-                {label.map((data,key) => {
-          			return(<div key={key}>{data}</div>
-          			);
-          		})}
+                {label[0]}<br/>{label[1]}<br/>{label[2]}
               </StepButton>
             </Step>
           );
         })}
       </Stepper>
-
     </div>
   );
 }

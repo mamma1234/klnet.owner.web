@@ -184,6 +184,38 @@ const getSnkMasterList = (request, response) => {
         // conn.release();
     });
 }
+  
+  const getUserInfoSample = (request, response) => {
+	  console.log ("value:"+request.body.id);
+	    const sql = {
+	        text: 'SELECT 1 FROM own_user_test where  user_id= $1 and user_pw = $2 limit 1',
+	        values: [request.body.id, request.body.pw],
+	        rowMode: 'array',
+	    }
+
+	    
+	    pgsqlPool.connect(function(err,conn,done) {
+	        if(err){
+	            console.log("err" + err);
+	            response.status(400).send(err);
+	        }
+
+	        conn.query(sql, function(err,result){
+	            done();
+	            if(err){
+	                console.log(err);
+	                response.status(400).send(err);
+	            }
+	            
+	            response.status(200).send(result.rows);
+	            console.log("ok"+result.rows);
+	            // console.log(result.fields.map(f => f.name));
+
+	        });
+
+	        // conn.release();
+	    });
+	}
 
 module.exports = {
     getTestSimple,
@@ -193,4 +225,5 @@ module.exports = {
     getSnkMasterList,
     getKmdMasterList,
     getYmlMasterList,
+    getUserInfoSample,
 }

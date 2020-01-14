@@ -29,11 +29,12 @@ app.get("/pg/getTestSimple", dao.postgresql.getTestSimple);
 app.get("/pg/getTestQuerySample", dao.postgresql.getTestQuerySample);
 app.get("/pg/getTestQueryParamSample", dao.postgresql.getTestQueryParamSample);
 app.post("/pg/getTestQueryAttibuteSample", dao.postgresql.getTestQueryAttibuteSample);
+app.post("/api/getUserInfoSample", dao.postgresql.getUserInfoSample);
 
-app.get("/ora/getTestSimple", dao.oracle.getTestSimple);
-app.get("/ora/getTestQuerySample", dao.oracle.getTestQuerySample);
-app.get("/ora/getTestQueryParamSample", dao.oracle.getTestQueryParamSample);
-app.post("/ora/getTestQueryAttibuteSample", dao.oracle.getTestQueryAttibuteSample);
+//app.get("/ora/getTestSimple", dao.oracle.getTestSimple);
+//app.get("/ora/getTestQuerySample", dao.oracle.getTestQuerySample);
+//app.get("/ora/getTestQueryParamSample", dao.oracle.getTestQueryParamSample);
+//app.post("/ora/getTestQueryAttibuteSample", dao.oracle.getTestQueryAttibuteSample);
 
 app.post("/api/snkMasterList", dao.postgresql.getSnkMasterList );
 app.post("/api/kmdMasterList", dao.postgresql.getKmdMasterList );

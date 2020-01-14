@@ -21,7 +21,7 @@ import logo from "assets/img/reactlogo.png";
 let ps;
 
 const switchRoutes = (
-  <Switch>
+<Switch>
     {routes.map((prop, key) => {
       if (prop.layout === "/admin") {
         return (
@@ -119,14 +119,14 @@ export default function Admin({ ...rest }) {
           <div className={classes.map}>{switchRoutes}</div>
         )}
         {getRoute() ? <Footer /> : null}
-       {/*  <FixedPlugin
+         <FixedPlugin
           handleImageClick={handleImageClick}
           handleColorClick={handleColorClick}
           bgColor={color}
           bgImage={image}
           handleFixedClick={handleFixedClick}
           fixedClasses={fixedClasses}
-        /> */}
+        />
       </div>
     </div>
   );

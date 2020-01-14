@@ -1,4 +1,5 @@
 import React from "react";
+
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -22,81 +23,20 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import styles from "assets/jss/material-kit-react/views/loginPage.js";
 
 import image from "assets/img/bg2.jpg";
-import axios from 'axios';
 
 const useStyles = makeStyles(styles);
 
 export default function LoginPage(props) {
 
   const [cardAnimaton, setCardAnimation] = React.useState("cardHidden");
-  const [loginId, setLoginId,loginPW, setLoginPW] = React.useState(new Set());
-  const [loginPw, setLoginPw] = React.useState(new Set());
-  const [check, setCheck] = React.useState("N");
-  
-  setTimeout(function() {
-    setCardAnimation("");
-  }, 700);
+
   const classes = useStyles();
   const { ...rest } = props;
-
-
-  const onChangeIDValue = (event) => {
-	  console.log (">>>>ID:"+event.target.value);
-	  setLoginId(event.target.value);
-
-  };
-  
-  const onChangePWValue = (event) => {
-
-	  setLoginPw(event.target.value);
-
-  };
-  
-  const handleClick = () => {
-
-	  componentDidMount(loginId,loginPw);
-
-	 if (check == "Y") {
-		 window.location.href = "/admin/dashboard";
-	 } else {
-		 alert("로그인 정보를 확인해 주세요.");
-	 }  
-  }
-  
-  const componentDidMount = (id,pw) => {
-	  
-	  return axios ({
-			url:'/api/getUserInfoSample',
-			method:'POST',
-			data: {id : id,
-				   pw : pw,
-				   }
-		}).then(response => setCheck("Y"));
-   }
-  
-  
-  
   return (
-    <div>
-      <Header
-        absolute
-        color="transparent"
-        brand="Plism+"
-        rightLinks={<HeaderLinks />}
-        {...rest}
-      />
-      <div
-        className={classes.pageHeader}
-        style={{
-          backgroundImage: "url(" + image + ")",
-          backgroundSize: "cover",
-          backgroundPosition: "top center"
-        }}
-      >
         <div className={classes.container}>
-          <GridContainer justify="center">
-            <GridItem xs={12} sm={12} md={4}>
-              <Card className={classes[cardAnimaton]}>
+          <GridContainer>
+            <GridItem xs={12} sm={12} md={7}>
+              <Card >
                 <form className={classes.form}>
                   <CardHeader color="primary" className={classes.cardHeader}>
                     <h4>Login</h4>
@@ -144,8 +84,7 @@ export default function LoginPage(props) {
                           <InputAdornment position="end">
                             <People className={classes.inputIconsColor} />
                           </InputAdornment>
-                        ),
-                        onChange:onChangeIDValue
+                        )
                       }}
                     />
                     <CustomInput
@@ -163,13 +102,12 @@ export default function LoginPage(props) {
                             </Icon>
                           </InputAdornment>
                         ),
-                        autoComplete: "off",
-                        onChange:onChangePWValue
+                        autoComplete: "off"
                       }}
                     />
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
-                    <Button simple color="primary" size="lg" onClick={handleClick}>
+                    <Button simple color="primary" size="lg" href ="/admin/dashboard">
                       Get started
                     </Button>
                   </CardFooter>
@@ -178,37 +116,5 @@ export default function LoginPage(props) {
             </GridItem>
           </GridContainer>
         </div>
-        <Footer whiteFont />
-      </div>
-    </div>
   );
 }
-
-
-class LoginCheck extends React.Component {
-	
-	  state = { expanded: false , port: []};
-
-	  componentDidMount() {
-		  console.log(">>>>");
-		  return axios ({
-				url:'/api/getScheduleDetailList',
-				method:'POST',
-				data: {carrierCode : this.props.data.LINE_CODE,
-					   startPort : this.props.data.START_PORT,
-					   endPort : this.props.data.END_PORT,
-					   voyage : this.props.data.VOYAGE_NO,
-					   vesselName : this.props.data.VESSEL_NAME
-					   }
-			}).then(response => this.setState({port:response.data }));
-		  }
-
-	  render() {
-
-	     const { port } = this.state;
-
-	    return [
-	      
-	    ];
-	  }
-	}
