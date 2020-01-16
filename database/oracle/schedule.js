@@ -26,6 +26,7 @@ const getCarrierInfo = (request, response) => {
             // console.log(results);
             // response.send(results.rows);
             response.status(200).json(results.rows);
+            conn.close();
             
         });
         // conn.release();
@@ -44,7 +45,7 @@ const getScheduleList = (request, response) => {
 	let sql = "SELECT SCH.VESSEL_NAME,SCH.VOYAGE_SID,SCH.VOYAGE_NO,SCH.LINE_CODE,SCH.PORT_CODE as START_PORT,PORT.PORT_CODE as END_PORT "
             + ",TO_CHAR(TO_DATE(SCH.ETD||SCH.ETD_TIME,'YYYYMMDDHH24MI'),'YYYY-MM-DD')AS START_DAY"
             + ",TO_CHAR(TO_DATE(PORT.ETA,'YYYYMMDDHH24MI'),'YYYY-MM-DD') AS END_DAY "
-            + "FROM MFEDI.TCS_VSL_SCH@mfedi_real SCH,MFEDI.TCS_VSL_SCH_PORT@mfedi_real PORT,MFEDI.CODE_PORT@mfedi_real PORT_NM"
+            + "FROM MFEDI.TCS_VSL_SCH@mfedi_real SCH,MFEDI.TCS_VSL_SCH_PORT@mfedi_real PORT"
             + " WHERE SCH.VOYAGE_SID = PORT.VOYAGE_SID "
 	        + " AND SCH.LINE_CODE NOT IN ('CKC','DIF') ";
             if(request.body.carrierCode != "") {
@@ -60,7 +61,6 @@ const getScheduleList = (request, response) => {
             	sql = sql + "AND SCH.VESSEL_NAME LIKE '%"+request.body.vesselName+"%' ";	
             }
             sql = sql+ "AND SCH.IO_FLAG = 'O' "
-            + "AND PORT.PORT_CODE = PORT_NM.PORT_CODE(+) "
             + "ORDER BY SCH.ETD";
             
             console.log ("query:" +sql);
@@ -81,7 +81,7 @@ const getScheduleList = (request, response) => {
             // console.log(results);
             // response.send(results.rows);
             response.status(200).json(results.rows);
-            
+            conn.close();
         });
         // conn.release();
     });
@@ -123,6 +123,7 @@ const getScheduleDetailList = (request, response) => {
             // console.log(results);
             // response.send(results.rows);
             response.status(200).json(results.rows);
+            conn.close();
             
         });
         // conn.release();
@@ -162,6 +163,7 @@ const getPortCodeInfo = (request, response) => {
             // response.send(results.rows);
     
             response.status(200).json(results.rows);
+            conn.close();
             
         });
         // conn.release();

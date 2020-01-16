@@ -34,16 +34,16 @@ app.post("/api/getUserInfoSample", dao.postgresql.getUserInfoSample);
 //app.get("/ora/getTestSimple", dao.oracle.getTestSimple);
 //app.get("/ora/getTestQuerySample", dao.oracle.getTestQuerySample);
 //app.get("/ora/getTestQueryParamSample", dao.oracle.getTestQueryParamSample);
-//app.post("/ora/getTestQueryAttibuteSample", dao.oracle.getTestQueryAttibuteSample);
+app.post("/ora/getTestQueryAttibuteSample", dao.oracle.getTestQueryAttibuteSample);
 
 app.post("/api/snkMasterList", dao.postgresql.getSnkMasterList );
 app.post("/api/kmdMasterList", dao.postgresql.getKmdMasterList );
 app.post("/api/ymlMasterList", dao.postgresql.getYmlMasterList );
 
 
-app.post("/api/getCarrierInfo", dao.oracle.getCarrierInfo);
-app.post("/api/getScheduleList", dao.oracle.getScheduleList);
-app.post("/api/getPortCodeInfo", dao.oracle.getPortCodeInfo);
-app.post("/api/getScheduleDetailList", dao.oracle.getScheduleDetailList);
+app.post("/api/getCarrierInfo", dao.schedule.getCarrierInfo);
+app.post("/api/getScheduleList", dao.schedule.getScheduleList);
+app.post("/api/getPortCodeInfo", dao.schedule.getPortCodeInfo);
+app.post("/api/getScheduleDetailList", dao.schedule.getScheduleDetailList);
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
