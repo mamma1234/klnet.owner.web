@@ -17,9 +17,28 @@ cd material-react-mobx
 
 yarn install
 
+/*
+yarn add cookie-parser express-session morgan connect-flash pug
+
+yarn add dotenv
+
 yarn add passport
 yarn add passport-local
 yarn add passport-facebook
 yarn add passport-kakao
 yarn add passport-naver
 yarn add passport-google
+
+yarn add cookie-session
+*/
+
+/*
+https://github.com/kelektiv/node.bcrypt.js/wiki/Installation-Instructions
+
+//administrator 로 설치해야 함
+npm install --global --production windows-build-tools
+
+yarn add bcrypt
+*/
+
+

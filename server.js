@@ -1,15 +1,93 @@
+'use strict';
 const express = require("express");
+
+const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
+const path = require('path');
+const session = require('express-session');
+const flash = require('connect-flash');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+require('dotenv').config();
+// const cookieSession = require('cookie-session');
+
+const pageRouter = require('./routes/page');
+const authRouter = require('./routes/auth');
+
+// const { sequelize } = require('./models');
+const passportConfig = require('./passport');
 const bodyParser = require("body-parser");
+const dao = require('./database/');
+
+// const bcrypt = require('bcrypt');
+const { isLoggedIn, isNotLoggedIn } = require('./routes/middlewares');
+
 const app = express();
-const port = process.env.PORT || 5000;
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// sequelize.sync();
+passportConfig(passport);
+
+
+
+
+app.set('views', path.join(__dirname, 'views')); //템플리트 엔진을 사용 1
+app.set('view engine', 'pug'); //템플리트 엔진을 사용 2
+
+app.use(morgan('dev')); //morgan: 요청에 대한 정보를 콘솔에 기록
+app.use(express.static(path.join(__dirname, 'public'))); //static: 정적인 파일을 제공, public 폴더에 정적 폴더를 넣는다.
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser('nodebirdsecret')); //cookie-parser: 요청에 동봉된 쿠키를 해석
+app.use(session({   //express-session: 세션 관리용 미들웨어, 로그인 드의 이유로 세션을 구현할 때 유용하다.
+    resave: false,
+    saveUninitialized: false,
+    secret: 'nodebirdsecret',
+    cookie: {
+        httpOnly: true,
+        secure: false,
+    },
+}));
+// app.use(cookieSession({
+//     keys: ['node_yun'],
+//     cookie: {
+//       maxAge: 1000 * 60 * 60 // 유효기간 1시간
+//     }
+// }));
+app.use(flash()); //connect-flash: 일회성 메시지들을 웹 브라우저에 나타낼 때 사용한다. cookie-parser와 express-session 뒤에 위치해야한다.
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+app.route(/^((?!\/auth\/|\/login).)*$/s).all(function(req, res, next) {    
+	var path = req.params[0];
+	console.log("path");
+
+	if ( req.session.user ) { 
+		console.dir( req.session.user );
+		console.log('로그인 정보 남아 있음.');
+		next();
+	} else {
+		var fullUrl = req.protocol + '://' + req.headers.host + req.originalUrl;
+		console.log( fullUrl );
+        console.log('로그인 정보 없음 예외 처리');
+        console.log(req.headers.host);
+        // return res.redirect('http://' + req.headers.host + '/login/?redirect=' + fullUrl);
+        //return res.redirect('http://' + req.headers.host + '/login');
+
+        return;
+	}
+})
+
+app.use('/', pageRouter);
+app.use('/auth', authRouter);
+
+app.use(bodyParser.json()); //요청의 본문을 해석해주는 미들웨어 1
+app.use(bodyParser.urlencoded({ extended: true })); //요청의 본문을 해석해주는 미들웨어 2
 
 
 // const oracleConfig = require('./config_oracle.js');
 // const pgsqlConfig = require('./config_postgresql.js');
 
-const dao = require('./database/');
+
 
 //데이터베이스 사용 방법 아래 API 참조
 //ORACLE API https://oracle.github.io/node-oracledb/doc/api.html
@@ -24,6 +102,34 @@ const dao = require('./database/');
 //ORACLE API https://oracle.github.io/node-oracledb/doc/api.html
 //POSTGRES API https://node-postgres.com/api
 
+
+
+
+/*
+passport.use(new LocalStrategy({
+    usernameField: 'id', //'username',
+    passwordField: 'pw', //'password',
+    passReqToCallback: true //인증을 수행하는 인증 함수로 HTTP request를 그대로  전달할지 여부를 결정한다
+  }, function (req, username, password, done) {
+    console.log(username, password);
+    // if(username === 'user001' && password === 'password'){
+    if(username === 'admin' && password === 'admin00'){
+      return done(null, {
+        'user_id': username,
+      });
+    }else{
+      return done(false, null)
+    }
+  }));
+*/
+/*
+app.post('/login', passport.authenticate('local', {failureRedirect: '/loginfail', failureFlash: true}), // 인증 실패 시 401 리턴, {} -> 인증 스트레티지
+    function (req, res) {
+        console.log('local login true');
+    // res.redirect('/home');
+    // res.status(200).json("ok login");
+  });
+*/
 
 app.get("/pg/getTestSimple", dao.postgresql.getTestSimple);
 app.get("/pg/getTestQuerySample", dao.postgresql.getTestQuerySample);
@@ -46,4 +152,20 @@ app.post("/api/getScheduleList", dao.schedule.getScheduleList);
 app.post("/api/getPortCodeInfo", dao.schedule.getPortCodeInfo);
 app.post("/api/getScheduleDetailList", dao.schedule.getScheduleDetailList);
 
+
+//에러 처리 미들웨어: error라는 템플릿 파일을 렌더링한다. 404에러가 발생하면 404처리 미들웨어에서 넣어준 값을 사용한다.
+app.use((req, res, next) => {
+    const err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+});
+ 
+app.use((err, req, res) => {
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+    res.status(err.status || 500);
+    res.render('error');
+});
+
+const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Listening on port ${port}`));

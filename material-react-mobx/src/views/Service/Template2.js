@@ -53,7 +53,6 @@ const Counter = () => {
   ]);
 
 
-
   useEffect(() => {
     console.log('effect');
     console.log(pform1);

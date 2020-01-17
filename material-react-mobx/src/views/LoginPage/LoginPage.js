@@ -21,6 +21,8 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 
 import styles from "assets/jss/material-kit-react/views/loginPage.js";
 
+
+
 import image from "assets/img/bg2.jpg";
 import axios from 'axios';
 
@@ -66,15 +68,35 @@ export default function LoginPage(props) {
   const componentDidMount = (id,pw) => {
 	  
 	  return axios ({
-			url:'/api/getUserInfoSample',
+			// url:'/api/getUserInfoSample',
+			url:'/login',
 			method:'POST',
-			data: {id : id,
-				   pw : pw,
-				   }
-		}).then(response => setCheck("Y"));
+			data: {id : id,pw : pw,}
+    }).then(response => setCheck("Y"));
+      
    }
+
+   const login = () => {
+
+    axios.post("/auth/login", {id : loginId, pw : loginPw,})
+    .then(res => {
+        console.log(res);
+        if (res.data.message) alert(res.data.message);
+        else alert(res.data.userid + " 로그인 성공");
+    })
+    .catch(err => {
+        console.log(err);
+    })
+  }
   
+
+  // const responseKakao = () => {
+  //   // console.log(res);
+  // }
   
+  // const responseFail = () => {
+  //   // console.log(err);
+  // }
   
   return (
     <div>
@@ -169,8 +191,8 @@ export default function LoginPage(props) {
                     />
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
-                    <Button simple color="primary" size="lg" onClick={handleClick}>
-                      Get started
+                    <Button simple color="primary" size="lg" onClick={login}>
+                      login
                     </Button>
                   </CardFooter>
                 </form>
