@@ -58,7 +58,7 @@ export default function LandingPage() {
               <Button
                 color="danger"
                 size="lg"
-                href ="/admin/dashboard"
+                href ="/own/fcl_schedule"
                 rel="noopener noreferrer"
               >
                 <i className="fas fa-play" />

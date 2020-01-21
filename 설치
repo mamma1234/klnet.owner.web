@@ -18,18 +18,11 @@ cd material-react-mobx
 yarn install
 
 /*
-yarn add cookie-parser express-session morgan connect-flash pug
+yarn add cookie-parser cookie-session express-session morgan connect-flash pug
 
 yarn add dotenv
 
-yarn add passport
-yarn add passport-local
-yarn add passport-facebook
-yarn add passport-kakao
-yarn add passport-naver
-yarn add passport-google
-
-yarn add cookie-session
+yarn add passport passport-local passport-facebook passport-kakao passport-naver passport-google
 */
 
 /*

@@ -50,7 +50,9 @@ import WebScrp from "views/WebScrap/WebScrap.js";
 import Login from "views/LoginPage/LoginPage.js";
 
 
+
 const dashboardRoutes = [
+
   {
     path: "/schedule",
     name: "Schedule",
@@ -60,12 +62,12 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-	    path: "/fclschedule",
-	    name: "Fcl Schedule",
+	    path: "/fcl_schedule",
+	    name: "FCL-Schedule",
 	    rtlName: "FCL Schedule",
 	    icon: ScheduleIcon,
 	    component: FCLSchedulePage,
-	    layout: "/admin"
+	    layout: "/own"
   },
   {
     path: "/maps-tracking",

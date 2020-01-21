@@ -1,5 +1,4 @@
 import React from "react";
-
 import PropTypes from "prop-types";
 // @material-ui/core components
 import { makeStyles,useTheme } from "@material-ui/core/styles";
@@ -15,20 +14,8 @@ import FirstPageIcon from "@material-ui/icons/FirstPage";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
-
 // core components
 import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
-import { slideDown, slideUp } from "components/Slide/Slide.js";
-import ExpandTable from "components/Table/Table.js";
-
-import axios from 'axios';
-import Stepper from 'components/Navbars/Stepper.js';
-
-const classes = makeStyles(theme => ({
-  root: {
-    padding: 0,
-  },
-}));
 
 const useStyles = makeStyles(styles);
 
@@ -38,7 +25,6 @@ const useStyles1 = makeStyles(theme => ({
 		marginLeft: theme.spacing(2.5),
 	}
 }));
-
 
 function TablePageinationActions(props) {
 	const classes = useStyles1();
@@ -105,14 +91,11 @@ TablePageinationActions.propTypes = {
 		rowsPerPage:PropTypes.number.isRequired,
 }
 
-export default function ToggleTable(props) {
-
-
+export default function CustomTable(props) {
   const classes = useStyles();
   const { tableHead, tableData, tableHeaderColor } = props;
   const [page,setPage] = React.useState(0);
   const [rowsPerPage,setRowsPerPage] = React.useState(5);
-  console.log(tableData);
   
   const emptyRows = rowsPerPage - Math.min(rowsPerPage,tableData.length - page * rowsPerPage);
   
@@ -124,7 +107,6 @@ export default function ToggleTable(props) {
 	  setRowsPerPage(parseInt(event.target.value,10));
 	  setPage(0);
   }
-  
   
   return (
     <div className={classes.tableResponsive}>
@@ -146,42 +128,49 @@ export default function ToggleTable(props) {
           </TableHead>
         ) : null}
         <TableBody>
-           {(rowsPerPage > 0?tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) :  tableData).map((prop, key) => {
+        {(rowsPerPage > 0?tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) :  tableData).map((prop, key) => {
+            return (
+              <TableRow key={key} className={classes.tableBodyRow}>
+                {prop.map((prop, key) => {
                   return (
-                    <TableRows key={key} index={key + 1} data={prop} />
+                    <TableCell className={classes.tableCell} key={key}>
+                      {prop}
+                    </TableCell>
                   );
                 })}
-           
+              </TableRow>
+            );
+          })}
         </TableBody>
         {(tableData.length >= 5 ?
         <TableFooter>
-        	<TableRow>
-        		<TablePagination 
-        			rowsPerPageOptions={[5,10,15,{label:'All',value:-1}]}
-        			colSpan={5}
-        			count={tableData.length}
-        		    rowsPerPage={rowsPerPage}
-        			page={page}
-        			SelectProps={{
-        				inputProps: {'aria-label':'Rows Per Page'},
-        			    native:true,
-        			}}
-        			onChangePage={handleChagePage}
-        			onChangeRowsPerPage={handleChangeRowsPerPage}
-        			ActionsComponent={TablePageinationActions}
-        	/>
-        	</TableRow>
-        </TableFooter>: null )}
+    	<TableRow>
+    		<TablePagination 
+    			rowsPerPageOptions={[5,10,15,{label:'All',value:-1}]}
+    			colSpan={5}
+    			count={tableData.length}
+    		    rowsPerPage={rowsPerPage}
+    			page={page}
+    			SelectProps={{
+    				inputProps: {'aria-label':'Rows Per Page'},
+    			    native:true,
+    			}}
+    			onChangePage={handleChagePage}
+    			onChangeRowsPerPage={handleChangeRowsPerPage}
+    			ActionsComponent={TablePageinationActions}
+    	/> 
+    	</TableRow>
+    </TableFooter>: null )}
       </Table>
     </div>
   );
 }
 
-ToggleTable.defaultProps = {
+CustomTable.defaultProps = {
   tableHeaderColor: "gray"
 };
 
-ToggleTable.propTypes = {
+CustomTable.propTypes = {
   tableHeaderColor: PropTypes.oneOf([
     "warning",
     "primary",
@@ -192,81 +181,5 @@ ToggleTable.propTypes = {
     "gray"
   ]),
   tableHead: PropTypes.arrayOf(PropTypes.string),
+  tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string))
 };
-
-
- class TableRows extends React.Component {
-  state = { expanded: false , port: []};
-
-  componentDidMount() {
-	    this.scheduleToSearch();
-	  }
-  
-  // 테이블 조회
-  scheduleToSearch = () => {
-
-    return axios ({
-		url:'/api/getScheduleDetailList',
-		method:'POST',
-		data: {carrierCode : this.props.data.LINE_CODE,
-			   startPort : this.props.data.START_PORT,
-			   endPort : this.props.data.END_PORT,
-			   voyage : this.props.data.VOYAGE_NO,
-			   vesselName : this.props.data.VESSEL_NAME
-			   }
-	}).then(response => this.setState({port:response.data }));
-    
-  }
- 
-  // 로우 생성
-  toggleExpander = () => {
-    if (!this.state.expanded) {
-      this.setState({ expanded: true }, () => {
-        if (this.refs.expanderBody) {
-          slideDown(this.refs.expanderBody);
-        }
-      });
-    } else {
-      slideUp(this.refs.expanderBody, {
-        onComplete: () => {
-          this.setState({ expanded: false });
-        }
-      });
-    }
-
-  };
-  
-  render() {
-    //const { data } = this.props;
-     const { port } = this.state;
-     let point =0;
-     
-     port.map((data, index) => {
-     if (data[3] == "Y") {
-    	 point = index;
-     	}
-     	});
-
-    return [
-      <TableRow  key={this.props.index} onClick={this.toggleExpander} >
-        <TableCell >{this.props.data.LINE_CODE}</TableCell>
-        <TableCell >{this.props.data.VESSEL_NAME}</TableCell>
-        <TableCell >{this.props.data.VOYAGE_NO}</TableCell>
-        <TableCell >{this.props.data.START_PORT} ({this.props.data.START_DAY})</TableCell>
-        <TableCell >{this.props.data.END_PORT} ({this.props.data.END_DAY})</TableCell>
-      </TableRow>,
-      this.state.expanded && (
-        <TableRow key = {this.props.index+1}>
-          <TableCell colSpan={5}>
-            <div ref="expanderBody"> 
-	          <Stepper 
-	          	stepData ={port}
-	            active ={point}
-	          />  
-            </div>
-          </TableCell>
-        </TableRow>
-      )
-    ];
-  }
-}

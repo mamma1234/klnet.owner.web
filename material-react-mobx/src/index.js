@@ -36,6 +36,7 @@ import Django from "./pages/Django.js";
 import nodeExpress from "./pages/nodeExpress.js";
 
 import Service from "layouts/Service.js";
+import ServiceUser from "layouts/Service_user.js";
 import Login from "views/LoginPage/LoginPage.js";
 import Landing from "views/LandingPage/LandingPage.js";
 
@@ -46,6 +47,7 @@ ReactDOM.render(
     <Router history={hist}>
       <Switch>
         <Route path="/admin" component={Admin} />
+        <Route path="/own" component={ServiceUser} />
         <Route path="/rtl" component={RTL} />
         <Route path="/login" component={Login} />
         <Route path="/Landing" component={Landing} />

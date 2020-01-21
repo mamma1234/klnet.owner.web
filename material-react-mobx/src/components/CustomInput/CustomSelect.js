@@ -18,14 +18,14 @@ export default function CustomSelects(props) {
     formControlProps,
     labelText,
     id,
-    vVal,
-   // labelProps,
-    labelData,
+    option,
+    inputProps,
+    setValue,
     error,
     success
   } = props;
 
-  const [value, setvalue] = React.useState(vVal);
+  const [value, setvalue] = React.useState(setValue);
 
   const labelClasses = classNames({
     [" " + classes.labelRootError]: error,
@@ -44,9 +44,9 @@ export default function CustomSelects(props) {
         <Select
           id = {id}
           value={value}
-          onChange={handleChange}
+          {...inputProps}
         >
-        {labelData.map((prop) => {
+        {option.map((prop) => {
                 return (
                   <MenuItem key={prop} value={prop}>{prop}</MenuItem>
                 );

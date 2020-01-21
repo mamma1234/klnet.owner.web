@@ -1,6 +1,7 @@
 // var passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const bcrypt = require('bcrypt');
+const crypto = require('crypto');
+// const bcrypt = require('bcrypt');
 const sUser = require('../models/sessionUser');
  
 // const { User } = require('../models');
@@ -93,8 +94,15 @@ module.exports = (passport) => {
                     // let hash = bcrypt.hashSync(exUser.password, 10);
                     // console.log("hash:", hash);
                     //password:admin00
-                    const storepassword = "$2b$10$4GWf52INsdxRGz0oMGLQ2uvOaGJpamIQCHZhfZAM7pKuWKdsQvbf6";
-                    const result = await bcrypt.compare(password, storepassword);
+                    const storepassword = "5a78d577c88cd1ac69c7f751cbb346763eed86862713756e4de33ed0219122238f548d8b1d5b9e19bcadcb89aedbca00ff69469e7a76fa4c0f28a154995263ec";
+                    // const result = await bcrypt.compare(password, storepassword);
+                    
+                    const inputpassword = crypto.pbkdf2Sync(password, 'salt', 100000, 64, 'sha512').toString('hex');
+                    
+                    // const storepassword = "admin00";
+                    let result = false;
+                    if (inputpassword == storepassword) result = true;
+                    
                     console.log(result);
                     if(result) {
                         console.log('정상 로그인되었습니다.');

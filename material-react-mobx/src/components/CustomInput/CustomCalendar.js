@@ -33,7 +33,6 @@ export default function MaterialUIPickers(props) {
           label={labelText}
           value={setValue}
           onChange={onChangeValue}
-         /* {...inputProps}*/
           KeyboardButtonProps={{
             'aria-label': 'change date',
           }}

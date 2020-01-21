@@ -1,6 +1,6 @@
 const express = require('express');
 const passport = require('passport');
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 const { isLoggedIn, isNotLoggedIn, isLoggedPass } = require('./middlewares');
  
 const router = express.Router();
@@ -13,7 +13,8 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
             return res.redirect('/join');
         }
     
-        const hash = await bcrypt.hash(password, 12);
+        // const hash = await bcrypt.hash(password, 12);
+        const hash = password;
         await User.create({
             email,
             nick,
@@ -27,8 +28,8 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
 });
  
 
-router.post('/login', isNotLoggedIn, (req, res, next) => {
-    
+// router.post('/login', isNotLoggedIn, (req, res, next) => {
+router.post('/login', isLoggedPass, (req, res, next) => {
     console.log("(auth.js) req.isAuthenticated():", req.isAuthenticated());
     
     passport.authenticate('local', (authError, user, info) => {
@@ -54,6 +55,7 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
             // return res.redirect('/');
             res.status(200).json(user);
             return;
+            // return res.redirect('http://localhost:3000');
         });
     })(req, res, next)  //미들웨어 내의 미들웨어에는 (req, res, next)를 붙인다.
 });

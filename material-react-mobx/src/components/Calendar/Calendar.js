@@ -1,4 +1,5 @@
 import React from "react";
+
 //import ReactDom from 'react-dom';
 import BigCalendar from 'react-big-calendar';
 import moment from 'moment';
@@ -25,10 +26,16 @@ const myEventsList = [
     title:"test",
     start: indate,
     end: enddate
+  },
+  {
+	    title:"test2",
+	    start: indate,
+	    end: enddate
   }
 ];
 
 export default function App() {
+
   const classes = useStyles();
   return (
     <div className={classes.App}>
