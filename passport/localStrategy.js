@@ -1,6 +1,7 @@
 // var passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
+const sUser = require('../models/sessionUser');
  
 // const { User } = require('../models');
  
@@ -24,8 +25,8 @@ module.exports = (passport) => {
           
     passport.use(new LocalStrategy({
         usernameField: 'id',
-        passwordField: 'pw'
-        // passReqToCallback: true
+        passwordField: 'pw',
+        passReqToCallback: true
 /*        
         }, function(req, email, password, done) {
 
@@ -64,14 +65,28 @@ module.exports = (passport) => {
             // })
 */
         // }, async (email, password, done) => {
-        }, async (userid, password, done) => {
+    }, async (req, userid, password, done) => {
             // }, async (req, username, password, done) => {
-
+                console.log('(localStrategy.js) userid:', userid, 'password:', password);
 
             try {
                 console.log(userid, password);
+
+                /*
+                    2020.01.21 pdk ship 
+
+                    userid, password 로 DB를 검색하여 존재하는지에 따라 프로세스 처리
+                */
+                            
                 // const exUser = await User.find({ where: { email } });
                 const exUser = {userid, password}
+
+                sUser.provider = 'local';
+                sUser.userid = userid;
+                sUser.username = 'test',
+                sUser.displayName = 'test',
+                sUser.email = 'test@klnet.co.kr';
+                req.session.sUser = sUser;
 
                 // console.log(exUser);
                 if(exUser) {
@@ -100,6 +115,5 @@ module.exports = (passport) => {
                 console.error(error);
                 done(error);
             }
-        }
-    ));
+    }));
 };

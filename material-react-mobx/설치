@@ -41,3 +41,4 @@ mobx (기타)
 
 
 yarn add react-kakao-login
+yarn add kakaojs

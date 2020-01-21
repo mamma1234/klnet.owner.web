@@ -1,5 +1,5 @@
 const local = require('./localStrategy');
-// const kakao = require('./kakaoStrategy');
+const kakao = require('./kakaoStrategy');
 // const { User } = require('../models');
  
 module.exports = (passport) => {
@@ -15,5 +15,5 @@ module.exports = (passport) => {
     });
     
     local(passport);
-    // kakao(passport);
+    kakao(passport);
 };

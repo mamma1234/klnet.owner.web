@@ -89,6 +89,19 @@ export default function LoginPage(props) {
     })
   }
   
+  //  const kakao = () => {
+
+  //   axios.get("/auth/login/kakao", {id : loginId, pw : loginPw,})
+  //   .then(res => {
+  //       console.log(res);
+  //       if (res.data.message) alert(res.data.message);
+  //       else alert(res.data.userid + " 로그인 성공");
+  //   })
+  //   .catch(err => {
+  //       console.log(err);
+  //   })
+  // }
+  
 
   // const responseKakao = () => {
   //   // console.log(res);
@@ -194,6 +207,12 @@ export default function LoginPage(props) {
                     <Button simple color="primary" size="lg" onClick={login}>
                       login
                     </Button>
+                    {/* <Button simple color="primary" size="lg" onClick={kakao}>
+                      kakao
+                    </Button> */}
+                    <a href="https://kauth.kakao.com/oauth/authorize?client_id=0b6d98316119442e856dd2ad7497df14&redirect_uri=http://localhost:5000/auth/kakao/callback&response_type=code">카카오로그인</a>
+                    {/* <a href="https://kauth.kakao.com/oauth/authorize?client_id=0b6d98316119442e856dd2ad7497df14&redirect_uri=http://localhost:3000/login/callback&response_type=code">카카오로그인</a> */}
+                    {/* <a href="https://kapi.kakao.com/v1/user/logout">카카오로그아웃</a> */}
                   </CardFooter>
                 </form>
               </Card>

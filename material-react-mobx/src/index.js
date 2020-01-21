@@ -37,7 +37,6 @@ import nodeExpress from "./pages/nodeExpress.js";
 
 import Service from "layouts/Service.js";
 import Login from "views/LoginPage/LoginPage.js";
-import Kakaologin from "views/LoginPage/KakaoPage.js";
 import Landing from "views/LandingPage/LandingPage.js";
 
 const hist = createBrowserHistory();
@@ -49,7 +48,6 @@ ReactDOM.render(
         <Route path="/admin" component={Admin} />
         <Route path="/rtl" component={RTL} />
         <Route path="/login" component={Login} />
-        <Route path="/kakaologin" component={Kakaologin} />
         <Route path="/Landing" component={Landing} />
         <Route path="/mobx" component={Mobx} />
         <Route path="/home" component={Home} />

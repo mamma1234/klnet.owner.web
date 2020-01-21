@@ -1,5 +1,5 @@
 exports.isLoggedIn = (req, res, next) => {
-    console.log("isLoggedIn:req.isAuthenticated():".req.isAuthenticated());
+    console.log("(middlewares.js) isLoggedIn:req.isAuthenticated():".req.isAuthenticated());
     if(req.isAuthenticated()) {
         next();
     }
@@ -9,11 +9,19 @@ exports.isLoggedIn = (req, res, next) => {
 };
  
 exports.isNotLoggedIn = (req, res, next) => {
-    console.log("isNotLoggedIn:req.isAuthenticated():",req.isAuthenticated());
+    console.log("(middlewares.js) isNotLoggedIn:req.isAuthenticated():",req.isAuthenticated());
+    console.log("req.session.sUser:", req.session.sUser);
     if(!req.isAuthenticated()) {
         next();
     }
     else {
         res.redirect('/');
+        //next();
     }
+};
+
+
+exports.isLoggedPass = (req, res, next) => {
+    console.log("(middlewares.js) isLoggedPass:req.isAuthenticated():",req.isAuthenticated());
+    next();
 };

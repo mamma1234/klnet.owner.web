@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const bcrypt = require('bcrypt');
-const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
+const { isLoggedIn, isNotLoggedIn, isLoggedPass } = require('./middlewares');
  
 const router = express.Router();
 router.post('/join', isNotLoggedIn, async (req, res, next) => {
@@ -29,7 +29,7 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
 
 router.post('/login', isNotLoggedIn, (req, res, next) => {
     
-    console.log("req.isAuthenticated():", req.isAuthenticated());
+    console.log("(auth.js) req.isAuthenticated():", req.isAuthenticated());
     
     passport.authenticate('local', (authError, user, info) => {
         console.log("authError:",authError,",user:",user,",info:",info);
@@ -61,11 +61,45 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
 
 
 // kakao 로그인
-// router.get('/login/kakao',
-//   passport.authenticate('kakao')
-// );
+router.get('/login/kakao',
+  passport.authenticate('kakao')
+);
+
+router.get('/kakao/callback', isLoggedPass, (req, res, next) => {
+    
+    console.log("(auth.js) /kakao/callback:req.isAuthenticated():", req.isAuthenticated());
+    
+    passport.authenticate('kakao', (authError, user, info) => {
+        console.log("authError:",authError,",user:",user,",info:",info);
+        if(authError) {
+            console.error("authError", authError);
+            return next(authError);
+        }
+        if(!user){
+            console.log("!user", user);
+            // req.flash('loginError', info.message);
+            return res.redirect('http://localhost:3000/login');
+
+            // res.status(200).json(info);
+            // return;
+        }
+        return req.login(user, (loginError) => {
+            console.log("user", user);
+            if(loginError) {
+                console.error("loginError", loginError);
+                return next(loginError);
+            }
+            console.log("http://localhost:3000 redirect");
+            return res.redirect('http://localhost:3000');
+            // res.status(200).json(user);
+            // return;
+        });
+    })(req, res, next)  //미들웨어 내의 미들웨어에는 (req, res, next)를 붙인다.
+});
+
+
 // kakao 로그인 연동 콜백
-// router.get('/login/kakao/callback',
+// router.get('/kakao/callback',
 //   passport.authenticate('kakao', {
 //     successRedirect: '/',
 //     failureRedirect: '/login'

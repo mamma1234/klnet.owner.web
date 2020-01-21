@@ -26,8 +26,8 @@ const app = express();
 // sequelize.sync();
 passportConfig(passport);
 
-
-
+const sUser = require('./models/sessionUser');
+console.log("sUser:",sUser);
 
 app.set('views', path.join(__dirname, 'views')); //템플리트 엔진을 사용 1
 app.set('view engine', 'pug'); //템플리트 엔진을 사용 2
@@ -56,29 +56,56 @@ app.use(flash()); //connect-flash: 일회성 메시지들을 웹 브라우저에
 app.use(passport.initialize());
 app.use(passport.session());
 
+/*
+2020.01.21 pdk ship 개발 혹은 테스트 기간중 아래 세션 체크 로직 편의상 막아도 됨
 
 app.route(/^((?!\/auth\/|\/login).)*$/s).all(function(req, res, next) {    
 	var path = req.params[0];
-	console.log("path");
+	console.log("(server.js) path:",path);
+    // if (req.isAuthenticated !== undefined && req.isAuthenticated()){
+    if (req.isAuthenticated()){
+      console.log('로그인 정보 남아 있음.', req.session.sUser);
+      next();
+    } else {
+      var fullUrl = req.protocol + '://' + req.headers.host + req.originalUrl;
+      console.log( fullUrl );
+      console.log('로그인 정보 없음 예외 처리');
+      // console.log(req.headers.host);
+      // return res.redirect('http://' + req.headers.host + '/login/?redirect=' + fullUrl);
+      //return res.redirect('http://' + req.headers.host + '/login');
 
-	if ( req.session.user ) { 
-		console.dir( req.session.user );
-		console.log('로그인 정보 남아 있음.');
-		next();
-	} else {
-		var fullUrl = req.protocol + '://' + req.headers.host + req.originalUrl;
-		console.log( fullUrl );
-        console.log('로그인 정보 없음 예외 처리');
-        console.log(req.headers.host);
-        // return res.redirect('http://' + req.headers.host + '/login/?redirect=' + fullUrl);
-        //return res.redirect('http://' + req.headers.host + '/login');
+      // return;
+      // const err = new Error('Not Found');
+      // err.status = 404;
+      // next(err);
 
-        return;
-	}
+      // req.logout();
+      // req.session.destroy();
+      // res.redirect('/');   
+      // return res.redirect('http://' + req.headers.host + '/auth/');
+      // return res.redirect('/auth/logout');
+      // next('/auth/logout');
+      next('not login');
+    }
+
+	// if ( req.session.user ) { 
+	// 	console.dir( req.session.user );
+	// 	console.log('로그인 정보 남아 있음.');
+	// 	next();
+	// } else {
+	// 	var fullUrl = req.protocol + '://' + req.headers.host + req.originalUrl;
+	// 	console.log( fullUrl );
+  //       console.log('로그인 정보 없음 예외 처리');
+  //       console.log(req.headers.host);
+  //       // return res.redirect('http://' + req.headers.host + '/login/?redirect=' + fullUrl);
+  //       //return res.redirect('http://' + req.headers.host + '/login');
+
+  //       return;
+  // }
 })
-
-app.use('/', pageRouter);
+*/
 app.use('/auth', authRouter);
+app.use('/', pageRouter);
 
 app.use(bodyParser.json()); //요청의 본문을 해석해주는 미들웨어 1
 app.use(bodyParser.urlencoded({ extended: true })); //요청의 본문을 해석해주는 미들웨어 2
@@ -159,7 +186,7 @@ app.use((req, res, next) => {
     err.status = 404;
     next(err);
 });
- 
+
 app.use((err, req, res) => {
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};

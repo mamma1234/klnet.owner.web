@@ -17,6 +17,7 @@
     "d3-interpolate": "^1.4.0",
     "date-fns": "^2.8.1",
     "history": "4.9.0",
+    "kakaojs": "^1.2.0",
     "mobx": "^5.15.0",
     "mobx-react": "^6.1.4",
     "moment": "^2.24.0",
