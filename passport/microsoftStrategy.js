@@ -1,33 +1,18 @@
-const KakaoStrategy = require('passport-kakao').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const sUser = require('../models/sessionUser');
 // console.log("sUser:",sUser);
 
 module.exports = (passport) => {
 
-    // passport.use(new KakaoStrategy({
-    //     clientID: secret_config.federation.kakao.client_id,
-    //     callbackURL: '/auth/kakao/callback'
-    //   },
-    //   function (accessToken, refreshToken, profile, done) {
-    //     var _profile = profile._json;
-    
-    //     loginByThirdparty({
-    //       'auth_type': 'kakao',
-    //       'auth_id': _profile.id,
-    //       'auth_name': _profile.properties.nickname,
-    //       'auth_email': _profile.id
-    //     }, done);
-    //   }
-    // ));
-
-    passport.use(new KakaoStrategy({
-        clientID: '0b6d98316119442e856dd2ad7497df14', //process.env.KAKAO_ID,
-        clientSecret: 'JBzQybkhxoJrj464OwaYSKJQygc69dEw',
-        callbackURL: '/auth/kakao/callback',
+    passport.use(new GoogleStrategy({
+        clientID: 'ebaa5ed3-b264-463d-9131-d62097a32df1', //process.env.KAKAO_ID,
+        clientSecret: 'a1aa615f-1040-42e2-a905-dc12f8ebe4f2',
+        callbackURL: '/auth/microsoft/callback',
+        // profileFields: ['id', 'displayName', 'emails', 'birthday', 'friends', 'first_name', 'last_name', 'middle_name', 'gender', 'link'],
         passReqToCallback: true
     }, async (req, accessToken, refreshToken, profile, done) => {
         try {
-            console.log('(kakaoStrategy.js) profile:', profile, 'accessToken:', accessToken, 'refreshToken:', refreshToken);
+            console.log('(microsoftStrategy.js) profile:', profile, 'accessToken:', accessToken, 'refreshToken:', refreshToken);
             // const exUser = await User.find({ where: { snsId: profile.id, provider: 'kakao' } });
 
 
@@ -49,8 +34,8 @@ module.exports = (passport) => {
             const exUser = {userid, password}
 
 
-            sUser.provider = 'kakao';
-            sUser.email = profile._json.kakao_account.email; //mamma1234@naver.com
+            sUser.provider = 'microsoft';
+            sUser.email = profile.emails; //mamma1234@naver.com
             sUser.id = profile.id;  //1261001956
             sUser.username = profile.username
             sUser.displayName = profile.displayName       

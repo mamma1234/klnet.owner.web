@@ -1,5 +1,8 @@
 const local = require('./localStrategy');
 const kakao = require('./kakaoStrategy');
+const naver = require('./naverStrategy');
+const facebook = require('./facebookStrategy');
+const google = require('./googleStrategy');
 // const { User } = require('../models');
  
 module.exports = (passport) => {
@@ -16,4 +19,7 @@ module.exports = (passport) => {
     
     local(passport);
     kakao(passport);
+    naver(passport);
+    facebook(passport);
+    google(passport);
 };

@@ -131,6 +131,38 @@ router.get('/kakao/callback', isLoggedPass, (req, res, next) => {
 // );
 
 
+router.get('/naver/callback', isLoggedPass, (req, res, next) => {
+    
+    console.log("(auth.js) /naver/callback:req.isAuthenticated():", req.isAuthenticated());
+    
+    passport.authenticate('naver', (authError, user, info) => {
+        console.log("authError:",authError,",user:",user,",info:",info);
+        if(authError) {
+            console.error("authError", authError);
+            return next(authError);
+        }
+        if(!user){
+            console.log("!user", user);
+            // req.flash('loginError', info.message);
+            return res.redirect('http://localhost:3000/login');
+
+            // res.status(200).json(info);
+            // return;
+        }
+        return req.login(user, (loginError) => {
+            console.log("user", user);
+            if(loginError) {
+                console.error("loginError", loginError);
+                return next(loginError);
+            }
+            console.log("http://localhost:3000 redirect");
+            return res.redirect('http://localhost:3000');
+            // res.status(200).json(user);
+            // return;
+        });
+    })(req, res, next)  //미들웨어 내의 미들웨어에는 (req, res, next)를 붙인다.
+});
+
 // // facebook 로그인
 // router.get('/auth/login/facebook',
 //   passport.authenticate('facebook')
@@ -142,7 +174,135 @@ router.get('/kakao/callback', isLoggedPass, (req, res, next) => {
 //     failureRedirect: '/login'
 //   })
 // );
+router.get('/facebook/callback', isLoggedPass, (req, res, next) => {
+    
+    console.log("(auth.js) /facebook/callback:req.isAuthenticated():", req.isAuthenticated());
+    
+    passport.authenticate('facebook', (authError, user, info) => {
+        console.log("authError:",authError,",user:",user,",info:",info);
+        if(authError) {
+            console.error("authError", authError);
+            return next(authError);
+        }
+        if(!user){
+            console.log("!user", user);
+            // req.flash('loginError', info.message);
+            return res.redirect('http://localhost:3000/login');
 
+            // res.status(200).json(info);
+            // return;
+        }
+        return req.login(user, (loginError) => {
+            console.log("user", user);
+            if(loginError) {
+                console.error("loginError", loginError);
+                return next(loginError);
+            }
+            console.log("http://localhost:3000 redirect");
+            return res.redirect('http://localhost:3000');
+            // res.status(200).json(user);
+            // return;
+        });
+    })(req, res, next)  //미들웨어 내의 미들웨어에는 (req, res, next)를 붙인다.
+});
+
+router.get('/google/callback', isLoggedPass, (req, res, next) => {
+    
+    console.log("(auth.js) /google/callback:req.isAuthenticated():", req.isAuthenticated());
+    
+    passport.authenticate('google', (authError, user, info) => {
+        console.log("authError:",authError,",user:",user,",info:",info);
+        if(authError) {
+            console.error("authError", authError);
+            return next(authError);
+        }
+        if(!user){
+            console.log("!user", user);
+            // req.flash('loginError', info.message);
+            return res.redirect('http://localhost:3000/login');
+
+            // res.status(200).json(info);
+            // return;
+        }
+        return req.login(user, (loginError) => {
+            console.log("user", user);
+            if(loginError) {
+                console.error("loginError", loginError);
+                return next(loginError);
+            }
+            console.log("http://localhost:3000 redirect");
+            return res.redirect('http://localhost:3000');
+            // res.status(200).json(user);
+            // return;
+        });
+    })(req, res, next)  //미들웨어 내의 미들웨어에는 (req, res, next)를 붙인다.
+});
+
+
+router.get('/openbank/callback', isLoggedPass, (req, res, next) => {
+    
+    console.log("(auth.js) /openbank/callback:req.isAuthenticated():", req.isAuthenticated());
+    
+    passport.authenticate('openbank', (authError, user, info) => {
+        console.log("authError:",authError,",user:",user,",info:",info);
+        if(authError) {
+            console.error("authError", authError);
+            return next(authError);
+        }
+        if(!user){
+            console.log("!user", user);
+            // req.flash('loginError', info.message);
+            return res.redirect('http://localhost:3000/login');
+
+            // res.status(200).json(info);
+            // return;
+        }
+        return req.login(user, (loginError) => {
+            console.log("user", user);
+            if(loginError) {
+                console.error("loginError", loginError);
+                return next(loginError);
+            }
+            console.log("http://localhost:3000 redirect");
+            return res.redirect('http://localhost:3000');
+            // res.status(200).json(user);
+            // return;
+        });
+    })(req, res, next)  //미들웨어 내의 미들웨어에는 (req, res, next)를 붙인다.
+});
+
+
+router.get('/microsoft/callback', isLoggedPass, (req, res, next) => {
+    
+    console.log("(auth.js) /microsoft/callback:req.isAuthenticated():", req.isAuthenticated());
+    
+    passport.authenticate('microsoft', (authError, user, info) => {
+        console.log("authError:",authError,",user:",user,",info:",info);
+        if(authError) {
+            console.error("authError", authError);
+            return next(authError);
+        }
+        if(!user){
+            console.log("!user", user);
+            // req.flash('loginError', info.message);
+            return res.redirect('http://localhost:3000/login');
+
+            // res.status(200).json(info);
+            // return;
+        }
+        return req.login(user, (loginError) => {
+            console.log("user", user);
+            if(loginError) {
+                console.error("loginError", loginError);
+                return next(loginError);
+            }
+            console.log("http://localhost:3000 redirect");
+            return res.redirect('http://localhost:3000');
+            // res.status(200).json(user);
+            // return;
+        });
+    })(req, res, next)  //미들웨어 내의 미들웨어에는 (req, res, next)를 붙인다.
+});
 // router.post('/login', isNotLoggedIn, (req, res, next) => {
 //     passport.authenticate('local', (authError, user, info) => {
 //         if(authError) {

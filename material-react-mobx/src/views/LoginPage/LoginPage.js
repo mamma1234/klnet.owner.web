@@ -210,9 +210,15 @@ export default function LoginPage(props) {
                     {/* <Button simple color="primary" size="lg" onClick={kakao}>
                       kakao
                     </Button> */}
-                    <a href="https://kauth.kakao.com/oauth/authorize?client_id=0b6d98316119442e856dd2ad7497df14&redirect_uri=http://localhost:5000/auth/kakao/callback&response_type=code">카카오로그인</a>
+                    <a href="https://kauth.kakao.com/oauth/authorize?client_id=0b6d98316119442e856dd2ad7497df14&redirect_uri=http://localhost:5000/auth/kakao/callback&response_type=code&state=12345">카카오로그인</a>
                     {/* <a href="https://kauth.kakao.com/oauth/authorize?client_id=0b6d98316119442e856dd2ad7497df14&redirect_uri=http://localhost:3000/login/callback&response_type=code">카카오로그인</a> */}
                     {/* <a href="https://kapi.kakao.com/v1/user/logout">카카오로그아웃</a> */}
+                    <pre>  </pre>
+                    <a href="https://nid.naver.com/oauth2.0/authorize?client_id=5vSPppBEGLWEwMT8p9kZ&redirect_uri=http://localhost:5000/auth/naver/callback&response_type=code&state=12345">네이버로그인</a>
+                    <pre>  </pre>
+                    <a href="https://www.facebook.com/v5.0/dialog/oauth?client_id=184064786168643&redirect_uri=http://localhost:5000/auth/facebook/callback&response_type=code&state=12345">페이스북로그인</a>
+                    <pre>  </pre>
+                    <a href="https://accounts.google.com/o/oauth2/v2/auth?client_id=684197542136-kkba8s7e8a1l6pnqdio46vgdgkfkhsmn.apps.googleusercontent.com&redirect_uri=http://localhost:5000/auth/google/callback&response_type=code&scope=profile&state=12345">구글로그인</a>
                   </CardFooter>
                 </form>
               </Card>
