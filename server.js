@@ -131,33 +131,6 @@ app.use(bodyParser.urlencoded({ extended: true })); //요청의 본문을 해석
 
 
 
-
-/*
-passport.use(new LocalStrategy({
-    usernameField: 'id', //'username',
-    passwordField: 'pw', //'password',
-    passReqToCallback: true //인증을 수행하는 인증 함수로 HTTP request를 그대로  전달할지 여부를 결정한다
-  }, function (req, username, password, done) {
-    console.log(username, password);
-    // if(username === 'user001' && password === 'password'){
-    if(username === 'admin' && password === 'admin00'){
-      return done(null, {
-        'user_id': username,
-      });
-    }else{
-      return done(false, null)
-    }
-  }));
-*/
-/*
-app.post('/login', passport.authenticate('local', {failureRedirect: '/loginfail', failureFlash: true}), // 인증 실패 시 401 리턴, {} -> 인증 스트레티지
-    function (req, res) {
-        console.log('local login true');
-    // res.redirect('/home');
-    // res.status(200).json("ok login");
-  });
-*/
-
 app.get("/pg/getTestSimple", dao.postgresql.getTestSimple);
 app.get("/pg/getTestQuerySample", dao.postgresql.getTestQuerySample);
 app.get("/pg/getTestQueryParamSample", dao.postgresql.getTestQueryParamSample);

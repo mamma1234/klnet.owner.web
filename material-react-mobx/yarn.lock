@@ -6795,11 +6795,6 @@ just-debounce@^1.0.0:
   resolved "https://registry.yarnpkg.com/just-debounce/-/just-debounce-1.0.0.tgz#87fccfaeffc0b68cd19d55f6722943f929ea35ea"
   integrity sha1-h/zPrv/AtozRnVX2cilD+SnqNeo=
 
-kakaojs@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/kakaojs/-/kakaojs-1.2.0.tgz#45e591df622b727495fc0976ce130b5ba540aaec"
-  integrity sha1-ReWR32IrcnSV/Al2zhMLW6VAquw=
-
 keycode@^2.1.7:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/keycode/-/keycode-2.2.0.tgz#3d0af56dc7b8b8e5cba8d0a97f107204eec22b04"
@@ -9428,11 +9423,6 @@ react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.4:
   version "16.11.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.11.0.tgz#b85dfecd48ad1ce469ff558a882ca8e8313928fa"
   integrity sha512-gbBVYR2p8mnriqAwWx9LbuUrShnAuSCNnuPGyc7GJrMVQtPDAh8iLpv7FRuMPFb56KkaVZIYSz1PrjI9q0QPCw==
-
-react-kakao-login@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/react-kakao-login/-/react-kakao-login-1.2.0.tgz#3c54f432ac9ea4214f817e00f678bae63a463f22"
-  integrity sha512-InisI33rdggQMWehc4UYxkCnb9l9EWQ0sHOa8tJAZ8ep19FOlrfhw/iZMRnoNPl5qHHnH8oRDi+9TQxBYYccQA==
 
 react-mobx@^0.0.4:
   version "0.0.4"
