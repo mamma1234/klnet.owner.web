@@ -23,6 +23,8 @@ yarn add cookie-parser cookie-session express-session morgan connect-flash pug
 yarn add dotenv
 
 yarn add passport passport-local passport-facebook passport-kakao passport-naver passport-google-oauth20
+
+yarn add passport-daum-oauth2 passport-twitter-oauth2 passport-cognito-oauth2 passport-instagram passport-linkedin-oauth2
 */
 
 /*
