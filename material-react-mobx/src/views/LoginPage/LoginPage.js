@@ -21,7 +21,11 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 
 import styles from "assets/jss/material-kit-react/views/loginPage.js";
 
-
+import localimage from 'assets/img/local.png';
+import naverimage from 'assets/img/naver.png';
+import facebookimage from 'assets/img/facebook.png';
+import kakaoimage from 'assets/img/kakao.png';
+import googleimage from 'assets/img/google.png';
 
 import image from "assets/img/bg2.jpg";
 import axios from 'axios';
@@ -204,21 +208,25 @@ export default function LoginPage(props) {
                     />
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
-                    <Button simple color="primary" size="lg" onClick={login}>
-                      login
-                    </Button>
+                    <a href="#" onClick={login}>
+                      <img src={localimage} alt="로그인 버튼" width="222" height="49"></img></a>                    
                     {/* <Button simple color="primary" size="lg" onClick={kakao}>
                       kakao
                     </Button> */}
-                    <a href="https://kauth.kakao.com/oauth/authorize?client_id=0b6d98316119442e856dd2ad7497df14&redirect_uri=http://localhost:5000/auth/kakao/callback&response_type=code&state=12345">카카오로그인</a>
+                    <pre>  </pre>
+                    <a href="https://kauth.kakao.com/oauth/authorize?client_id=0b6d98316119442e856dd2ad7497df14&redirect_uri=http://localhost:5000/auth/kakao/callback&response_type=code&state=12345">
+                      <img src={kakaoimage} alt="카카오 로그인 버튼" width="222" height="49"></img></a>
                     {/* <a href="https://kauth.kakao.com/oauth/authorize?client_id=0b6d98316119442e856dd2ad7497df14&redirect_uri=http://localhost:3000/login/callback&response_type=code">카카오로그인</a> */}
                     {/* <a href="https://kapi.kakao.com/v1/user/logout">카카오로그아웃</a> */}
                     <pre>  </pre>
-                    <a href="https://nid.naver.com/oauth2.0/authorize?client_id=5vSPppBEGLWEwMT8p9kZ&redirect_uri=http://localhost:5000/auth/naver/callback&response_type=code&state=12345">네이버로그인</a>
+                    <a href="https://nid.naver.com/oauth2.0/authorize?client_id=5vSPppBEGLWEwMT8p9kZ&redirect_uri=http://localhost:5000/auth/naver/callback&response_type=code&state=12345">
+                      <img src={naverimage} border="0" title="네이버 아이디로 로그인" width="226.625px" height="49px"></img></a>
                     <pre>  </pre>
-                    <a href="https://www.facebook.com/v5.0/dialog/oauth?client_id=184064786168643&redirect_uri=http://localhost:5000/auth/facebook/callback&response_type=code&state=12345">페이스북로그인</a>
+                    <a href="https://www.facebook.com/v5.0/dialog/oauth?client_id=184064786168643&redirect_uri=http://localhost:5000/auth/facebook/callback&response_type=code&state=12345">
+                      <img src={facebookimage} alt="페이스북 로그인 버튼" width="245" height="105"></img></a>
                     <pre>  </pre>
-                    <a href="https://accounts.google.com/o/oauth2/v2/auth?client_id=684197542136-kkba8s7e8a1l6pnqdio46vgdgkfkhsmn.apps.googleusercontent.com&redirect_uri=http://localhost:5000/auth/google/callback&response_type=code&scope=profile&state=12345">구글로그인</a>
+                    <a href="https://accounts.google.com/o/oauth2/v2/auth?client_id=684197542136-kkba8s7e8a1l6pnqdio46vgdgkfkhsmn.apps.googleusercontent.com&redirect_uri=http://localhost:5000/auth/google/callback&response_type=code&scope=profile&state=12345">
+                      <img src={googleimage} alt="구글 로그인 버튼" width="222" height="49"></img></a>
                   </CardFooter>
                 </form>
               </Card>
