@@ -10,6 +10,7 @@ import { Alert,AlertTitle } from '@material-ui/lab';
 import MButton from '@material-ui/core/Button';
 import BackupIcon from "@material-ui/icons/Backup";
 import StarIcon from "@material-ui/icons/Stars";
+import SettingIcon from "@material-ui/icons/Settings";
 import MapIcon from "@material-ui/icons/Map";
 import FormControl from "@material-ui/core/FormControl";
 import Icon from "@material-ui/core/Icon";
@@ -30,6 +31,10 @@ import CardIcon from "components/Card/CardIcon.js";
 import axios from 'axios';
 import moment from 'moment';
 import ScheduleToggleTable from "views/Schedule/ScheduleDetailTable.js";
+import Blupload from "views/Tracking/Blupload/Blupload.js";
+import HotSet from "views/Tracking/HotSet/HotSet.js";
+import Map from "views/Tracking/Map/Map.js";
+import Setting from "views/Tracking/Setting/Setting.js";
 
 
 const styles = {
@@ -74,16 +79,16 @@ const styles = {
 	    }
 	  },
   gridcss: {
-	paddingTop:15,
+	textAlign: "center",  
+	paddingTop:20,
 	marginLeft: 'auto',
+	fullWidth: true
   },
   buttoncss: {
 	  fullHight: true,
 	  fullWidth: true
   },
-  calendarcss: {
-	  width:200,
-  },
+
 };
 
 const useStyles = makeStyles(styles);
@@ -106,6 +111,7 @@ export default function ScheduleList() {
   const [anchorE1, setAnchorE1] = useState(null);
   const [anchorE2, setAnchorE2] = useState(null);
   const [anchorE3, setAnchorE3] = useState(null);
+  //const [anchorE4, setAnchorE4] = useState(null);
 
   
   
@@ -162,26 +168,26 @@ export default function ScheduleList() {
 	  setAnchorE1(null);
 	  setAnchorE2(null);
 	  setAnchorE3(null);
+	  //setAnchorE4(null);
   }
   
   const open_bl = Boolean(anchorE1);
   const open_hot = Boolean(anchorE2);
   const open_map = Boolean(anchorE3);
+  //const open_set = Boolean(anchorE4);
   const id_bl = open_bl ? 'simple-popover1':undefined;
   const id_hot = open_hot ? 'simple-popover2':undefined;
   const id_map = open_map ? 'simple-popover3':undefined;
+  //const id_set = open_set ? 'simple-popover4':undefined;
   
   const classes = useStyles();
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
         <Card>
-        <CardHeader color="warning" stats icon>
-	        <CardIcon color="warning">
-	        <Icon>content_copy</Icon>
-	      </CardIcon>
-        <h4 className={classes.cardTitleBlack}>Tacking Service</h4>
-        <p className={classes.cardTitleBlack}>
+        <CardHeader color="warning">
+        <h4 className={classes.cardTitleWhite}>Tacking Service</h4>
+        <p className={classes.cardCategoryWhite}>
           Here is a subtitle for this table
         </p>
       </CardHeader>
@@ -231,7 +237,7 @@ export default function ScheduleList() {
 						      		</GridContainer>
 					        	</GridItem>
 					      		<GridItem xs={12} sm={5}>
-						        	<GridContainer>
+						        	<GridContainer spacing={1}>
 							        	<GridItem xs={12} sm={12} md={6}>
 				      						<Autocomplete
 							        			options = {portData}
@@ -256,12 +262,11 @@ export default function ScheduleList() {
 							        			)}
 						      				/>
 					      				</GridItem>
-			      						
 					      			</GridContainer>
 					      		</GridItem>
 					        	<GridItem xs={12} sm={7}>
 					      			<GridContainer>
-						      			<GridItem xs={12} sm={12} md={6}>
+						      			<GridItem xs={12} sm={12} md={5}>
 			      						<CustomInput
 						        			labelText="BL No."
 						        			id="blNo"
@@ -269,7 +274,7 @@ export default function ScheduleList() {
 						        			formControlProps={{fullWidth: true}}
 			      						/>
 					      			</GridItem>
-				      				<GridItem xs={12} sm={12} md={6}>
+				      				<GridItem xs={12} sm={12} md={7}>
 					      				<CustomInput
 						        			labelText="Vessel Name"
 						        			id="vesselName"
@@ -278,74 +283,95 @@ export default function ScheduleList() {
 					      				/>
 				      				</GridItem>
 						      		</GridContainer>
-					      		</GridItem>
+					      		</GridItem>	
 					      		<Grid className={classes.gridcss}>
 				      			<Grid container spacing={1}>
-			  						<Grid item xs={12}>
-			      						<MButton
-			      							variant="contained"
-			      							//color="primary"
-			      							size="small"
-			      							//style={{}}
-			      							startIcon={<BackupIcon/>}
-			      							onClick={e=>setAnchorE1(e.currentTarget)}
-			      						 >BL Upload
-			      						 </MButton>
-			      			            <Popover
+									<Grid item>
+			    						<MButton
+			    							variant="contained"
+			    							//color="primary"
+			    							size="small"
+			    							style={{lineHeight:"1",}}
+			    							startIcon={<BackupIcon/>}
+			    							onClick={e=>setAnchorE1(e.currentTarget)}
+			    						 >BL Upload
+			    						 </MButton>
+			    			            <Popover
 				      		            	id={id_bl}
 				      		            	open={open_bl}
 				      		            	anchorEl={anchorE1}
 				      		            	onClose={handleClose}
 				      		            	anchorOrigin={{vertical:'bottom',horizontal:'center',}}
 				      		            	transformOrigin={{vertical:'top',horizontal:'center',}}
-			      			            >BL Upload PopUp
-			      			            </Popover>
-			      			            &nbsp;&nbsp;
-			      						<MButton
-			    							variant="contained"
-			    							//color="primary"
-			    							size="small"
-			    							startIcon={<StarIcon/>}
+			    			            ><Blupload/>
+			    			            </Popover>
+			    			            &nbsp;&nbsp;
+			    						<MButton
+			  							variant="contained"
+			  							//color="primary"
+			  							size="small"
+			  							style={{lineHeight:"1",}}
+			  							startIcon={<StarIcon/>}
 				      						onClick={e=>setAnchorE2(e.currentTarget)}
 				    					>Star
-			    						</MButton>
-			    						<Popover
+			  						</MButton>
+			  						<Popover
 				      		            	id={id_hot}
 				      		            	open={open_hot}
 				      		            	anchorEl={anchorE2}
 				      		            	onClose={handleClose}
 				      		            	anchorOrigin={{vertical:'bottom',horizontal:'center',}}
 				      		            	transformOrigin={{vertical:'top',horizontal:'center',}}
-			    						>Hot Star Add
-		      			            </Popover>
-		      			            &nbsp;&nbsp;
-			    						<MButton
+			  						><HotSet/>
+						            </Popover>
+						            &nbsp;&nbsp;
+			  						<MButton
 											variant="contained"
 											//color="primary"
 											size="small"
+											style={{lineHeight:"1",}}
 											startIcon={<MapIcon/>}
 				    						onClick={e=>setAnchorE3(e.currentTarget)}
-			    						>Map
-			    						</MButton>
-			    						<Popover
+			  						>Map
+			  						</MButton>
+			  						<Popover
 				      		            	id={id_map}
 				      		            	open={open_map}
 				      		            	anchorEl={anchorE3}
 				      		            	onClose={handleClose}
 				      		            	anchorOrigin={{vertical:'bottom',horizontal:'center',}}
 				      		            	transformOrigin={{vertical:'top',horizontal:'center',}}
-			    						>Map Add
-	      			            </Popover>
-			    					</Grid>
+			  						><Map/>
+			  						</Popover>
+{/*			  						&nbsp;&nbsp;
+			  						<MButton
+											variant="contained"
+											//color="primary"
+											size="small"
+											style={{lineHeight:"1",}}
+											startIcon={<SettingIcon/>}
+				    						onClick={e=>setAnchorE4(e.currentTarget)}
+			  						>SETTING
+			  						</MButton>
+			  						<Popover
+				      		            	id={id_set}
+				      		            	open={open_set}
+				      		            	anchorEl={anchorE4}
+				      		            	onClose={handleClose}
+				      		            	anchorOrigin={{vertical:'bottom',horizontal:'center',}}
+				      		            	transformOrigin={{vertical:'top',horizontal:'center',}}
+			  						><Setting/>
+			  						</Popover>*/}
+			  					</Grid>
 					      		</Grid>
 					      </Grid>
 				        	 </GridContainer>
 			        	 </GridItem>
 			        	<GridItem xs={12} sm={12} md>
-			        		<Button onClick = {onSubmit} fullWidth>Search</Button>
+			        		<Button color="warning" onClick = {onSubmit} fullWidth>Search</Button>
 			        	</GridItem>
 		        	</GridContainer>
-		          </GridItem> 
+		          </GridItem>
           		</CardHeader>
           		<CardBody>
           			<GridContainer>
