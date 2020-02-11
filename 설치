@@ -37,3 +37,11 @@ yarn add bcrypt
 */
 
 
+
+/*
+docker build -t klnet.owner.node .
+docker build -t klnet.owner.web .
+
+docker run -p 5000:5000 -d klnet.owner.node
+docker run -p 3000:3000 -d klnet.owner.web
+*/

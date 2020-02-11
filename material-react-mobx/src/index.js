@@ -39,6 +39,7 @@ import Service from "layouts/Service.js";
 import ServiceUser from "layouts/Service_user.js";
 import Login from "views/LoginPage/LoginPage.js";
 import Landing from "views/LandingPage/LandingPage.js";
+import CntrList from "views/Tracking/CntrList.js";
 
 const hist = createBrowserHistory();
 
@@ -48,6 +49,7 @@ ReactDOM.render(
       <Switch>
         <Route path="/admin" component={Admin} />
         <Route path="/own" component={ServiceUser} />
+        <Route path="/cntrlist" component={CntrList} />
         <Route path="/rtl" component={RTL} />
         <Route path="/login" component={Login} />
         <Route path="/Landing" component={Landing} />

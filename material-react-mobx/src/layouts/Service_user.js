@@ -35,7 +35,7 @@ const switchRoutes = (
       }
       return null;
     })}
-    <Redirect from="/own" to="/own/fcl_schedule" />
+    <Redirect from="/own" to="/own/tracking" />
   </Switch>
 );
 
@@ -123,14 +123,7 @@ export default function Service({ ...rest }) {
           <div className={classes.map}>{switchRoutes}</div>
         )}
         {getRoute() ? <Footer /> : null}
-        {  <FixedPlugin
-	          handleImageClick={handleImageClick}
-	          handleColorClick={handleColorClick}
-	          bgColor={color}
-	          bgImage={image}
-	          handleFixedClick={handleFixedClick}
-	          fixedClasses={fixedClasses}
-        /> }
+        {   }
       </div>
     </div>
   );

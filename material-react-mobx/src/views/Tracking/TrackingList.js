@@ -7,7 +7,6 @@ import Select from '@material-ui/core/Select';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import { Alert,AlertTitle } from '@material-ui/lab';
-import MButton from '@material-ui/core/Button';
 import BackupIcon from "@material-ui/icons/Backup";
 import StarIcon from "@material-ui/icons/Stars";
 import SettingIcon from "@material-ui/icons/Settings";
@@ -18,7 +17,7 @@ import Popover from  '@material-ui/core/Popover';
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
+//import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -30,11 +29,11 @@ import CardIcon from "components/Card/CardIcon.js";
 // other import
 import axios from 'axios';
 import moment from 'moment';
-import ScheduleToggleTable from "views/Schedule/ScheduleDetailTable.js";
-import Blupload from "views/Tracking/Blupload/Blupload.js";
+import Table from "views/Tracking/TrackingDetail.js";
+import Blupload from "views/Tracking/Blupload/Upload.js";
 import HotSet from "views/Tracking/HotSet/HotSet.js";
 import Map from "views/Tracking/Map/Map.js";
-import Setting from "views/Tracking/Setting/Setting.js";
+import FixedPlugin from "views/Tracking/Setting/CustomFixedPlugin.js";
 
 
 const styles = {
@@ -79,7 +78,7 @@ const styles = {
 	    }
 	  },
   gridcss: {
-	textAlign: "center",  
+	textAlignLast:'right',
 	paddingTop:20,
 	marginLeft: 'auto',
 	fullWidth: true
@@ -112,8 +111,21 @@ export default function ScheduleList() {
   const [anchorE2, setAnchorE2] = useState(null);
   const [anchorE3, setAnchorE3] = useState(null);
   //const [anchorE4, setAnchorE4] = useState(null);
-
+  const [fixedClasses, setFixedClasses] = React.useState("dropdown");
+  const [viewVlaue, setViewVlaue] = React.useState("list");
   
+  
+  const handleViewClick = () => {
+	  console.log("event3: 시작");
+  }
+  
+  const handleFixedClick = () => {
+	    if (fixedClasses === "dropdown") {
+	      setFixedClasses("dropdown show");
+	    } else {
+	      setFixedClasses("dropdown");
+	    }
+	  };
   
   useEffect(() => {
 	    console.log('effect');
@@ -192,8 +204,8 @@ export default function ScheduleList() {
         </p>
       </CardHeader>
           <CardBody>
-          	<Card>
-          		<CardHeader>
+          	<Card style={{marginTop:'5px',marginBottom:'5px'}}>
+          		<CardHeader style={{paddingBottom:'1px',paddingRight:'1px',paddingLeft:'1px'}}>
 		          <GridItem xs>
 			      	<GridContainer>
 			      		<GridItem xs={12} sm={9} md={10}>
@@ -219,7 +231,7 @@ export default function ScheduleList() {
 									      				format="yyyy-MM-dd"
 									      				setValue={fromDate}
 									        			onChangeValue={date => setFromDate(date)}
-									        			formControlProps={{fullWidth: true}}
+									        			formControlProps={{fullWidth: true}} 
 								      				/>
 								      			</GridItem>
 							      				<GridItem xs={12} sm={12} md={6}>
@@ -284,87 +296,7 @@ export default function ScheduleList() {
 				      				</GridItem>
 						      		</GridContainer>
 					      		</GridItem>	
-					      		<Grid className={classes.gridcss}>
-				      			<Grid container spacing={1}>
-									<Grid item>
-			    						<MButton
-			    							variant="contained"
-			    							//color="primary"
-			    							size="small"
-			    							style={{lineHeight:"1",}}
-			    							startIcon={<BackupIcon/>}
-			    							onClick={e=>setAnchorE1(e.currentTarget)}
-			    						 >BL Upload
-			    						 </MButton>
-			    			            <Popover
-				      		            	id={id_bl}
-				      		            	open={open_bl}
-				      		            	anchorEl={anchorE1}
-				      		            	onClose={handleClose}
-				      		            	anchorOrigin={{vertical:'bottom',horizontal:'center',}}
-				      		            	transformOrigin={{vertical:'top',horizontal:'center',}}
-			    			            ><Blupload/>
-			    			            </Popover>
-			    			            &nbsp;&nbsp;
-			    						<MButton
-			  							variant="contained"
-			  							//color="primary"
-			  							size="small"
-			  							style={{lineHeight:"1",}}
-			  							startIcon={<StarIcon/>}
-				      						onClick={e=>setAnchorE2(e.currentTarget)}
-				    					>Star
-			  						</MButton>
-			  						<Popover
-				      		            	id={id_hot}
-				      		            	open={open_hot}
-				      		            	anchorEl={anchorE2}
-				      		            	onClose={handleClose}
-				      		            	anchorOrigin={{vertical:'bottom',horizontal:'center',}}
-				      		            	transformOrigin={{vertical:'top',horizontal:'center',}}
-			  						><HotSet/>
-						            </Popover>
-						            &nbsp;&nbsp;
-			  						<MButton
-											variant="contained"
-											//color="primary"
-											size="small"
-											style={{lineHeight:"1",}}
-											startIcon={<MapIcon/>}
-				    						onClick={e=>setAnchorE3(e.currentTarget)}
-			  						>Map
-			  						</MButton>
-			  						<Popover
-				      		            	id={id_map}
-				      		            	open={open_map}
-				      		            	anchorEl={anchorE3}
-				      		            	onClose={handleClose}
-				      		            	anchorOrigin={{vertical:'bottom',horizontal:'center',}}
-				      		            	transformOrigin={{vertical:'top',horizontal:'center',}}
-			  						><Map/>
-			  						</Popover>
-{/*			  						&nbsp;&nbsp;
-			  						<MButton
-											variant="contained"
-											//color="primary"
-											size="small"
-											style={{lineHeight:"1",}}
-											startIcon={<SettingIcon/>}
-				    						onClick={e=>setAnchorE4(e.currentTarget)}
-			  						>SETTING
-			  						</MButton>
-			  						<Popover
-				      		            	id={id_set}
-				      		            	open={open_set}
-				      		            	anchorEl={anchorE4}
-				      		            	onClose={handleClose}
-				      		            	anchorOrigin={{vertical:'bottom',horizontal:'center',}}
-				      		            	transformOrigin={{vertical:'top',horizontal:'center',}}
-			  						><Setting/>
-			  						</Popover>*/}
-			  					</Grid>
-					      		</Grid>
-					      </Grid>
+					      		
 				        	 </GridContainer>
 			        	 </GridItem>
 			        	<GridItem xs={12} sm={12} md>
@@ -372,17 +304,94 @@ export default function ScheduleList() {
 			        	</GridItem>
 		        	</GridContainer>
 		          </GridItem>
+		          <GridItem style={{textAlignLast:'right'}}>
+  						<Button
+  							variant="contained"
+  							color="warning"
+  							size="sm"
+  							startIcon={<BackupIcon/>}
+  							onClick={e=>setAnchorE1(e.currentTarget)}
+  						 >BL Upload
+  						 </Button>
+  			            <Popover
+	      		            	id={id_bl}
+	      		            	open={open_bl}
+	      		            	anchorEl={anchorE1}
+	      		            	onClose={handleClose}
+  			            		anchorReference="anchorPosition"
+  			            		anchorPosition={{top:100,left:650}}
+	      		            	anchorOrigin={{vertical:'bottom',horizontal:'center',}}
+	      		            	transformOrigin={{vertical:'top',horizontal:'center',}}
+  			            ><Blupload/>
+  			            </Popover>
+  			            &nbsp;&nbsp;
+  						<Button
+	  							variant="contained"
+	  	  						color="warning"
+	  	    					size="sm"
+	  							startIcon={<StarIcon/>}
+	      						onClick={e=>setAnchorE2(e.currentTarget)}
+	    					>Star
+						</Button>
+						<Popover
+	      		            	id={id_hot}
+	      		            	open={open_hot}
+	      		            	anchorEl={anchorE2}
+	      		            	onClose={handleClose}
+								anchorReference="anchorPosition"
+								anchorPosition={{top:300,left:450}}
+	      		            	anchorOrigin={{vertical:'bottom',horizontal:'center',}}
+	      		            	transformOrigin={{vertical:'top',horizontal:'center',}}
+						><HotSet/>
+			            </Popover>
+			            &nbsp;&nbsp;
+						<Button
+								variant="contained"
+		  						color="warning"
+		  	  					size="sm"
+								startIcon={<MapIcon/>}
+	    						onClick={e=>setAnchorE3(e.currentTarget)}
+						>Map
+						</Button>
+						<Popover
+	      		            	id={id_map}
+	      		            	open={open_map}
+	      		            	anchorEl={anchorE3}
+	      		            	onClose={handleClose}
+		            			anchorReference="anchorPosition"
+  			            		anchorPosition={{top:100,left:650}}
+	      		            	anchorOrigin={{vertical:'bottom',horizontal:'center',}}
+	      		            	transformOrigin={{vertical:'top',horizontal:'center',}}
+						><Map/>
+						</Popover>
+		      </GridItem>
           		</CardHeader>
-          		<CardBody>
+          		<CardBody style={{padding:'3px'}}>
           			<GridContainer>
           				<GridItem xs={12}>
-          					<ScheduleToggleTable
-		                        //tableHeaderColor="primary"
-		                        tableHead={["BL No", "HOT", "I/E", "CARRIER", "VESSEL/VOYAGE","CURRENT","POL/ETD","POD/ETA"]}
-		                        tableData={scheduleData}
+          					<Table
+		                        tableHeaderColor="warning"
+		                        tableHead={["BL No", "HOT", "I/E", "CARRIER", "VESSEL/VOYAGE","CURRENT","POL/ETD","POD/ETA","ACTION"]}
+	          					tableData={[
+	    				            ["SNKO000000001", "Y", "E", "SNKO","KOREAREAD ER40W","입항","KRPUS 2020-01-29","KRINC 2020-01-29"],
+	    				            ["SNKO000000001", "Y", "E", "SNKO","KOREAREAD ER40W","입항","KRPUS 2020-01-29","KRINC 2020-01-29"],
+	    				            ["SNKO000000001", "Y", "E", "SNKO","KOREAREAD ER40W","입항","KRPUS 2020-01-29","KRINC 2020-01-29"],
+	    				            ["SNKO000000001", "Y", "E", "SNKO","KOREAREAD ER40W","입항","KRPUS 2020-01-29","KRINC 2020-01-29"],
+	    				            ["SNKO000000001", "Y", "E", "SNKO","KOREAREAD ER40W","입항","KRPUS 2020-01-29","KRINC 2020-01-29"],
+	    				            ["SNKO000000001", "Y", "E", "SNKO","KOREAREAD ER40W","입항","KRPUS 2020-01-29","KRINC 2020-01-29"]
+	    				          ]}
 		                     /> 
 		                </GridItem>
 		            </GridContainer>
+		            <FixedPlugin
+			          //handleImageClick={handleImageClick}
+			          //handleColorClick={handleColorClick}
+			          //bgColor={color}
+			          //bgImage={image}
+		              handleViewClick={handleViewClick}
+			          handleFixedClick={handleFixedClick}
+			          fixedClasses={fixedClasses}
+		        />
           		</CardBody>
           	</Card>
           </CardBody>

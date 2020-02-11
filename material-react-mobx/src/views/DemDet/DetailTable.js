@@ -1,8 +1,9 @@
-import React from "react";
+import React,{ useState, useEffect } from "react";
 
 import PropTypes from "prop-types";
 // @material-ui/core components
 import { makeStyles,useTheme } from "@material-ui/core/styles";
+import Checkbox from "@material-ui/core/Checkbox";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
@@ -15,6 +16,9 @@ import FirstPageIcon from "@material-ui/icons/FirstPage";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
+import GridItem from "components/Grid/GridItem.js";
+import GridContainer from "components/Grid/GridContainer.js";
+import MButton from '@material-ui/core/Button';
 
 // core components
 import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
@@ -113,6 +117,7 @@ export default function ToggleTable(props) {
   const [page,setPage] = React.useState(0);
   const [rowsPerPage,setRowsPerPage] = React.useState(5);
   console.log(tableData);
+  console.log(props);
   
   const emptyRows = rowsPerPage - Math.min(rowsPerPage,tableData.length - page * rowsPerPage);
   
@@ -151,6 +156,7 @@ export default function ToggleTable(props) {
                     <TableRows key={key} index={key + 1} data={prop} />
                   );
                 })}
+                
            
         </TableBody>
         {(tableData.length >= 5 ?
@@ -158,7 +164,7 @@ export default function ToggleTable(props) {
         	<TableRow>
         		<TablePagination 
         			rowsPerPageOptions={[5,10,15,{label:'All',value:-1}]}
-        			colSpan={5}
+        			colSpan={9}
         			count={tableData.length}
         		    rowsPerPage={rowsPerPage}
         			page={page}
@@ -196,13 +202,13 @@ ToggleTable.propTypes = {
 
 
  class TableRows extends React.Component {
-  state = { expanded: false , port: []};
+  state = { tarrifExpanded: false , cntrExpanded: false, list: []};
 
   componentDidMount() {
-	    this.scheduleToSearch();
+	    //this.scheduleToSearch();
 	  }
   
-  // 테이블 조회
+  // ���̺� ��ȸ
   scheduleToSearch = () => {
 
     return axios ({
@@ -214,55 +220,105 @@ ToggleTable.propTypes = {
 			   voyage : this.props.data.VOYAGE_NO,
 			   vesselName : this.props.data.VESSEL_NAME
 			   }
-	}).then(response => this.setState({port:response.data }));
+	}).then(response => this.setState({list:response.data }));
     
   }
  
-  // 로우 생성
-  toggleExpander = () => {
-    if (!this.state.expanded) {
-      this.setState({ expanded: true }, () => {
-        if (this.refs.expanderBody) {
-          slideDown(this.refs.expanderBody);
-        }
-      });
-    } else {
-      slideUp(this.refs.expanderBody, {
-        onComplete: () => {
-          this.setState({ expanded: false });
-        }
-      });
-    }
+  // �ο� ���� 
+  toggleExpander = (id,col) => {
+    return(event) => {
 
+      console.log(col);
+      this.setState({ tarrifExpanded: false });
+      this.setState({ cntrExpanded: false });
+
+      if (col=="LINE_CODE") {
+        if (!this.state.tarrifExpanded) {
+          this.setState({ tarrifExpanded: true }, () => {
+            if (this.refs.expandTarrif) {slideDown(this.refs.expandTarrif);}
+          });
+        } else {
+          slideUp(this.refs.expandTarrif, {onComplete: () => {this.setState({ tarrifExpanded: false });}});
+        }
+      } else if (col=="CNTR_NO") {
+        if (!this.state.cntrExpanded) {
+          this.setState({ cntrExpanded: true }, () => {
+            if (this.refs.expandCntr) {slideDown(this.refs.expandCntr);}
+          });
+        } else {
+          slideUp(this.refs.expandCntr, {onComplete: () => {this.setState({ cntrExpanded: false });}});
+        }
+      }
+
+      
+      
+    }
   };
+
+
   
   render() {
     //const { data } = this.props;
-     const { port } = this.state;
+     const { list } = this.state;
      let point =0;
-     
-     port.map((data, index) => {
-     if (data[3] == "Y") {
+
+
+     list.map((data, index) => {
+     if (data[3] == "Y") { 
     	 point = index;
      	}
      	});
-
+    
     return [
-      <TableRow  key={this.props.index} onClick={this.toggleExpander} >
-        <TableCell >{this.props.data.LINE_CODE}</TableCell>
-        <TableCell >{this.props.data.VESSEL_NAME}</TableCell>
-        <TableCell >{this.props.data.VOYAGE_NO}</TableCell>
-        <TableCell >{this.props.data.START_PORT} ({this.props.data.START_DAY})</TableCell>
-        <TableCell >{this.props.data.END_PORT} ({this.props.data.END_DAY})</TableCell>
+      <TableRow  key={this.props.index}  >
+        <TableCell >
+          <Checkbox
+          value="secondary"
+          color="primary"
+          inputProps={{ 'aria-label': 'secondary checkbox' }}
+          />
+        </TableCell>
+        <TableCell onClick={this.toggleExpander(this.props.data.id,"LINE_CODE")}>{this.props.data.LINE_CODE}</TableCell>
+        <TableCell onClick={this.toggleExpander(this.props.data.id,"CNTR_NO")}>{this.props.data.CNTR_NO}</TableCell>
+        <TableCell >{this.props.data.DET}</TableCell>
+        <TableCell >{this.props.data.DEM}</TableCell> 
+        <TableCell >{this.props.data.COMBINE}</TableCell>
+        <TableCell >{this.props.data.STORAGE}</TableCell>
+        <TableCell >{this.props.data.REMARK}</TableCell>
+        <TableCell >
+          <MButton
+            variant="contained"
+            //color="primary"
+            size="small"
+            style={{lineHeight:"1",}}
+            //startIcon={<CancelIcon/>}
+            onClick={null}
+          >DO신청
+          </MButton>
+        </TableCell>
       </TableRow>,
-      this.state.expanded && (
+      this.state.tarrifExpanded && (
+        
+
+            <div ref="expandTarrif"> 
+           <Table
+              tableHeaderColor="primary"
+              tableHead={["1","2"]}
+              tableData={["1","2"]}
+            />
+            </div>
+
+        
+      ),
+      this.state.cntrExpanded && (
         <TableRow key = {this.props.index+1}>
-          <TableCell colSpan={5}>
-            <div ref="expanderBody"> 
-	          <Stepper 
-	          	stepData ={port}
-	            active ={point}
-	          />  
+          <TableCell colSpan={9}>
+            <div ref="expandCntr"> 
+            <GridContainer>
+              <GridItem xs={12} sm={2}>
+                규격
+              </GridItem>
+            </GridContainer>
             </div>
           </TableCell>
         </TableRow>

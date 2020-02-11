@@ -55,16 +55,16 @@ export default function Footer(props) {
           </List>
           <p className={classes.left}>
           <span>
-          고객지원센터 157701172 (06264) 서울시 강남구 역삼로 153 케이엘넷 빌딩<br/>
+          고객지원센터 1577-1172 (06264) 서울시 강남구 역삼로 153 케이엘넷 빌딩<br/>
           &copy; {1900 + new Date().getYear()}{" "}
           <a
-            href="https://www.creative-tim.com?ref=mdr-footer"
+            href="https://www.klnet.co.kr"
             target="_blank"
             className={classes.a}
           >
-            KL-Net
+            KL-Net &nbsp;
             </a>
-            	,Ltd. All Rigths Reserved.
+            	Co.,Ltd. All Rigths Reserved.
           	</span>
           </p>
         </div>

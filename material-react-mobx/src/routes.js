@@ -39,6 +39,7 @@ import RTLPage from "views/RTLPage/RTLPage.js";
 import iconDirectionsBoat from "@material-ui/icons/DirectionsBoat";
 import SchedulePage from "views/Schedule/Schedule.js";
 import FCLSchedulePage from "views/Schedule/FclScheduleList.js";
+import DemDet from "views/DemDet/DemDetList.js";
 import MapTrackingPage from "views/MapTracking/MapTracking.js";
 import iconRouter from "@material-ui/icons/Router";
 import Calendar from "views/Calendar/Calendar.js";
@@ -69,6 +70,14 @@ const dashboardRoutes = [
 	    component: FCLSchedulePage,
 	    layout: "/own"
   },
+  {
+    path: "/demdet",
+    name: "DEM/DET",
+    rtlName: "DEM/DET",
+    icon: ScheduleIcon,
+    component: DemDet,
+    layout: "/own"
+},
   {
     path: "/maps-tracking",
     name: "Ship Tracking",

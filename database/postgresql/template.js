@@ -1,9 +1,11 @@
 'use strict';
 
 const pgsqlPool = require("../pool.js").pgsqlPool
-
+const basicauth = require("basic-auth");
 const getTestSimple = (request, response) => {
-    response.send([
+
+    response.send(
+      [
         {
             "rownum": 1,
             "shipper_code": 'LGE',
@@ -28,7 +30,8 @@ const getTestSimple = (request, response) => {
             "actual_gubun": 'DUMMY',
             "ship_req_date": '2020-11-19'
         }
-    ]);
+    ]
+  );
 }
 
 const getTestQuerySample = (request, response) => {
@@ -85,7 +88,7 @@ const getSnkMasterList = (request, response) => {
         sql += " where 1=1 "
         sql += " and web_seq like '"+ search_date+"%'"
         bl_no == "" ? sql += "" : sql += " and bl_no= '"+bl_no +"'";
-
+    
     pgsqlPool.connect(function(err,client,done) {
       if(err){
         console.log("err" + err);
@@ -107,7 +110,6 @@ const getSnkMasterList = (request, response) => {
   const getKmdMasterList = (request, response) => {
     const bl_no = request.body.bl_no
     const search_date = request.body.search_date
-
     let sql = "SELECT web_seq, line_code, bl_no, booking_no, cntr_no, cntr_trace FROM own_web_master_kmd "
         sql += " where 1=1 "
         sql += " and web_seq like '"+ search_date+"%'"
@@ -133,7 +135,6 @@ const getSnkMasterList = (request, response) => {
   const getYmlMasterList = (request, response) => {
     const bl_no = request.body.bl_no
     const search_date = request.body.search_date
-
     let sql = "SELECT web_seq, line_code, bl_no, cntr_no, recipient, loading, discharge, delivery, vessel, voyage_no, no_of_packages, on_board_date, gross_cargo_weight, no_of_containsers, measurement, service_requirement, cntr_size, cntr_type, seal_no, move_type, date_time, latest_event, place, vgm FROM own_web_master_yml "
           sql += " where 1=1 "
           sql += " and web_seq like '"+ search_date+"%'"
@@ -215,8 +216,80 @@ const getSnkMasterList = (request, response) => {
 
 	        // conn.release();
 	    });
-	}
+  }
+  
 
+
+  const getPortLocation = (request, response) => {
+    const portCode = request.body.portCode;
+    if (portCode == undefined) {
+      response.set('parameter','error');
+      response.status(400).send();
+      return;
+    }
+    console.log(request.body,portCode);
+    let idx = 0;
+    let sql = "SELECT terminal, terminal_kname, terminal_ename, wgs84_x, wgs84_y FROM own_terminal_info "
+        sql += " where 1=1 ";
+    portCode == "" ? sql +="" : 
+    
+    portCode.forEach(element => {
+      console.log(idx)
+      if (idx == 0) {
+        sql+= "and terminal = '" + element +"' ";
+      }else{
+        sql+= "or terminal = '" + element +"' ";
+      }
+      idx++;
+    });
+    
+        
+    console.log("query == ",sql);    
+    pgsqlPool.connect(function(err,client,done) {
+      if(err){
+        console.log("err" + err);
+        response.status(400).send(err);
+      }
+      client.query(sql, function(err,result){
+        done();
+        if(err){
+          console.log(err);
+          response.status(400).send(err);
+        }
+        response.status(200).send(result.rows);
+      });
+  
+    });
+  
+  }
+
+
+
+
+  const getPort = (request, response) => {
+    let sql = "SELECT terminal, terminal_kname, terminal_ename, float8(wgs84_x) as wgs84_x, float8(wgs84_y) as wgs84_y FROM own_terminal_info "
+        sql += " where 1=1 ";
+    
+        
+    console.log("query == ",sql);    
+    pgsqlPool.connect(function(err,client,done) {
+      if(err){
+        console.log("err" + err);
+        response.status(400).send(err);
+      }
+      client.query(sql, function(err,result){
+        done();
+        if(err){
+          console.log(err);
+          response.status(400).send(err);
+        }
+        console.log(result.rows);
+        response.status(200).send(result.rows);
+      });
+  
+    });
+  
+  }  
 module.exports = {
     getTestSimple,
     getTestQuerySample,
@@ -226,4 +299,6 @@ module.exports = {
     getKmdMasterList,
     getYmlMasterList,
     getUserInfoSample,
+    getPortLocation,
+    getPort,
 }

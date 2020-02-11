@@ -1,0 +1,356 @@
+
+  
+
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
+security:
+  basicAuth: []
+
+tags:
+  - name: pg
+    description: "pgsql 관련"
+  - name: api
+    description: "api 관련"
+  - name: ora
+    description: "orcla 관련"
+
+paths:
+  /pg/getTestSimple:
+    get:
+      summary: test
+      description: getTestSimple
+      tags: [pg]
+      security:
+        - basicAuth: []
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: integer
+                  id:
+                    type: integer  
+        "401":
+          description: UnauthorizedError
+          $ref: "#/definitions/UnauthorizedError"
+      default:
+        description: Error
+
+
+  /pg/getPortLocation:
+    post:
+      summary: GET PORTCODE LOCATION
+      tags: [pg]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/MultiportCode'
+ 
+      responses:
+        200:
+          description: OK
+        default:
+          description: Error
+ 
+  /pg/getTestQuerySample:
+    get:
+      summary: test
+      tags: [pg]
+      responses:
+        200:
+          description: OK
+        default:
+          description: Error
+
+  /pg/getTestQueryParamSample:
+    get:
+      summary: test
+      tags: [pg]
+      parameters:
+        - name: line_code
+          in: query
+          description: Line
+          type: string
+        - name: ts_yn
+          in: query
+          description: TS
+          type: list
+      responses:
+        200:
+          description: OK
+        default:
+          description: Error
+
+
+  /pg/getTestQueryAttibuteSample:
+    post:
+      summary: test
+      tags: [pg]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/SimpleModels'
+      responses:
+        200:
+          description: OK
+        default:
+          description: Error
+          
+  /api/getUserInfoSample:
+    post:
+      summary: test
+      tags: [api]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/UserInfo'
+              
+      responses:
+        200:
+          description: OK
+        default:
+          description: Error
+
+  /ora/getTestQueryAttibuteSample:
+    post:
+      summary: test
+      tags: [ora]
+      parameters:
+        name: userId
+        in: query
+        description: number of records to skip for pagination
+        type: string
+      responses:
+        200:
+          description: OK
+        default:
+          description: Error
+    
+  /api/snkMasterList:
+    post:
+      summary: SNK GET BL LIST
+      tags: [api]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/getBL'     
+      responses:
+        200:
+          description: OK
+        default:
+          description: Error
+
+  /api/kmdMasterList:
+    post:
+      summary: KMD GET BL LIST
+      tags: [api]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/definitions/getBL'
+
+            example:
+              bl_no: SNKO02A181200512
+              search_date: 20200205              
+      responses:
+        200:
+          description: OK
+        default:
+          description: Error
+
+
+  /api/ymlMasterList:
+    post:
+      summary: YML GET BL LIST
+      tags: [api]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/getBL'
+      responses:
+        200:
+          description: OK
+        default:
+          description: Error
+
+
+
+
+  /api/getCarrierInfo:
+    post:
+      summary: Get Carrier
+      tags: [api]
+      responses:
+        200:
+          description: OK
+        default:
+          description: Error
+
+  
+
+  /api/getScheduleList:
+    post:
+      summary: SchduleList
+      tags: [api]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Getschedule'
+      responses:
+        200:
+          description: OK
+        default:
+          description: Error
+
+
+  /api/getPortCodeInfo:
+    post:
+      summary: Port Info
+      tags: [api]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/SingleportCode'
+      responses:
+        200:
+          description:
+        default:
+          description: Error
+  
+  /api/getScheduleDetailList:
+    post:
+      summary: GET SCHEDULE DETAIL
+      tags: [api]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/GetscheduleDetail'
+      responses:
+        200:
+          description: OK
+        default:
+          description: Error
+
+  
+
+
+          # complex objects have schema definitions
+definitions:
+
+  getBL:
+    type: object
+    required:
+      - bl_no
+    properties:
+      bl_no:
+        type: string
+      search_date:
+        type: string
+  
+  UserInfo:
+    type: object
+    properties:
+      id:
+        type: string
+      pw:
+        type: string
+
+  SimpleModels:
+    type: object
+    properties:
+      param1:
+        type: string
+      param2:
+        type: string
+
+  Getschedule:
+    type: object
+    properties:
+      carrierCode:
+        type: string
+      startPort:
+        type: string
+      endPort:
+        type: string
+      startDate:
+        type: string
+        description: Start date
+        format: date
+        example: '20200203'
+        pattern: "YYYYMMDD"
+        minLength: 8
+        maxLength: 8
+      endDate:
+        type: string
+        description: End date
+        format: date
+        example: '20200203'
+        pattern: "YYYYMMDD"
+        minLength: 8
+        maxLength: 8
+      vesselName:
+        type: string
+
+  GetscheduleDetail:
+    type: object
+    properties:
+      carrierCode:
+        type: string
+      vesselName:
+        type: string
+      voyage:
+        type: string
+      startPort:
+        type: string
+      endPort:
+        type: string
+
+  SingleportCode:
+    type: object
+    properties:
+      portCode:
+        type: string
+
+  MultiportCode:
+    type: object
+    properties:
+      portCode:
+        type: array
+        items:
+          type: string
+            
+  
+  UnauthorizedError:
+    description: API key is missing or invalid
+    headers:
+      username:
+        schema:
+          type: string
+
+        description: AuthUserId
+      password:
+        schema:
+          type: string
+        description: AuthPassword

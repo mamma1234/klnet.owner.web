@@ -27,8 +27,15 @@ import facebookimage from 'assets/img/facebook.png';
 import kakaoimage from 'assets/img/kakao.png';
 import googleimage from 'assets/img/google.png';
 
+import GoogleIcon from 'assets/img/sns/google.png';
+import FaceIcon from 'assets/img/sns/face.png';
+import KakaoIcon from 'assets/img/sns/kakao.png';
+import NaverIcon from 'assets/img/sns/naver.png';
+
 import image from "assets/img/bg2.jpg";
 import axios from 'axios';
+
+import Link from '@material-ui/core/Link';
 
 const useStyles = makeStyles(styles);
 
@@ -62,8 +69,8 @@ export default function LoginPage(props) {
 
 	  componentDidMount(loginId,loginPw);
 
-	 if (check == "Y") {
-		 window.location.href = "/admin/dashboard";
+	 if (check != "Y") {
+		 window.location.href = "/own/tracking";
 	 } else {
 		 alert("로그인 정보를 확인해 주세요.");
 	 }  
@@ -142,30 +149,39 @@ export default function LoginPage(props) {
                     <div className={classes.socialLine}>
                       <Button
                         justIcon
-                        href="#pablo"
+                        href="https://kauth.kakao.com/oauth/authorize?client_id=0b6d98316119442e856dd2ad7497df14&redirect_uri=http://localhost:5000/auth/kakao/callback&response_type=code&state=12345"
                         target="_blank"
                         color="transparent"
                         onClick={e => e.preventDefault()}
                       >
-                        <i className={"fab fa-twitter"} />
-                      </Button>
+                      <img src={KakaoIcon} alt="카카오SNS" width="41" height="41"></img>
+                      </Button>&nbsp;&nbsp;
                       <Button
                         justIcon
-                        href="#pablo"
+                        href="https://nid.naver.com/oauth2.0/authorize?client_id=5vSPppBEGLWEwMT8p9kZ&redirect_uri=http://localhost:5000/auth/naver/callback&response_type=code&state=12345"
                         target="_blank"
                         color="transparent"
                         onClick={e => e.preventDefault()}
                       >
-                        <i className={"fab fa-facebook"} />
-                      </Button>
+                      <img src={NaverIcon} alt="네이버SNS" width="41" height="41"></img>
+                      </Button>&nbsp;&nbsp;
                       <Button
                         justIcon
-                        href="#pablo"
+                        href="https://www.facebook.com/v5.0/dialog/oauth?client_id=184064786168643&redirect_uri=http://localhost:5000/auth/facebook/callback&response_type=code&state=12345"
                         target="_blank"
                         color="transparent"
                         onClick={e => e.preventDefault()}
                       >
-                        <i className={"fab fa-google-plus-g"} />
+                      <img src={FaceIcon} alt="페이스북SNS" width="41" height="41"></img>
+                      </Button>&nbsp;&nbsp;
+                      <Button
+	                      justIcon
+	                      href="https://accounts.google.com/o/oauth2/v2/auth?client_id=684197542136-kkba8s7e8a1l6pnqdio46vgdgkfkhsmn.apps.googleusercontent.com&redirect_uri=http://localhost:5000/auth/google/callback&response_type=code&scope=profile&state=12345"
+	                      target="_blank"
+	                      color="transparent"
+	                      onClick={e => e.preventDefault()}
+                      >
+                      <img src={GoogleIcon} alt="구글SNS" width="41" height="41"></img>
                       </Button>
                     </div>
                   </CardHeader>
@@ -208,26 +224,34 @@ export default function LoginPage(props) {
                     />
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
-                    <a href="#" onClick={login}>
-                      <img src={localimage} alt="로그인 버튼" width="222" height="49"></img></a>                    
-                    {/* <Button simple color="primary" size="lg" onClick={kakao}>
-                      kakao
+                  
+		             <Button color="primary" size="lg" onClick={handleClick}>
+		               Get started
+		             </Button>
+                  {/*<a href="#" onClick={login}>
+                   {/*   <img src={localimage} alt="로그인 버튼" width="222" height="49"></img></a>  
+                      
+                     <Button simple color="primary" size="lg" onClick={kakao}>*/}
+                  {/*   kakao
                     </Button> */}
                     <pre>  </pre>
-                    <a href="https://kauth.kakao.com/oauth/authorize?client_id=0b6d98316119442e856dd2ad7497df14&redirect_uri=http://localhost:5000/auth/kakao/callback&response_type=code&state=12345">
-                      <img src={kakaoimage} alt="카카오 로그인 버튼" width="222" height="49"></img></a>
+                    {/*<a href="https://kauth.kakao.com/oauth/authorize?client_id=0b6d98316119442e856dd2ad7497df14&redirect_uri=http://localhost:5000/auth/kakao/callback&response_type=code&state=12345">*/}
+                    {/*  <img src={kakaoimage} alt="카카오 로그인 버튼" width="222" height="49"></img></a>*/}
                     {/* <a href="https://kauth.kakao.com/oauth/authorize?client_id=0b6d98316119442e856dd2ad7497df14&redirect_uri=http://localhost:3000/login/callback&response_type=code">카카오로그인</a> */}
                     {/* <a href="https://kapi.kakao.com/v1/user/logout">카카오로그아웃</a> */}
-                    <pre>  </pre>
-                    <a href="https://nid.naver.com/oauth2.0/authorize?client_id=5vSPppBEGLWEwMT8p9kZ&redirect_uri=http://localhost:5000/auth/naver/callback&response_type=code&state=12345">
+                    {/*<pre>  </pre>
+                    {/*<a href="https://nid.naver.com/oauth2.0/authorize?client_id=5vSPppBEGLWEwMT8p9kZ&redirect_uri=http://localhost:5000/auth/naver/callback&response_type=code&state=12345">
                       <img src={naverimage} border="0" title="네이버 아이디로 로그인" width="226.625px" height="49px"></img></a>
                     <pre>  </pre>
                     <a href="https://www.facebook.com/v5.0/dialog/oauth?client_id=184064786168643&redirect_uri=http://localhost:5000/auth/facebook/callback&response_type=code&state=12345">
                       <img src={facebookimage} alt="페이스북 로그인 버튼" width="245" height="105"></img></a>
                     <pre>  </pre>
                     <a href="https://accounts.google.com/o/oauth2/v2/auth?client_id=684197542136-kkba8s7e8a1l6pnqdio46vgdgkfkhsmn.apps.googleusercontent.com&redirect_uri=http://localhost:5000/auth/google/callback&response_type=code&scope=profile&state=12345">
-                      <img src={googleimage} alt="구글 로그인 버튼" width="222" height="49"></img></a>
+                      <img src={googleimage} alt="구글 로그인 버튼" width="222" height="49"></img></a>*/}
                   </CardFooter>
+		          <CardFooter>
+         			New Here? <Link to="/own/register">Create an account</Link>
+         			</CardFooter>
                 </form>
               </Card>
             </GridItem>

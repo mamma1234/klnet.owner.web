@@ -47,136 +47,40 @@ const getTrackingList = (request, response) => {
 }
 
 
-const getCarrierInfo = (request, response) => {
-	const sql = "SELECT A.line_code ,'['||A.LINE_CODE||'] '||B.CNAME_KR AS line_name "
-        +" FROM TCS_ESHIP_CONFIG A,TCS_COMP_HEADER_TBL B"
-	      +" WHERE A.KLNET_ID = B.KLNET_ID(+)"
-        +" ORDER BY A.LINE_CODE ASC";
-
-    oraclePool.getConnection(function(err,conn,done) {
-        if(err){
-            console.log("err" + err);
-            response.status(400).send(err);
-        }
-
-        conn.execute(sql,{},{outFormat:oraclePool.OBJECT},(error, results) => {
-            if (error) {
-                response.status(400).json({ "error": error.message });
-                return;
-            }
-
-            // console.log(results.json);
-            // console.log(results);
-            // response.send(results.rows);
-            response.status(200).json(results.rows);
-            conn.close();
-            
-        });
-        // conn.release();
-    });
-}
-
-const getScheduleList = (request, response) => {
-	console.log(">>>>>>log");
-	console.log (">>PARAM1:"+request.body.carrierCode);
-	console.log (">>PARAM2:"+request.body.startPort);
-	console.log (">>PARAM3:"+request.body.endPort);
-	console.log (">>PARAM4:"+request.body.startDate);
-	console.log (">>PARAM5:"+request.body.endDate);
-	console.log (">>PARAM6:"+request.body.vesselName);
-	
-	let sql = "SELECT SCH.VESSEL_NAME,SCH.VOYAGE_SID,SCH.VOYAGE_NO,SCH.LINE_CODE,SCH.PORT_CODE as START_PORT,PORT.PORT_CODE as END_PORT "
-            + ",TO_CHAR(TO_DATE(SCH.ETD||SCH.ETD_TIME,'YYYYMMDDHH24MI'),'YYYY-MM-DD')AS START_DAY"
-            + ",TO_CHAR(TO_DATE(PORT.ETA,'YYYYMMDDHH24MI'),'YYYY-MM-DD') AS END_DAY "
-            + "FROM MFEDI.TCS_VSL_SCH@mfedi_real SCH,MFEDI.TCS_VSL_SCH_PORT@mfedi_real PORT"
-            + " WHERE SCH.VOYAGE_SID = PORT.VOYAGE_SID "
-	        + " AND SCH.LINE_CODE NOT IN ('CKC','DIF') ";
-            if(request.body.carrierCode != "") {
-            	sql= sql + "AND SCH.LINE_CODE ='"+request.body.carrierCode+"'";	
-            }
-            
-            sql = sql+" AND SCH.ETD >= '"+request.body.startDate+"' "
-            + "AND PORT.ETA <= '"+request.body.endDate+"'"
-            + "AND SCH.PORT_CODE ='"+request.body.startPort+"' "
-            + "AND PORT.PORT_CODE = '"+request.body.endPort+"' "
-            + "AND PORT.ROUTE_SEQ = (SELECT MIN(X.ROUTE_SEQ) FROM MFEDI.TCS_VSL_SCH_PORT X WHERE X.VOYAGE_SID = SCH.VOYAGE_SID AND SCH.ETD <= X.ETA AND X.PORT_CODE=  '"+request.body.endPort+"') ";
-            if(request.body.vesselName != "") {
-            	sql = sql + "AND SCH.VESSEL_NAME LIKE '%"+request.body.vesselName+"%' ";	
-            }
-            sql = sql+ "AND SCH.IO_FLAG = 'O' "
-            + "ORDER BY SCH.ETD";
-            
-            console.log ("query:" +sql);
-
-    oraclePool.getConnection(function(err,conn,done) {
-        if(err){
-            console.log("err" + err);
-            response.status(400).send(err);
-        }
-
-        conn.execute(sql,{},{outFormat:oraclePool.OBJECT},(error, results) => {
-            if (error) {
-                response.status(400).json({ "error": error.message });
-                return;
-            }
-
-            // console.log(results.json);
-            // console.log(results);
-            // response.send(results.rows);
-            response.status(200).json(results.rows);
-            conn.close();
-        });
-        // conn.release();
-    });
-}
-
-
-
-
-const getPortCodeInfo = (request, response) => {
+const getHotInfo = (request, response) => {
 	  let sql = "";
-	  const portCode=request.body.portCode.substr(0,3);
-	console.log("입력Keyword:"+portCode);
+	  //const portCode=request.body.portCode.substr(0,3);
+	  //console.log("입력Keyword:"+portCode);
 
-	    sql = "SELECT P.PORT_CODE,P.PORT_NAME FROM MFEDI.CODE_PORT P"
-		      +",MFEDI. TCS_CODE_PORT A "
-		      +" WHERE P.PORT_CODE = A.ISO_PORT"
-		      +" AND (P.PORT_CODE LIKE '%"+portCode+"%' or P.PORT_NAME LIKE '%"+portCode+"%')"
-		      +" AND NVL(P.PORT_TYPE,' ') LIKE (CASE WHEN P.NATION_CODE = 'KR' THEN 'P' ELSE '%%' END)"
-		      +" AND P.PORT_NAME IS NOT NULL"
-		      +" AND A.LINE_CODE IN ( SELECT LINE_CODE FROM MFEDI.TCS_ESHIP_CONFIG)"
-		      +" GROUP BY P.PORT_CODE,P.PORT_NAME";
+	    sql = "select SEQ,VESSEL_NAME,IE_TYPE,POL,POD from CNEDI.OWN_HOT_VESSEL_SET ";
 	    
 	    console.log("쿼리:"+sql);
 
-    oraclePool.getConnection(function(err,conn,done) {
-        if(err){
-            console.log("err" + err);
-            response.status(400).send(err);
-        }
+  oraclePool.getConnection(function(err,conn,done) {
+      if(err){
+          console.log("err" + err);
+          response.status(400).send(err);
+      }
 
-        conn.execute(sql,{},{outFormat:oraclePool.OBJECT},(error, results) => {
-            if (error) {
-                response.status(400).json({ "error": error.message });
-                return;
-            }
+      conn.execute(sql,{},{outFormat:oraclePool.OBJECT},(error, results) => {
+          if (error) {
+              response.status(400).json({ "error": error.message });
+              return;
+          }
 
-            // console.log(results.json);
-            // console.log(results.rows);
-            // response.send(results.rows);
-    
-            response.status(200).json(results.rows);
-            conn.close();
-            
-        });
-        // conn.release();
-    });
+          // console.log(results.json);
+          // console.log(results.rows);
+          // response.send(results.rows);
+  
+          response.status(200).json(results.rows);
+          conn.close();
+          
+      });
+      // conn.release();
+  });
 }
 
 
 module.exports = {
-	    getCarrierInfo,
-	    getScheduleList,
-	    getPortCodeInfo,
-	    getScheduleDetailList,
+	    getHotInfo,
 	}

@@ -35,7 +35,7 @@ export default function LandingPage() {
       <Header
         color="transparent"
         routes={dashboardRoutes}
-        brand="Plism +"
+        brand="Plism+"
         rightLinks={<HeaderLinks />}
         fixed
         changeColorOnScroll={{
@@ -43,7 +43,7 @@ export default function LandingPage() {
           color: "white"
         }}
       />
-      <Parallax filter image={require("assets/img/landing-bg.jpg")}>
+      <Parallax filter image={require("images/main.jpg")}>
         <div className={classes.container}>
           <GridContainer>
             <GridItem xs={12} sm={12} md={6}>
@@ -70,9 +70,11 @@ export default function LandingPage() {
       </Parallax>
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div className={classes.container}>
+          {/*
           <ProductSection />
           <TeamSection />
           <WorkSection />
+          */}
         </div>
       </div>
       <Footer />
