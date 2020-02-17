@@ -5,6 +5,7 @@
     "client": "cd material-react-mobx && yarn start",
     "server": "nodemon server.js",
     "server1": "node server.js",
+    "cluster": "nodemon cluster.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },
   "dependencies": {
