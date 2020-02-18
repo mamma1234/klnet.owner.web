@@ -42,6 +42,18 @@ yarn add bcrypt
 docker build -t klnet.owner.node .
 docker build -t klnet.owner.web .
 
-docker run -p 5000:5000 -d klnet.owner.node
-docker run -p 3000:3000 -d klnet.owner.web
+docker run -p 5000:5000 -d klnet.owner.node --name server
+docker run -p 80:3000 -d klnet.owner.web
+
+docker run -p 80:80 -d klnet.owner.web --link practical_lovelace
+
+docker run -p 80:80 -d klnet.owner.web
+
+docker logs -f 
+
+
+docker run -d --name "server" -p 5000:5000 klnet.owner.node
+docker run -d --name "client" -p 80:80 --link server klnet.owner.web 
+
+
 */

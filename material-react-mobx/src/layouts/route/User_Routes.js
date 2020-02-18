@@ -5,6 +5,8 @@ import LocalAirportIcon from "@material-ui/icons/LocalAirport";
 import TrackingPage from 'views/Tracking/TrackingList.js';
 import DemDetPage from 'views/DemDet/DemDetList.js';
 import DemDetIcon from "@material-ui/icons/NotificationImportant";
+import ScrapIcon from '@material-ui/icons/Description';
+import ScrapSchedule from "views/WebScrap/WebScrap.js";
 
 
 
@@ -25,7 +27,15 @@ const serviceRoutes = [
 		icon: DemDetIcon,
 		component: DemDetPage,
 		layout: "/own"
-  },
+	  },
+	  {
+			path: "/scrap_sch",
+			name: "Web Scrap Schedule",
+			rtlName: "WebScrap",
+			icon: ScrapIcon,
+			component: ScrapSchedule,
+			layout: "/own"
+		  },
 ];
 
 export default serviceRoutes;

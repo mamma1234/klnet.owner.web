@@ -16,8 +16,11 @@ import DraftsIcon from "@material-ui/icons/Drafts";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ScheduleIcon from "@material-ui/icons/WatchLater";
+import LocationIcon from "@material-ui/icons/Map";
 // core components
 import AdminNavbarLinks from "components/Navbars/AdminNavbarLinks.js";
+
 import RTLNavbarLinks from "components/Navbars/RTLNavbarLinks.js";
 
 import styles from "assets/jss/material-dashboard-react/components/sidebarStyle.js";
@@ -32,21 +35,27 @@ export default function Sidebar(props) {
   }
   const { color, logo, image, logoText, routes } = props;
   const [open,setOpen] = React.useState(true);
+  const [scheduleopen,setScheduleopen] = React.useState(false);
   const handleClick = () => {
 	  setOpen(!open);
+  }
+  
+  const scheduleHandleClick = () => {
+	  setScheduleopen(!scheduleopen);
   }
   
   var links = (
     <List className={classes.list}>
 	<ListItem button onClick={handleClick}>
 		<ListItemIcon className={classes.itemIcon}>
-			<DraftsIcon />
+			<LocationIcon />
 		</ListItemIcon>
-		<ListItemText primary ="LOCATION INFO" className={classes.whiteFont}/>
+		<ListItemText primary ="LOCATION" className={classes.whiteFont}/>
 			{open ? <ExpandLess className={classes.itemIcon} />:<ExpandMore className={classes.itemIcon} />}
-		</ListItem>
+	</ListItem>
 		<Collapse in={open} timeout="auto" unmountOnExit>
-	      {routes.map((prop, key) => {
+	      {routes.map((prop, key) => { 
+	    	if(prop.path == "/tracking" || prop.path == "/demDet" ) {
 	        var activePro = " ";
 	        var listItemClasses;
 	        if (prop.path === "/upgrade-to-pro") {
@@ -69,7 +78,7 @@ export default function Sidebar(props) {
 	            activeClassName="active"
 	            key={key}
 	          >
-	            <ListItem button className={classes.itemLink + listItemClasses}>
+	            <ListItem button className={classes.itemLink + listItemClasses} onClick={e=>setScheduleopen(false)}>
 	              {typeof prop.icon === "string" ? (
 	                <Icon
 	                  className={classNames(classes.itemIcon, whiteFontClasses, {
@@ -95,7 +104,67 @@ export default function Sidebar(props) {
 	            </ListItem>
 	          </NavLink>
 	        );
-	      })}
+	      }})}
+		</Collapse>
+		<ListItem button onClick={scheduleHandleClick}>
+		<ListItemIcon className={classes.itemIcon}>
+			<ScheduleIcon />
+		</ListItemIcon>
+		<ListItemText primary ="SCHEDULE" className={classes.whiteFont}/>
+		{scheduleopen ? <ExpandLess className={classes.itemIcon} />:<ExpandMore className={classes.itemIcon} />}
+		</ListItem>
+		<Collapse in={scheduleopen} timeout="auto" unmountOnExit>
+	      {routes.map((prop, key) => { 
+	    	if(prop.path != "/tracking" && prop.path != "/demDet" ) {
+	        var activePro = " ";
+	        var listItemClasses;
+	        if (prop.path === "/upgrade-to-pro") {
+	          activePro = classes.activePro + " ";
+	          listItemClasses = classNames({
+	            [" " + classes[color]]: true
+	          });
+	        } else {
+	          listItemClasses = classNames({
+	            [" " + classes[color]]: activeRoute(prop.layout + prop.path)
+	          });
+	        }
+	        const whiteFontClasses = classNames({
+	          [" " + classes.whiteFont]: activeRoute(prop.layout + prop.path)
+	        });
+	        return (
+	          <NavLink
+	            to={prop.layout + prop.path}
+	            className={activePro + classes.item}
+	            activeClassName="active"
+	            key={key}
+	          >
+	            <ListItem button className={classes.itemLink + listItemClasses} onClick={e=>setOpen(false)}>
+	              {typeof prop.icon === "string" ? (
+	                <Icon
+	                  className={classNames(classes.itemIcon, whiteFontClasses, {
+	                    [classes.itemIconRTL]: props.rtlActive
+	                  })}
+	                >
+	                  {prop.icon}
+	                </Icon>
+	              ) : (
+	                <prop.icon
+	                  className={classNames(classes.itemIcon, whiteFontClasses, {
+	                    [classes.itemIconRTL]: props.rtlActive
+	                  })}
+	                />
+	              )}
+	              <ListItemText
+	                primary={props.rtlActive ? prop.rtlName : prop.name}
+	                className={classNames(classes.itemText, whiteFontClasses, {
+	                  [classes.itemTextRTL]: props.rtlActive
+	                })}
+	                disableTypography={true}
+	              />
+	            </ListItem>
+	          </NavLink>
+	        );
+	      }})}
 		</Collapse>
     </List>
   );

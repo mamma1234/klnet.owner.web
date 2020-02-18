@@ -130,11 +130,11 @@ paths:
     post:
       summary: test
       tags: [ora]
-      parameters:
-        name: userId
-        in: query
-        description: number of records to skip for pagination
-        type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: #/definitions/dpt_date
       responses:
         200:
           description: OK

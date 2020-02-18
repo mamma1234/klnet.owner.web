@@ -160,7 +160,7 @@ export default function TableList() {
 		    setSelectData(tempRows);
 		    handleClose();
 	  };
-  
+	    
   return (
         <Card>
         	<CardHeader color="warning" stats icon style={{paddingBottom:'2px'}}>
@@ -173,29 +173,23 @@ export default function TableList() {
         		</p>
         	</CardHeader>
         	<CardBody style={{paddingBottom:'2px'}}>   
-	 	    	<GridItem>
+	 	    	<GridItem style={{textAlignLast:'right'}}>
 	 	    		<GridContainer>
 	 	    			<GridItem xs={12}>
-	 	    				<GridContainer>
-	 	    					<GridItem xs={9}></GridItem>
-			        			<GridItem >
-									<Button color="warning" onClick={addRow}>추가</Button>
-									<Button color="warning" >저장</Button>
-								</GridItem>
-							</GridContainer>
+									<Button color="warning" onClick={addRow} size="sm">추가</Button>
+									<Button color="warning" size="sm">저장</Button>
 						</GridItem>
 					</GridContainer>
 				</GridItem>
-				<Card>
-		        	<GridItem>
+		        <GridItem>
 				    	<Table className={classes.table}>
 				     		<TableHead>
 				     			<TableRow className={classes.tableHeadRow}>
-					     			<TableCell style={{color:"orange"}}>Vessel</TableCell>
-					     			<TableCell style={{color:"orange"}}>I/E</TableCell>
-					     			<TableCell style={{color:"orange"}}>POL</TableCell>
-					     			<TableCell style={{color:"orange"}}>POD</TableCell>
-					     			<TableCell style={{color:"orange"}}>Action</TableCell>
+					     			<TableCell style={{color:"orange",padding:'8px'}}>Vessel</TableCell>
+					     			<TableCell style={{color:"orange",padding:'8px'}}>I/E</TableCell>
+					     			<TableCell style={{color:"orange",padding:'8px'}}>POL</TableCell>
+					     			<TableCell style={{color:"orange",padding:'8px'}}>POD</TableCell>
+					     			<TableCell style={{color:"orange",padding:'8px'}}>Action</TableCell>
 				     			</TableRow>
 				     		</TableHead>
 				     		<TableBody>
@@ -205,36 +199,39 @@ export default function TableList() {
 				            	 
 				              return (
 				                <TableRow key={index} className={classes.tableBodyRow}>
-				                      <TableCell className={classes.tableCell}>
+				                      <TableCell className={classes.tableCell} style={{padding:'3px'}}>
 					                      <input 
 					                      	type="text" 
 					                        onChange={changeText(data.SEQ,'vessel')} 
-					                        value={data.VESSEL_NAME}
+					                        value={data.VESSEL_NAME?data.VESSEL_NAME:""}
+					                        style={{width:'150px',height:'21px'}}
 					                      />
 				                      </TableCell>
-				                      <TableCell className={classes.tableCell}>
+				                      <TableCell className={classes.tableCell} style={{padding:'3px'}}>
 					                      <input 
 					                      	type="text" 
 					                      	onChange={changeText(data.SEQ,'ie')} 
-					                      	value={data.IE_TYPE} 
+					                      	value={data.IE_TYPE?data.IE_TYPE:""} 
+					                        style={{width:'25px',height:'21px'}}
 					                       />
 				                      </TableCell>
-				                      <TableCell className={classes.tableCell}>
+				                      <TableCell className={classes.tableCell} style={{padding:'3px'}}>
 					                      <input 
-					                      	type="text" 
-					                      	style={{width:'20'}}
+					                      	type="text"
 					                      	onChange={changeText(data.SEQ,'pol')} 
-					                      	value={data.POL} 
+					                      	value={data.POL?data.POL:""}
+					                        style={{width:'60px',height:'21px'}}
 					                      />
 				                      </TableCell>
-				                      <TableCell className={classes.tableCell}>
+				                      <TableCell className={classes.tableCell} style={{padding:'3px'}}>
 					                      <input 
 					                      	type="text" 
 					                      	onChange={changeText(data.SEQ,'pod')} 
-					                      	value={data.POD} 
+					                      	value={data.POD?data.POD:""}
+					                        style={{width:'60px',height:'21px'}}
 					                      />
 				                      </TableCell>
-					                  <TableCell className={classes.tableCell}> 
+					                  <TableCell className={classes.tableCell} style={{padding:'5px'}}> 
 					                  	<Button color="warning" size="sm" onClick={deleteRow(data.SEQ)}>삭제</Button> 
 					                  </TableCell>
 				                </TableRow>
@@ -247,14 +244,13 @@ export default function TableList() {
 				            >
 				            <DialogTitle id="alert-dialog-title">{"선택한 즐겨찾기를 삭제 하시겠습니까?"}</DialogTitle>
 				            <DialogActions>
-				            	<Button onClick={handleClose} color="primary">Disagree</Button>
-				            	<Button onClick={handleDelete(delSeq)} color="primary" autoFocus>Agree</Button>
+				            	<Button onClick={handleClose} color="warning" size="sm" >Disagree</Button>
+				            	<Button onClick={handleDelete(delSeq)} color="warning" size="sm" autoFocus>Agree</Button>
 				            </DialogActions>
 				           </Dialog>
 				          </TableBody>
 				     	</Table>	
 				     </GridItem>
-			    </Card>
           </CardBody>
         </Card>
   );

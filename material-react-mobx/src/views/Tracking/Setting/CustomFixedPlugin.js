@@ -42,7 +42,7 @@ export default function FixedPlugin(props) {
         <div onClick={handleClick}>
           <i className="fa fa-cog fa-2x" />
         </div>
-        <ul className="dropdown-menu" style={{width:'320px'}}>
+        <ul className="dropdown-menu" style={{width:'320px',textAlignLast:'start'}}>
           <li className="header-title">View</li>
           <li className="adjustments-line">
 	          <Radio
@@ -118,6 +118,9 @@ export default function FixedPlugin(props) {
 	      	/>SMS 
 		  </li>
           <li className="header-title">GRID SET</li>
+          <li className="adjustments-line">
+          	
+          </li>
         </ul>
       </div>
     </div>

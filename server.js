@@ -45,6 +45,10 @@ app.use(session({   //express-session: 세션 관리용 미들웨어, 로그인 
     cookie: {
         httpOnly: true,
         secure: false,
+        //saveUninitialized:true,
+        cookie: {
+          maxAge: 1000 * 60 * 60 // 유효기간 1시간
+        }
     },
 }));
 // app.use(cookieSession({
@@ -105,6 +109,50 @@ app.route(/^((?!\/auth\/|\/login).)*$/s).all(function(req, res, next) {
   // }
 })
 */
+
+app.route(/^((?!\/auth\/|\/login).)*$/s).all(function(req, res, next) {    
+	var path = req.params[0];
+	console.log("(server.js) path:",path);
+    // if (req.isAuthenticated !== undefined && req.isAuthenticated()){
+    //if (req.isAuthenticated()){
+     // console.log('로그인 정보 남아 있음.', req.session.sUser);
+    //  next();
+    //} else {
+    //  var fullUrl = req.protocol + '://' + req.headers.host + req.originalUrl;
+    //  console.log( fullUrl );
+    //  console.log('로그인 정보 없음 예외 처리');
+      // console.log(req.headers.host);
+      // return res.redirect('http://' + req.headers.host + '/login/?redirect=' + fullUrl);
+      //return res.redirect('http://' + req.headers.host + '/login');
+
+      // return;
+      // const err = new Error('Not Found');
+      // err.status = 404;
+      // next(err);
+
+      // req.logout();
+      //req.session.destroy();
+      // res.redirect('/');   
+      // return res.redirect('http://' + req.headers.host + '/auth/');
+      // return res.redirect('/auth/logout');
+      //next('/auth/logout');
+      //next('not login');
+   // }
+ if ( req.session.sUser ) { 
+ 	console.dir( req.session.sUser );
+ 	console.log('로그인 정보 남아 있음.');
+ 	next();
+ } else {
+	var fullUrl = req.protocol + '://' + req.headers.host + req.originalUrl;
+ 	console.log( fullUrl );
+       console.log('로그인 정보 없음 예외 처리');
+       console.log(req.headers.host);
+       // return res.redirect('http://' + req.headers.host + '/login/?redirect=' + fullUrl);
+       //return res.redirect('http://' + req.headers.host + '/login');
+       return;
+ }
+});
+
 app.use('/auth', authRouter);
 app.use('/', pageRouter);
 
@@ -156,7 +204,7 @@ app.post("/api/getScheduleList", dao.schedule.getScheduleList);
 app.post("/api/getPortCodeInfo", dao.schedule.getPortCodeInfo);
 app.post("/api/getScheduleDetailList", dao.schedule.getScheduleDetailList);
 app.post("/api/getHotInfo", dao.tracking.getHotInfo);
-
+app.post("/api/getTrackingList", dao.tracking.getTrackingList);
 
 
 //에러 처리 미들웨어: error라는 템플릿 파일을 렌더링한다. 404에러가 발생하면 404처리 미들웨어에서 넣어준 값을 사용한다.

@@ -87,8 +87,7 @@ export default function TableList() {
   }
   
   return (	
-    <div style={{width:700,height:650,overflow:"auto"}}>
-      <GridItem xs={12} sm={12} md={12}>
+    <div style={{width:820,height:580,overflow:"auto"}}>
       	<Card style={{marginBottom:'1px'}}>
 	        <CardHeader color="warning" stats icon >
 		        <CardIcon color="warning">
@@ -96,12 +95,10 @@ export default function TableList() {
 		        </CardIcon>
 			    <h4 className={classes.cardTitleBlack}>BL No. UpLoad</h4>
 		      </CardHeader>
-          <CardBody style={{padding:'1px'}}>
-          	<GridItem xs={12}>
+          <CardBody style={{padding:'2px'}}>
+          	<GridItem>
           		<GridContainer>
-          			<GridItem xs={12} sm={12} md={9}>
-          				<GridContainer>
-          					<GridItem xs={12} sm={12} md={4}>
+          					<GridItem xs={12} sm={12} md={3}>
 								<CalendarBox
 				      				labelText ="Reg_Date From"
 				    				id="fromDate"
@@ -111,7 +108,7 @@ export default function TableList() {
 				      			formControlProps={{fullWidth: true}} 
 								/>
 							</GridItem>
-							<GridItem xs={12} sm={12} md={4}>
+							<GridItem xs={12} sm={12} md={3}>
 								<CalendarBox
 				      			labelText =" Reg_Date To"
 				    				id="toDate"
@@ -121,7 +118,7 @@ export default function TableList() {
 				      			formControlProps={{fullWidth: true}}
 								/>
 							</GridItem>
-					        <GridItem xs={12} sm={4}>
+					        <GridItem xs={12} sm={12} md={4}>
 						        <Autocomplete
 				        			options = {selectData}
 				        			getOptionLabel = { option => option.LINE_NAME }
@@ -132,57 +129,51 @@ export default function TableList() {
 				        			)}
 						        />
 				      		</GridItem>
-						</GridContainer>
-					</GridItem>
-					<GridItem>
-						<SearchButton color="warning">Search</SearchButton>
-					</GridItem>
-				</GridContainer>
-			</GridItem>
-			<GridItem style={{textAlignLast:'right'}}>
-						<Button
-						variant="contained"
-						color="warning"
-						size="sm"
-						style={{lineHeight:"1",}}
-						startIcon={<BackupIcon/>}
-						onClick={e=>setAnchorU(e.currentTarget)}
-					 	>Excel Upload
-					 </Button>
-		            &nbsp;&nbsp;
-					<Button
-						variant="contained"
-						color="warning"
-						size="sm"
-						style={{lineHeight:"1",}}
-						startIcon={<StarIcon/>}
-					    onClick={e=>setAnchorE(e.currentTarget)}
-					>Carrier Info
-					</Button>
-					<Popover
-		            	id={upload}
-		            	open={upload_open}
-		            	anchorEl={anchorU}
-		            	onClose={handleClose}
-		            	anchorOrigin={{vertical:'top',horizontal:'center',}}
-		            	transformOrigin={{vertical:'center',horizontal:'right',}}
-					><Excel/>
-					</Popover>
-					<Popover
-  		            	id={carrier}
-  		            	open={carrier_open}
-  		            	anchorEl={anchorE}
-  		            	onClose={handleClose}
-	            		anchorOrigin={{vertical:'top',horizontal:'center',}}
-	            		transformOrigin={{vertical:'center',horizontal:'right',}}
-					><CarrierInfo/>
-					</Popover>
-			</GridItem>
-          </CardBody>
-          </Card>
-      </GridItem>
+						    <GridItem  xs={12} sm={12} md={2}>
+								<SearchButton color="warning">Search</SearchButton>
+							</GridItem>
+			 </GridContainer>
+		  </GridItem>
+          <GridItem style={{textAlignLast:'right'}}>
+			<Button
+			variant="contained"
+			color="warning"
+			size="sm"
+			style={{lineHeight:"1",}}
+			startIcon={<BackupIcon/>}
+			onClick={e=>setAnchorU(e.currentTarget)}
+		 	>Excel Upload
+		 </Button>
+      &nbsp;&nbsp;
+		<Button
+			variant="contained"
+			color="warning"
+			size="sm"
+			style={{lineHeight:"1",}}
+			startIcon={<StarIcon/>}
+		    onClick={e=>setAnchorE(e.currentTarget)}
+		>Carrier Info
+		</Button>
+		<Popover
+      	id={upload}
+      	open={upload_open}
+      	anchorEl={anchorU}
+      	onClose={handleClose}
+      	anchorOrigin={{vertical:'top',horizontal:'center',}}
+      	transformOrigin={{vertical:'center',horizontal:'right',}}
+		><Excel/>
+		</Popover>
+		<Popover
+        	id={carrier}
+        	open={carrier_open}
+        	anchorEl={anchorE}
+        	onClose={handleClose}
+  		anchorOrigin={{vertical:'top',horizontal:'center',}}
+  		transformOrigin={{vertical:'center',horizontal:'right',}}
+		><CarrierInfo/>
+		</Popover>
+	  </GridItem>
       <GridItem xs={12} sm={12} md={12}>
-          <CardBody className={classes.gridStyle1}>
             <Table
               tableHeaderColor="warning"
               tableHead={["No", "BL No.", "Carrier", "Register Time"]}
@@ -195,9 +186,7 @@ export default function TableList() {
                 ["6", "SNKO000000006",  "SNKO", "2020-01-15 09:30"],
                 ["7", "SNKO000000007",  "SNKO", "2020-01-15 09:30"]
               ]}
-            />
-          </CardBody>
-      </GridItem>
+            /></GridItem></CardBody></Card>
     </div>
     
   );

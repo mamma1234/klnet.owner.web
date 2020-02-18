@@ -3,8 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepButton from '@material-ui/core/StepButton';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+//import Button from '@material-ui/core/Button';
+//import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,7 +31,7 @@ function getSteps() {
 
 export default function HorizontalNonLinearAlternativeLabelStepper(props) {
   const classes = useStyles();
-  const { stepData, setDate, active} = props;
+  const { stepData,  active} = props;
   const [activeStep, setActiveStep] = React.useState(active);
   const [completed, setCompleted] = React.useState(new Set());
   const [skipped, setSkipped] = React.useState(new Set());
@@ -77,49 +77,49 @@ export default function HorizontalNonLinearAlternativeLabelStepper(props) {
     return activeStep === totalSteps() - 1;
   };
 
-  const handleNext = () => {
-    const newActiveStep =
-      isLastStep() && !allStepsCompleted()
-        ? // It's the last step, but not all steps have been completed
+  //const handleNext = () => {
+  //  const newActiveStep =
+  //    isLastStep() && !allStepsCompleted()
+       // ? // It's the last step, but not all steps have been completed
           // find the first step that has been completed
-          steps.findIndex((step, i) => !completed.has(i))
-        : activeStep + 1;
+    //      steps.findIndex((step, i) => !completed.has(i))
+     //   : activeStep + 1;
 
-    setActiveStep(newActiveStep);
-  };
+    //setActiveStep(newActiveStep);
+  //};
 
-  const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
-  };
+  //const handleBack = () => {
+  //  setActiveStep(prevActiveStep => prevActiveStep - 1);
+  //};
 
   const handleStep = step => () => {
     setActiveStep(step);
   };
 
-  const handleComplete = () => {
-    const newCompleted = new Set(completed);
-    newCompleted.add(activeStep);
-    setCompleted(newCompleted);
+  //const handleComplete = () => {
+   // const newCompleted = new Set(completed);
+   // newCompleted.add(activeStep);
+    //setCompleted(newCompleted);
 
     /**
      * Sigh... it would be much nicer to replace the following if conditional with
      * `if (!this.allStepsComplete())` however state is not set when we do this,
      * thus we have to resort to not being very DRY.
      */
-    if (completed.size !== totalSteps() - skippedSteps()) {
-      handleNext();
-    }
-  };
+    //if (completed.size !== totalSteps() - skippedSteps()) {
+    //  handleNext();
+   // }
+  //};
 
-  const handleReset = () => {
-    setActiveStep(0);
-    setCompleted(new Set());
-    setSkipped(new Set());
-  };
+  //const handleReset = () => {
+ //   setActiveStep(0);
+ //   setCompleted(new Set());
+ //   setSkipped(new Set());
+//  };
 
-  const isStepSkipped = step => {
-    return skipped.has(step);
-  };
+  //const isStepSkipped = step => {
+  //  return skipped.has(step);
+  //};
 
   function isStepComplete(step) {
     return completed.has(step);
@@ -139,7 +139,7 @@ export default function HorizontalNonLinearAlternativeLabelStepper(props) {
             }*/}
 
           return (
-            <Step key={label} {...stepProps}>
+            <Step key={label} {...stepProps} >
               <StepButton
                 onClick={handleStep(index)}
                 completed={isStepComplete(index)}

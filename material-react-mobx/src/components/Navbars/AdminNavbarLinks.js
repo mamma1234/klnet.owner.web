@@ -20,7 +20,7 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
-
+import axios from 'axios';
 const useStyles = makeStyles(styles);
 
 export default function AdminNavbarLinks() {
@@ -50,8 +50,20 @@ export default function AdminNavbarLinks() {
   };
   
   const logOut = () => {
-	  window.location.href = "/login";
-  }
+	   console.log(">>>logout start");
+	    axios.get("/auth/logout")
+	    .then(res => {
+	        console.log(">>>>>"+res);
+	        if (res.data.message) alert(res.data.message);
+	        else window.location.href = "/login"; //alert(res.data.userid + " 로그인 성공");
+	    })
+	    .catch(err => {
+	        console.log(err);
+	    })
+	  
+	 // window.location.href = "/auth/logout";
+  };
+  
   return (
     <div>
       {/*}<div className={classes.searchWrapper}>

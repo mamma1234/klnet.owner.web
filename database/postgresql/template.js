@@ -221,24 +221,30 @@ const getSnkMasterList = (request, response) => {
 
 
   const getPortLocation = (request, response) => {
-    const portCode = request.body.portCode;
-    if (portCode == undefined) {
+    const port = request.body.portCode;
+
+    if (port == undefined) {
       response.set('parameter','error');
       response.status(400).send();
       return;
     }
-    console.log(request.body,portCode);
+
+
+
+
     let idx = 0;
     let sql = "SELECT terminal, terminal_kname, terminal_ename, wgs84_x, wgs84_y FROM own_terminal_info "
         sql += " where 1=1 ";
-    portCode == "" ? sql +="" : 
+    port == "" ? sql +="" : 
     
-    portCode.forEach(element => {
-      console.log(idx)
+    port.forEach(element => {
+      console.log(idx);
+      const nationCode = element.substr(0,2);
+      const portCode = element.substr(2,3);
       if (idx == 0) {
-        sql+= "and terminal = '" + element +"' ";
+        sql+= " and (nation_code = '" + nationCode +"' and location_code = '" + portCode + "') ";
       }else{
-        sql+= "or terminal = '" + element +"' ";
+        sql+= " or (nation_code = '" + nationCode +"' and location_code = '" + portCode + "') ";
       }
       idx++;
     });
@@ -267,10 +273,11 @@ const getSnkMasterList = (request, response) => {
 
 
   const getPort = (request, response) => {
-    let sql = "SELECT terminal, terminal_kname, terminal_ename, float8(wgs84_x) as wgs84_x, float8(wgs84_y) as wgs84_y FROM own_terminal_info "
+    let sql = "SELECT port_code, port_name, port_kname, float8(wgs84_x) as wgs84_x, float8(wgs84_y) as wgs84_y FROM own_code_port "
         sql += " where 1=1 ";
-    
-        
+        sql += " and use_yn = 'Y'"
+        sql += " and nation_code = 'KR'"
+        sql += " and port_code in('KRPUS', 'KRKAN', 'KRINC', 'KRUSN', 'KRPTK', 'KRKPO')"
     console.log("query == ",sql);    
     pgsqlPool.connect(function(err,client,done) {
       if(err){

@@ -45,10 +45,11 @@ export default function LandingPage() {
       />
       <Parallax filter image={require("images/main.jpg")}>
         <div className={classes.container}>
-          <GridContainer>
-            <GridItem xs={12} sm={12} md={6}>
+          <GridContainer style={{textAlignLast:'end'}}>
+          <GridItem xs={12} sm={12} md={6} ></GridItem>
+            <GridItem xs={12} sm={12} md={6} >
               <h2 className={classes.title}>Start To Plism Plus.</h2>
-              <h4>
+              <h4 style={{textAlign:'-webkit-right'}}>
                 Every landing page needs a small description after the big bold
                 title, that{"'"}s why we added this text here. Add here all the
                 information that can make you or your product create the first
@@ -58,7 +59,7 @@ export default function LandingPage() {
               <Button
                 color="danger"
                 size="lg"
-                href ="/own/fcl_schedule"
+                href ="/own/tracking"
                 rel="noopener noreferrer"
               >
                 <i className="fas fa-play" />
@@ -70,11 +71,11 @@ export default function LandingPage() {
       </Parallax>
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div className={classes.container}>
-          {/*
+         
           <ProductSection />
           <TeamSection />
           <WorkSection />
-          */}
+       
         </div>
       </div>
       <Footer />

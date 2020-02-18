@@ -3,6 +3,8 @@ const LocalStrategy = require('passport-local').Strategy;
 const crypto = require('crypto');
 // const bcrypt = require('bcrypt');
 const sUser = require('../models/sessionUser');
+
+const pgsqlPool = require("../database/pool.js").pgsqlPool
  
 // const { User } = require('../models');
  
@@ -71,7 +73,8 @@ module.exports = (passport) => {
                 console.log('(localStrategy.js) userid:', userid, 'password:', password);
 
             try {
-                console.log(userid, password);
+
+            	console.log(userid, password);
 
                 /*
                     2020.01.21 pdk ship 
@@ -80,46 +83,65 @@ module.exports = (passport) => {
                 */
                             
                 // const exUser = await User.find({ where: { email } });
-                const exUser = {userid, password}
+            	
+            	if(userid) {
+            		var storepassword = "";
+	                let sql = "select  * from own_comp_user where user_id = upper('"+userid+"')";
+	                //let sql = "select  * from own_comp_user ";
+	                     pgsqlPool.connect(function(err,conn) {
+	                    if(err){
+	                        console.log("err" + err);
+	                    }
+	
+	                    conn.query(sql, function(err,result){
+	                        if(err){
+	                            console.log(err);
+	                        }
+	                        if(result.rows[0] != null) {
+	                            console.log("SQL:"+sql);
+	                            console.log("DB DATA:"+result.rows[0].user_pw);
+	                            storepassword = result.rows[0].user_pw.toString();
+	                            // const storepassword = "admin00"; 
+	                            
+	                            // let hash = bcrypt.hashSync(exUser.password, 10);
+	                            // console.log("hash:", hash);
+	                            //password:admin00
+	                            //const storepassword = "5a78d577c88cd1ac69c7f751cbb346763eed86862713756e4de33ed0219122238f548d8b1d5b9e19bcadcb89aedbca00ff69469e7a76fa4c0f28a154995263ec";
+	                            // const result = await bcrypt.compare(password, storepassword);
+	                           
+	                            const exUser = {userid, password}
 
-                sUser.provider = 'local';
-                sUser.userid = userid;
-                sUser.username = 'test',
-                sUser.displayName = 'test',
-                sUser.email = 'test@klnet.co.kr';
-                req.session.sUser = sUser;
+	                            sUser.provider = 'local';
+	                            sUser.userid = userid;
+	                            sUser.username = 'test',
+	                            sUser.displayName = 'test',
+	                            sUser.email = 'test@klnet.co.kr';
+	                            req.session.sUser = sUser;
+	                            
+	                            const inputpassword = crypto.pbkdf2Sync(password, 'salt', 100000, 64, 'sha512').toString('hex');
+	                            let resultSet = false; 
+	                                 
+	                                 if (inputpassword == storepassword) resultSet = true;
+	                                 
+	                                 // console.log("result:"+result);
+	                                 if(resultSet) {
+	                                     console.log('정상 로그인되었습니다.');
+	                                     done(null, exUser);
+	                                 } else {
+	                                     console.log('아이디 또는 비밀번호가 일치하지 않습니다.');
+	                                     done(null, false, { message: '아이디 또는 비밀번호가 일치하지 않습니다.' });
+	                                 }   
+	                        } else {
+	                            console.log('가입되지 않은 회원입니다.');
+	                            done(null, false, { message: '아이디 또는 비밀번호가 일치하지 않습니다.' });
+	                        }
+	                    });
+	
+	                    // conn.release();
+	                });
+            	}
 
-                // console.log(exUser);
-                if(exUser) {
-                    // let hash = bcrypt.hashSync(exUser.password, 10);
-                    // console.log("hash:", hash);
-                    //password:admin00
-                    const storepassword = "5a78d577c88cd1ac69c7f751cbb346763eed86862713756e4de33ed0219122238f548d8b1d5b9e19bcadcb89aedbca00ff69469e7a76fa4c0f28a154995263ec";
-                    // const result = await bcrypt.compare(password, storepassword);
-                    
-                    const inputpassword = crypto.pbkdf2Sync(password, 'salt', 100000, 64, 'sha512').toString('hex');
-                    
-                    // const storepassword = "admin00";
-                    let result = false;
-                    if (inputpassword == storepassword) result = true;
-                    
-                    console.log(result);
-                    if(result) {
-                        console.log('정상 로그인되었습니다.');
-                        done(null, exUser);
-                    }
-                    else {
-                        console.log('비밀번호가 일치하지 않습니다.');
-                        done(null, false, { message: '비밀번호가 일치하지 않습니다.' });
-                    }
-
-                }
-                else {
-                    console.log('가입되지 않은 회원입니다.');
-                    done(null, false, { message: '가입되지 않은 회원입니다.' });
-                }
-            }
-            catch(error) {
+            } catch(error) {
                 console.error(error);
                 done(error);
             }

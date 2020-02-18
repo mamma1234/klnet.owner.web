@@ -10,7 +10,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Tooltip from "@material-ui/core/Tooltip";
-
+import LocationIcon from "@material-ui/icons/Map";
+import ScheduleIcon from "@material-ui/icons/WatchLater";
+import LoginIcon from "@material-ui/icons/VpnKey";
 // @material-ui/icons
 import { Apps, CloudDownload } from "@material-ui/icons";
 
@@ -32,33 +34,46 @@ export default function HeaderLinks(props) {
 	      href="/login"
 	      color="transparent"
 	      className={classes.navLink}
-	    >
+	    ><LoginIcon/>
 	      Login
 	    </Button>
 	  </ListItem>
       <ListItem className={classes.listItem}>
         <CustomDropdown
           noLiPadding
-          buttonText="Components"
+          buttonText="LOCATION"
           buttonProps={{
             className: classes.navLink,
             color: "transparent"
           }}
-          buttonIcon={Apps}
+          buttonIcon={LocationIcon}
           dropdownList={[
-            <Link to="/" className={classes.dropdownLink}>
-              All components
+            <Link to="/own/tracking" className={classes.dropdownLink}>
+              Tracking Service
             </Link>,
-            <a
-              href="https://creativetimofficial.github.io/material-kit-react/#/documentation?ref=mkr-navbar"
-              target="_blank"
-              className={classes.dropdownLink}
-            >
-              Documentation
-            </a>
+            <Link to="/own/demDet" className={classes.dropdownLink}>
+              Dem/Det Service
+            </Link>
           ]}
         />
       </ListItem>
+        
+      <ListItem className={classes.listItem}>
+        <CustomDropdown
+          noLiPadding
+          buttonText="SCHEDULE"
+          buttonProps={{
+            className: classes.navLink,
+            color: "transparent"
+          }}
+          buttonIcon={ScheduleIcon}
+          dropdownList={[
+            <Link to="/own/scrap_sch" className={classes.dropdownLink}>
+              Scrap Schedule
+            </Link>
+          ]}
+        />
+      </ListItem> 
       <ListItem className={classes.listItem}>
         <Button
           href="https://www.creative-tim.com/product/material-kit-react?ref=mkr-navbar"

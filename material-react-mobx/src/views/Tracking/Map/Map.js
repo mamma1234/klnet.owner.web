@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -20,75 +21,40 @@ import {
   Marker,
 } from "react-google-maps";
 import { compose, withStateHandlers, withHandlers, renderComponent } from "recompose";
+const portLocation = [];
 
-const portLocation = [
-  {
-    portCode: "KRPUS",
-    portName: "BUSAN",
-    portlat: 35.07795693,
-    portlng: 129.05245138
-  },
-  {
-    portCode: "KRINC",
-    portName: "INCHEON",
-    portlat: 37.41906618,
-    portlng: 126.58397938
-  },
-  {
-    portCode: "KRUSN",
-    portName: "ULSAN",
-    portlat: 35.50445947,
-    portlng: 129.37473001
-  },
-  {
-    portCode: "KRPTK",
-    portName: "PYEONGTAEK",
-    portlat: 36.98520097,
-    portlng: 126.7849153
-  },
-  {
-    portCode: "KRKAN",
-    portName: "GWANGYANG",
-    portlat: 34.938117,
-    portlng: 127.692385
-  },
-  {
-    portCode: "KRKPO",
-    portName: "POHANG",
-    portlat: 36.000093,
-    portlng: 129.377479
+
+
+axios.post("/pg/getPort").then(res => {
+  for (let v = 0; v < res.data.length; v++) {
+    const element = res.data[v];
+    portLocation.push({
+      portCode: element.port_code,
+      portName: element.port_name,
+      portKname: element.port_kname,
+      lng: element.wgs84_x,
+      lat: element.wgs84_y
+    })
   }
+});
 
-
-];
   
-  // axios.post("/pg/getPort").then(res => {
-  //   for (let v = 0; v < res.data.length; v++) {
-  //     const element = res.data[v];
-  //     portLocation.push({
-  //       portCode: element.portcode,
-  //       terminal: element.terminal, 
-  //       terminal_kname: element.terminal_kname, 
-  //       lng: element.wgs84_x,
-  //       lat: element.wgs84_y
-  //     })
-  //   }
-  // });
 
 
 
 
 
 
-const getPortInfo = (portCode) =>  {
+
+const getPortInfo = (port, props) =>  {
   //Marker 정보 Parameter = portInfo
   //axios.post("/pg/getPortLocation", {portCode: [ portInfo.portCode ]}).then(res => setUsePort(res.data));
-  
-  console.log('TTTTTT',portCode);
+  console.log(port);
   return(
     <InfoWindow>
-        <TerminalList 
-        	portCode ={portCode}
+        <TerminalList
+          
+        	port={port}
         />
     </InfoWindow>
   )
@@ -119,7 +85,7 @@ const getPortInfo = (portCode) =>  {
     (props =>
       <GoogleMap
       defaultZoom={7}
-      defaultCenter={ {lat: 36.337395, lng: 127.392544} }
+      defaultCenter={ {lat: 35.837395, lng: 127.782544} }
         defaultOptions={{
           scrollwheel: true,
           zoomControl: true
@@ -132,15 +98,14 @@ const getPortInfo = (portCode) =>  {
               <Marker 
                 key = {value.portCode}
                 draggable = {false} 
-                position={{lat:value.portlat, lng:value.portlng}} // 마커 위치 설정 {lat: ,lng: }   
+                position={{lat:value.lat, lng:value.lng}} // 마커 위치 설정 {lat: ,lng: }   
                 icon={require("assets/img/marker.png")}
                 onClick={() => props.onToggleOpen(value.portCode) }>
-                {value.portCode == props.port && getPortInfo(value.portCode)}  
+                {props.isOpen && value.portCode == props.port && getPortInfo(value, props)}  
               </Marker>
             )
         })
       }
-       {/* </MarkerClusterer>   */}
        
      </GoogleMap>
          
@@ -194,13 +159,12 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 export default function TableList() {
-  
   const classes = useStyles();
   
   return (
     <GridContainer
-    style={{height: '1000px',width: '800px'}}>
-      <GridItem xs={15} sm={15} md={15} style={{height: `90%`,width: `90%`}}>
+    style={{height: '650px',width: '650px'}}>
+      <GridItem xs={12} sm={12} md={12} style={{height: `100%`,width: `100%`}}>
         <Card>
           <CardHeader color="warning" stats icon>
             <CardIcon color="warning">
@@ -215,11 +179,11 @@ export default function TableList() {
 
 
             <Map    
-              googleMapURL="https://maps.googleapis.com/maps/api/js?key="
+              googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBK2wBJD1QHGAquIsW0V5_XVQeu6muFmZ0"
               loadingElement={<div style={{ height: `90%` }} />}
-              containerElement={<div style={{ height: `90vh` }} />}
-              mapElement={<div style={{ height: `90%` }} />}>
-            </Map>   
+              containerElement={<div style={{ height: `50vh` }} />}
+              mapElement={<div style={{ height: `100%` }} />}>
+            </Map>
 
 
           </CardBody>
@@ -228,4 +192,3 @@ export default function TableList() {
     </GridContainer>
   );
 }
-

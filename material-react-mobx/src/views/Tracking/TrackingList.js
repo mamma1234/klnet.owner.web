@@ -2,17 +2,15 @@ import React,{ useState, useEffect } from "react";
 
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-import Grid from '@material-ui/core/Grid';
-import Select from '@material-ui/core/Select';
+
+
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
-import { Alert,AlertTitle } from '@material-ui/lab';
 import BackupIcon from "@material-ui/icons/Backup";
 import StarIcon from "@material-ui/icons/Stars";
-import SettingIcon from "@material-ui/icons/Settings";
 import MapIcon from "@material-ui/icons/Map";
-import FormControl from "@material-ui/core/FormControl";
-import Icon from "@material-ui/core/Icon";
+//import FormControl from "@material-ui/core/FormControl";
+//import Icon from "@material-ui/core/Icon";
 import Popover from  '@material-ui/core/Popover';
 // core components
 import GridItem from "components/Grid/GridItem.js";
@@ -25,10 +23,10 @@ import Button from "components/CustomButtons/Button.js";
 import CalendarBox from "components/CustomInput/CustomCalendar.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import CustomSelect from "components/CustomInput/CustomSelect.js";
-import CardIcon from "components/Card/CardIcon.js";
+//import CardIcon from "components/Card/CardIcon.js";
 // other import
 import axios from 'axios';
-import moment from 'moment';
+//import moment from 'moment';
 import Table from "views/Tracking/TrackingDetail.js";
 import Blupload from "views/Tracking/Blupload/Upload.js";
 import HotSet from "views/Tracking/HotSet/HotSet.js";
@@ -95,7 +93,7 @@ const useStyles = makeStyles(styles);
 
 export default function ScheduleList() {
 
-  const setDate = new Date();
+
   const setEndDate = new Date();
   //const [carrierCode,setCarrierCode] = useState("");
   const [dateGbSet,setDateGbSet] = useState("ETA");
@@ -104,7 +102,7 @@ export default function ScheduleList() {
   const [vesselName,setVesselName] = useState("");
   const [selectData,setSelectData] = useState([]);
   const [portData,setPortData] = useState([]);
-  const [scheduleData,setScheduleData] = useState([]);
+  const [trackingList,setTrackingList] = useState([]);
   const [fromDate,setFromDate] = useState(new Date());
   const [toDate,setToDate] = useState(setEndDate.setDate(setEndDate.getDate()+6));
   const [anchorE1, setAnchorE1] = useState(null);
@@ -112,7 +110,7 @@ export default function ScheduleList() {
   const [anchorE3, setAnchorE3] = useState(null);
   //const [anchorE4, setAnchorE4] = useState(null);
   const [fixedClasses, setFixedClasses] = React.useState("dropdown");
-  const [viewVlaue, setViewVlaue] = React.useState("list");
+  //const [viewVlaue, setViewVlaue] = React.useState("list");
   
   
   const handleViewClick = () => {
@@ -129,9 +127,7 @@ export default function ScheduleList() {
   
   useEffect(() => {
 	    console.log('effect');
-/*	    axios.post("/api/getCarrierInfo").then(res => setSelectData(res.data));
-	    //.then(res => console.log(JSON.stringify(res.data)));
-	    */
+
 	    return () => {
 	      console.log('cleanup');
 	    };
@@ -165,14 +161,16 @@ export default function ScheduleList() {
   
   const onSubmit = () => {
 	  //search
-	  /*axios.post("/api/getScheduleList",{ carrierCode:carrierCode,
-		  								  startDate:moment(fromDate).format('YYYYMMDD'),
-		  								  endDate:moment(toDate).format('YYYYMMDD'),
-		  								  startPort:sPort,
-		  								  endPort:ePort,
-		  								  vesselName:vesselName
-	  									})
-	    .then(res => setScheduleData(res.data));*/
+	  axios.post("/api/getTrackingList"
+			  //{ carrierCode:carrierCode,
+		//  								  startDate:moment(fromDate).format('YYYYMMDD'),
+		 // 								  endDate:moment(toDate).format('YYYYMMDD'),
+		  //								  startPort:sPort,
+		  //								  endPort:ePort,
+		  //								  vesselName:vesselName
+	  									//})
+			  )
+	    .then(res => setTrackingList(res.data));
 	  alert("Tracking Info Search onSubmit");
   }
   
@@ -319,7 +317,7 @@ export default function ScheduleList() {
 	      		            	anchorEl={anchorE1}
 	      		            	onClose={handleClose}
   			            		anchorReference="anchorPosition"
-  			            		anchorPosition={{top:100,left:650}}
+  			            		anchorPosition={{top:100,left:690}}
 	      		            	anchorOrigin={{vertical:'bottom',horizontal:'center',}}
 	      		            	transformOrigin={{vertical:'top',horizontal:'center',}}
   			            ><Blupload/>
@@ -339,7 +337,7 @@ export default function ScheduleList() {
 	      		            	anchorEl={anchorE2}
 	      		            	onClose={handleClose}
 								anchorReference="anchorPosition"
-								anchorPosition={{top:300,left:450}}
+								anchorPosition={{top:80,left:650}}
 	      		            	anchorOrigin={{vertical:'bottom',horizontal:'center',}}
 	      		            	transformOrigin={{vertical:'top',horizontal:'center',}}
 						><HotSet/>
@@ -372,14 +370,7 @@ export default function ScheduleList() {
           					<Table
 		                        tableHeaderColor="warning"
 		                        tableHead={["BL No", "HOT", "I/E", "CARRIER", "VESSEL/VOYAGE","CURRENT","POL/ETD","POD/ETA","ACTION"]}
-	          					tableData={[
-	    				            ["SNKO000000001", "Y", "E", "SNKO","KOREAREAD ER40W","입항","KRPUS 2020-01-29","KRINC 2020-01-29"],
-	    				            ["SNKO000000001", "Y", "E", "SNKO","KOREAREAD ER40W","입항","KRPUS 2020-01-29","KRINC 2020-01-29"],
-	    				            ["SNKO000000001", "Y", "E", "SNKO","KOREAREAD ER40W","입항","KRPUS 2020-01-29","KRINC 2020-01-29"],
-	    				            ["SNKO000000001", "Y", "E", "SNKO","KOREAREAD ER40W","입항","KRPUS 2020-01-29","KRINC 2020-01-29"],
-	    				            ["SNKO000000001", "Y", "E", "SNKO","KOREAREAD ER40W","입항","KRPUS 2020-01-29","KRINC 2020-01-29"],
-	    				            ["SNKO000000001", "Y", "E", "SNKO","KOREAREAD ER40W","입항","KRPUS 2020-01-29","KRINC 2020-01-29"]
-	    				          ]}
+	          					tableData={trackingList}
 		                     /> 
 		                </GridItem>
 		            </GridContainer>

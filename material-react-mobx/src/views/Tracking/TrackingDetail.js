@@ -23,8 +23,9 @@ import Popover from  '@material-ui/core/Popover';
 import StarIcon from '@material-ui/icons/Star';
 import Favorite from '@material-ui/icons/Favorite';
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
-import Checkbox from '@material-ui/core/CheckBox';
 import Card from "components/Card/Card.js";
+import Access from "@material-ui/icons/AccessAlarm";
+import Assign from "@material-ui/icons/AssignmentTurnedIn";
 import CardHeader from "components/Card/CardHeader.js";
 import Icon from '@material-ui/core/Icon';
 // core components
@@ -215,7 +216,7 @@ ToggleTable.propTypes = {
   // 테이블 조회
   scheduleToSearch = () => {
 
-    return axios ({
+/*    return axios ({
 		url:'/api/getScheduleDetailList',
 		method:'POST',
 		data: {carrierCode : this.props.data.LINE_CODE,
@@ -224,7 +225,7 @@ ToggleTable.propTypes = {
 			   voyage : this.props.data.VOYAGE_NO,
 			   vesselName : this.props.data.VESSEL_NAME
 			   }
-	}).then(response => this.setState({port:response.data }));
+	}).then(response => this.setState({port:response.data }));*/
     
   }
  
@@ -252,7 +253,7 @@ ToggleTable.propTypes = {
   
   
   render() {
-    //const { data } = this.props;
+     const { data } = this.props;
      const { port } = this.state;
      let point =0;
      
@@ -264,15 +265,15 @@ ToggleTable.propTypes = {
 
     return [
       <TableRow  key={this.props.index}  >
-        <TableCell style={{padding:'5px',textAlignLast:'center'}} onClick={this.handleClickOpen}>SNKO000000001</TableCell>	
+        <TableCell style={{padding:'5px',textAlignLast:'center'}} onClick={this.handleClickOpen}>{data.BL_BKG}</TableCell>	
         <TableCell style={{padding:'5px',textAlignLast:'center'}}><StarIcon /></TableCell>
-        <TableCell style={{padding:'5px',textAlignLast:'center'}}>E</TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center'}}>{data.IE_TYPE}</TableCell>
         <TableCell style={{padding:'5px',textAlignLast:'center'}}>SNKO</TableCell>
-        <TableCell style={{padding:'5px',textAlignLast:'center'}}>SNKOTEST VESSL(EF003)</TableCell>
-        <TableCell style={{padding:'5px',textAlignLast:'center'}}>입항</TableCell>
-        <TableCell style={{padding:'5px',textAlignLast:'center'}}>KRPUS(2020-01-29)</TableCell>
-        <TableCell style={{padding:'5px',textAlignLast:'center'}}>KRINC(2020-01-29)</TableCell>
-        <TableCell style={{padding:'5px',textAlignLast:'center'}}><Icon color="primary" onClick={this.toggleExpander}>{this.state.iconstate}</Icon></TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center'}}>{data.VSL_NAME}({data.VOYAGE})</TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center'}}>{data.CURRENT_STATUS}</TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center'}}>{data.POL}({data.POL_ETD})</TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center'}}>{data.POD}({data.POD_ETA})</TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center'}}><Icon style={{color:'orange'}} onClick={this.toggleExpander}>{this.state.iconstate}</Icon></TableCell>
       </TableRow>,
       this.state.expanded && (
         <TableRow key = {this.props.index+1} style={{marginTop:'5px',marginBottom:'5px'}}>
@@ -285,7 +286,7 @@ ToggleTable.propTypes = {
 		        <Grid>
 		          	<GridContainer>
 		          		<GridItem xs={12} sm={12} md={6}>
-		          		<div>DEM / DET Service</div>
+		          		<div><Access color="primary"/>DEM / DET Service</div>
 			          		<Card style={{marginTop:'5px',marginBottom:'5px'}}>
 			          		
 					          	<TableList
@@ -299,7 +300,7 @@ ToggleTable.propTypes = {
 				          	</Card>
 			          	</GridItem>
 			          	<GridItem xs={12} sm={12} md={6}>
-			          		<div>CUSTOM</div>
+			          		<div><Assign color="primary" />CUSTOM</div>
 				          	<Card style={{marginTop:'5px',marginBottom:'5px'}}>
 				          	
 					          	<TableList
