@@ -6,9 +6,7 @@ exports.isLoggedIn = (req, res, next) => {
     }
     else {
     	console.log("로그인필요");
-        res.status(200).send('로그인 필요');
-        //res.status(403).send('로그인 필요');
-        next();
+        res.status(403).send('로그인 필요');
     }
 };
  
@@ -19,8 +17,9 @@ exports.isNotLoggedIn = (req, res, next) => {
         next();
     }
     else {
-        res.redirect('/login');
-        //next();
+    	console.log(" no login");
+        res.redirect('/');
+        next();
     }
 };
 

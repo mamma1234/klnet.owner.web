@@ -6,10 +6,8 @@ import TrackingPage from 'views/Tracking/TrackingList.js';
 import DemDetPage from 'views/DemDet/DemDetList.js';
 import DemDetIcon from "@material-ui/icons/NotificationImportant";
 import ScrapIcon from '@material-ui/icons/Description';
-import ScrapSchedule from "views/WebScrap/WebScrap.js";
-
-
-
+//import ScrapSchedule from "views/WebScrap/WebScrap.js";
+import FclSchedule from "views/Schedule/FclScheduleList.js";
 
 const serviceRoutes = [
 	  {
@@ -18,7 +16,7 @@ const serviceRoutes = [
 		    rtlName: "tracking",
 		    icon: LocalAirportIcon,
 		    component: TrackingPage,
-		    layout: "/own"
+		    layout: "/svc"
 	  },
 	  {
 		path: "/demDet",
@@ -26,16 +24,16 @@ const serviceRoutes = [
 		rtlName: "demDet",
 		icon: DemDetIcon,
 		component: DemDetPage,
-		layout: "/own"
+		layout: "/svc"
 	  },
 	  {
-			path: "/scrap_sch",
-			name: "Web Scrap Schedule",
-			rtlName: "WebScrap",
+			path: "/fcl_sch",
+			name: "Fcl Schedule",
+			rtlName: "FCL SCHEDULE",
 			icon: ScrapIcon,
-			component: ScrapSchedule,
-			layout: "/own"
-		  },
+			component: FclSchedule,
+			layout: "/svc"
+	   },
 ];
 
 export default serviceRoutes;

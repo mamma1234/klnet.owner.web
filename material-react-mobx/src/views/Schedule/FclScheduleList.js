@@ -73,7 +73,7 @@ export default function ScheduleList() {
   
   useEffect(() => {
 	    console.log('effect');
-	    axios.post("/api/getCarrierInfo").then(res => setSelectData(res.data));
+	    axios.post("/sch/getCarrierInfo").then(res => setSelectData(res.data));
 	    //.then(res => console.log(JSON.stringify(res.data)));
 	    
 	    return () => {
@@ -90,7 +90,7 @@ export default function ScheduleList() {
   const onPortSearchValue = (e) => {
 	    const values = e.target.value;
 	    if(values != "" && values.length > 2) {
-	    	axios.post("/api/getPortCodeInfo",{ portCode:values})
+	    	axios.post("/sch/getPortCodeInfo",{ portCode:values})
 		    .then(res => setPortData(res.data));
 	    }  
   }
@@ -114,7 +114,7 @@ export default function ScheduleList() {
   
   const onSubmit = () => {
 	  //search
-	  axios.post("/api/getScheduleList",{ carrierCode:carrierCode,
+	  axios.post("/sch/getScheduleList",{ carrierCode:carrierCode,
 		  								  startDate:moment(sDate).format('YYYYMMDD'),
 		  								  endDate:moment(eDate).format('YYYYMMDD'),
 		  								  startPort:sPort,

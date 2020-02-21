@@ -70,14 +70,14 @@ class SearchToBkg extends React.Component {
   }
 
   carrierToSearch = () => {
-    return fetch('/api/carrier')
+    return fetch('/loc/carrier')
       .then(res => res.json())
       .then(carrierData => this.setState({carrierData}));
   }
 
   bkgSearch = (vVal) => {
     //return fetch('/api/exportDemDetBkg?bkgNo='+vVal)
-    return fetch('/api/exportDemDet')
+    return fetch('/loc/exportDemDet')
       .then(res => res.json())
       .then(bkgData => this.setState({bkgData}));
   }
@@ -88,7 +88,7 @@ class SearchToBkg extends React.Component {
   }
 
   carrierCodeToSearch = (vVal) => {
-    return fetch('/api/carrier2?carrierName='+vVal)
+    return fetch('/loc/carrier2?carrierName='+vVal)
       .then(res => res.json())
       .then(carrierData => this.setState({carrierData}));
   }

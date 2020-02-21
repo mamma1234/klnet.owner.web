@@ -48,7 +48,7 @@ ReactDOM.render(
     <Router history={hist}>
       <Switch>
         <Route path="/admin" component={Admin} />
-        <Route path="/own" component={ServiceUser} />
+        <Route path="/svc" component={ServiceUser} />
         <Route path="/cntrlist" component={CntrList} />
         <Route path="/rtl" component={RTL} />
         <Route path="/login" component={Login} />

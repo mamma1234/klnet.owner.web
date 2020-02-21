@@ -92,7 +92,7 @@ export default function TableList() {
   
   useEffect(() => {
 	    console.log('호출....');
-	    axios.post("/api/getHotInfo").then(res => setSelectData(res.data));
+	    axios.post("/loc/getHotInfo").then(res => setSelectData(res.data));
 	    //.then(res => console.log(JSON.stringify(res.data)));
 	    return () => {
 	      console.log('cleanup');

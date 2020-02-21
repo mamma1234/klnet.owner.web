@@ -24,7 +24,7 @@ let ps;
 const switchRoutes = (
   <Switch>
     {routes.map((prop, key) => {
-      if (prop.layout === "/own") {
+      if (prop.layout === "/svc") {
         return (
           <Route
             path={prop.layout + prop.path}
@@ -35,7 +35,7 @@ const switchRoutes = (
       }
       return null;
     })}
-    <Redirect from="/own" to="/own/tracking" />
+    <Redirect from="/svc" to="/svc/tracking" />
   </Switch>
 );
 

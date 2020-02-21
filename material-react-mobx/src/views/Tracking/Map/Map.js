@@ -24,8 +24,8 @@ import { compose, withStateHandlers, withHandlers, renderComponent } from "recom
 const portLocation = [];
 
 
-
-axios.post("/pg/getPort").then(res => {
+{
+/*axios.post("/pg/getPort").then(res => {
   for (let v = 0; v < res.data.length; v++) {
     const element = res.data[v];
     portLocation.push({
@@ -36,8 +36,8 @@ axios.post("/pg/getPort").then(res => {
       lat: element.wgs84_y
     })
   }
-});
-
+});*/
+}
   
 
 
@@ -52,8 +52,7 @@ const getPortInfo = (port, props) =>  {
   console.log(port);
   return(
     <InfoWindow>
-        <TerminalList
-          
+        <TerminalList  
         	port={port}
         />
     </InfoWindow>

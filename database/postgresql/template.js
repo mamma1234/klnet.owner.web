@@ -273,11 +273,17 @@ const getSnkMasterList = (request, response) => {
 
 
   const getPort = (request, response) => {
+    console.log(request.body);
+    const port = request.body.portCode;
+    
+
     let sql = "SELECT port_code, port_name, port_kname, float8(wgs84_x) as wgs84_x, float8(wgs84_y) as wgs84_y FROM own_code_port "
         sql += " where 1=1 ";
         sql += " and use_yn = 'Y'"
         sql += " and nation_code = 'KR'"
         sql += " and port_code in('KRPUS', 'KRKAN', 'KRINC', 'KRUSN', 'KRPTK', 'KRKPO')"
+    port == "" ? sql +="" : sql += " and port_code = '" + port + "'" 
+
     console.log("query == ",sql);    
     pgsqlPool.connect(function(err,client,done) {
       if(err){

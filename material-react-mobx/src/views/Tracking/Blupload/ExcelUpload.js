@@ -183,7 +183,7 @@ export default class ExcelPage extends Component {
     return ( 
     		<div style={{width:380,overflow:"auto"}}>
     	   		<Card>
-    		    <CardHeader color="warning" style={{padding:'0px'}}>
+    		    <CardHeader color="info" style={{padding:'0px'}}>
     	   			<h4 >Importing Excel Component</h4>
     	        </CardHeader>
     	        <CardBody>
@@ -195,17 +195,17 @@ export default class ExcelPage extends Component {
     	          				onRemove={() => this.setState({ rows: [] })} 
     	          				multiple={false} 
     	          			> 
-		                    <Button style={{width:200}} color="warning"> 
+		                    <Button style={{width:200}} color="info"> 
 		                    <Icon type="upload" /> Click to Upload Excel File
 		                    </Button> 
 		                    </Upload>
 		                 </GridItem>
 	    	          	<GridItem xs={12} sm={12} md={5}>
-	    	          		<Button color="warning" style={{width:100}} onClick={this.handleSubmit} > Submit Data </Button>
+	    	          		<Button color="info" style={{width:100}} onClick={this.handleSubmit} > Submit Data </Button>
 	    	          	</GridItem>
     	          		</GridContainer>
 		                <TablePaging
-		                	tableHeaderColor="warning"
+		                	tableHeaderColor="info"
 		                	tableHead={["No", "BL No.", "CARRIER CODE"]}
 		                	tableData={this.state.rows}
 		                />

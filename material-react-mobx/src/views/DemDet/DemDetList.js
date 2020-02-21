@@ -62,13 +62,14 @@ const useStyles = makeStyles(styles);
 
 
 
-export default function DemDetList() {
+export default function DemDetList(props) {
   
   const [anchorCancel, setAnchorCancel] = useState(null);
   const [anchorExcel, setAnchorExcel] = useState(null);
   const [anchorAdd, setAnchorAdd] = useState(null);
   
-
+  
+  
   const [lineData, setLineData] = useState([]);
   const [listData, setListData] = useState([
     {CHK:"",LINE_CODE:"CMA",CNTR_NO:"CMAU4328321",DET:"10,000 KRW",DEM:"20,000 KRW",COMBINE:"30,000 KRW",STORAGE:"5,000 KRW",REMARK:"화주입력",DO:"I"},
@@ -87,16 +88,26 @@ export default function DemDetList() {
 
   const [mblNo,setMblNo] = useState("");
   const [cntrNo,setCntrNo] = useState("");
+  const [paramData, setParamData] = useState('');
+  useEffect(() => {
+    
+    console.log(props.location.state);
+    if (props.location.state != undefined) {
+      setParamData(props.location.state.param);
+    }
+      
+    return () => {
+        console.log('cleanup');
+      };
+  },[]);
 
-  
-  
   const excelHandleClose = () => {
     setAnchorExcel(null);
   }
-  
+  console.log(paramData);
   const open_bl = Boolean(anchorExcel);
   const id_bl = open_bl ? 'simple-popover1':undefined;
-
+  
   const classes = useStyles();  
   return (
     <GridContainer>

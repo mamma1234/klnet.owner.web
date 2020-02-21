@@ -106,7 +106,11 @@ export default function TableList() {
   
   useEffect(() => {
 	    console.log('호출....');
-	    axios.post("/api/getHotInfo").then(res => setSelectData(res.data));
+	    axios.post("/loc/getHotInfo").then(res => setSelectData(res.data))
+	    .catch(err => {
+	        console.log(err);
+	        //window.location.href = "/login";
+	    });
 	    //.then(res => console.log(JSON.stringify(res.data)));
 	    return () => {
 	      console.log('cleanup');
@@ -163,8 +167,8 @@ export default function TableList() {
 	    
   return (
         <Card>
-        	<CardHeader color="warning" stats icon style={{paddingBottom:'2px'}}>
-        		<CardIcon color="warning">
+        	<CardHeader color="info" stats icon style={{paddingBottom:'2px'}}>
+        		<CardIcon color="info">
         			<Icon>content_copy</Icon>
         		</CardIcon>
         		<h4 className={classes.cardTitleBlack}>HOT Setting</h4>
@@ -176,8 +180,8 @@ export default function TableList() {
 	 	    	<GridItem style={{textAlignLast:'right'}}>
 	 	    		<GridContainer>
 	 	    			<GridItem xs={12}>
-									<Button color="warning" onClick={addRow} size="sm">추가</Button>
-									<Button color="warning" size="sm">저장</Button>
+									<Button color="info" onClick={addRow} size="sm">추가</Button>
+									<Button color="info" size="sm">저장</Button>
 						</GridItem>
 					</GridContainer>
 				</GridItem>
@@ -185,11 +189,11 @@ export default function TableList() {
 				    	<Table className={classes.table}>
 				     		<TableHead>
 				     			<TableRow className={classes.tableHeadRow}>
-					     			<TableCell style={{color:"orange",padding:'8px'}}>Vessel</TableCell>
-					     			<TableCell style={{color:"orange",padding:'8px'}}>I/E</TableCell>
-					     			<TableCell style={{color:"orange",padding:'8px'}}>POL</TableCell>
-					     			<TableCell style={{color:"orange",padding:'8px'}}>POD</TableCell>
-					     			<TableCell style={{color:"orange",padding:'8px'}}>Action</TableCell>
+					     			<TableCell style={{color:"#00acc1",padding:'8px'}}>Vessel</TableCell>
+					     			<TableCell style={{color:"#00acc1",padding:'8px'}}>I/E</TableCell>
+					     			<TableCell style={{color:"#00acc1",padding:'8px'}}>POL</TableCell>
+					     			<TableCell style={{color:"#00acc1",padding:'8px'}}>POD</TableCell>
+					     			<TableCell style={{color:"#00acc1",padding:'8px'}}>Action</TableCell>
 				     			</TableRow>
 				     		</TableHead>
 				     		<TableBody>
@@ -232,7 +236,7 @@ export default function TableList() {
 					                      />
 				                      </TableCell>
 					                  <TableCell className={classes.tableCell} style={{padding:'5px'}}> 
-					                  	<Button color="warning" size="sm" onClick={deleteRow(data.SEQ)}>삭제</Button> 
+					                  	<Button color="info" size="sm" onClick={deleteRow(data.SEQ)}>삭제</Button> 
 					                  </TableCell>
 				                </TableRow>
 				              );
@@ -244,8 +248,8 @@ export default function TableList() {
 				            >
 				            <DialogTitle id="alert-dialog-title">{"선택한 즐겨찾기를 삭제 하시겠습니까?"}</DialogTitle>
 				            <DialogActions>
-				            	<Button onClick={handleClose} color="warning" size="sm" >Disagree</Button>
-				            	<Button onClick={handleDelete(delSeq)} color="warning" size="sm" autoFocus>Agree</Button>
+				            	<Button onClick={handleClose} color="info" size="sm" >Disagree</Button>
+				            	<Button onClick={handleDelete(delSeq)} color="info" size="sm" autoFocus>Agree</Button>
 				            </DialogActions>
 				           </Dialog>
 				          </TableBody>

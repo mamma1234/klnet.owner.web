@@ -206,7 +206,7 @@ ToggleTable.propTypes = {
   scheduleToSearch = () => {
 
     return axios ({
-		url:'/api/getScheduleDetailList',
+		url:'/sch/getScheduleDetailList',
 		method:'POST',
 		data: {carrierCode : this.props.data.LINE_CODE,
 			   startPort : this.props.data.START_PORT,

@@ -55,5 +55,13 @@ docker logs -f
 docker run -d --name "server" -p 5000:5000 klnet.owner.node
 docker run -d --name "client" -p 80:80 --link server klnet.owner.web 
 
+docker run -d -it --rm --name "server1" -p 5001:5000 -v /KLNET/OWNER:/OWNER klnet.owner.node
+docker run -d -it --rm --name "server2" -p 5002:5000 -v /KLNET/OWNER:/OWNER klnet.owner.node
+docker run -d -it --rm --name "client" -p 80:80 -v /KLNET/OWNER:/OWNER --link server1:server1 --link server2:server2 klnet.owner.web 
 
+
+sudo systemctl start firewalld.service
+
+systemctl status firewalld.service
 */
+

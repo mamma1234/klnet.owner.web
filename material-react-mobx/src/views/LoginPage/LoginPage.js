@@ -38,6 +38,7 @@ import image from "assets/img/bg2.jpg";
 import axios from 'axios';
 
 import Link from '@material-ui/core/Link';
+import JoinPage from "components/Form/Common/JoinPage.js";
 
 const useStyles = makeStyles(styles);
 
@@ -108,7 +109,7 @@ export default function LoginPage(props) {
     .then(res => {
         console.log(res);
         if (res.data.message) alert(res.data.message);
-        else window.location.href = "/own/tracking"; //alert(res.data.userid + " 로그인 성공");
+        else window.location.href = "/svc/tracking"; //alert(res.data.userid + " 로그인 성공");
     })
     .catch(err => {
         console.log(err);
@@ -153,118 +154,8 @@ export default function LoginPage(props) {
           backgroundSize: "cover",
           backgroundPosition: "top center"
         }}
-      >
-        <div className={classes.container}>
-          <GridContainer justify="center">
-            <GridItem xs={12} sm={12} md={8}>
-              <Card className={classes[cardAnimaton]}>
-                <form className={classes.form}>
-                  <CardHeader color="warning" className={classes.cardHeader} style={{padding:'1px'}}>
-                    <h4 style={{marginBottom:'0px'}}>Login</h4>
-                    <p className={classes.divider} style={{marginTop:'5px'}}>Plism Plus 방문을 환영 합니다.</p>
-                  </CardHeader>  
-                  <CardBody>
-                  	<GridContainer>
-	                  	<GridItem xs={12} sm={12} md={5} style={{textAlignLast:'center'}}>
-	                  		<p className={classes.divider}>KLNET 계정으로 로그인</p>
-	                  		<pre>  </pre>
-	                  		<CustomInput
-		                      labelText="Login ID"
-		                      id="first"
-		                      formControlProps={{
-		                        fullWidth: true
-		                      }}
-		                      inputProps={{
-		                        type: "text",
-		                        endAdornment: (
-		                          <InputAdornment position="end">
-		                            <People className={classes.inputIconsColor} />
-		                          </InputAdornment>
-		                        ),
-		                        onChange:({target:{value} }) => setLoginId(value)
-		                      }}
-		                    />
-		                    <CustomInput
-		                      labelText="Password"
-		                      id="pass"
-		                      formControlProps={{
-		                        fullWidth: true
-		                      }}
-		                      inputProps={{
-		                        type: "password",
-		                        endAdornment: (
-		                          <InputAdornment position="end">
-		                            <Icon className={classes.inputIconsColor}>
-		                              lock_outline
-		                            </Icon>
-		                          </InputAdornment>
-		                        ),
-		                        autoComplete: "off",
-		                        onChange:({target:{value} }) => setLoginPw(value)
-		                      }}
-		                    />
-		                    <pre>  </pre>
-		                    <Button color="warning" size="lg" onClick={login} fullWidth>
-				               Login
-				             </Button>
-						          <CardFooter>
-				         			<Link to="/own/register">아이디 찾기</Link>|
-				         			<Link to="/own/register">비밀번호 재설정</Link>|
-				         			<Link to="/own/register">회원가입</Link>
-				         		  </CardFooter>
-		                    </GridItem>
-		                    <GridItem xs={12} sm={12} md={1} style={{textAlignLast:'center'}}>
-		                    </GridItem>
-		                    <GridItem xs={12} sm={12} md={5} >
-		                    	<p className={classes.divider}>SNS계정으로 로그인</p>
-			                        <div className="button-container">
-			                          <Button
-			                            style={{backgroundColor:'#f5f500',color:'black',padding:'5px',placeContent:'initial'}}
-			                            href="https://kauth.kakao.com/oauth/authorize?client_id=0b6d98316119442e856dd2ad7497df14&redirect_uri=http://localhost:5000/auth/kakao/callback&response_type=code&state=12345"
-			                            target="_blank"
-			                            fullWidth
-			                          >&nbsp;&nbsp;<img src={KakaoIcon} alt="카카오SNS" width="40" height="40"></img>&nbsp;&nbsp;&nbsp;&nbsp;LOGIN TO USER KAKAO ACCESS
-			                          </Button>
-			                        </div>
-			                        <div className="button-container">
-			                        <Button
-			                        style={{backgroundColor:'#008000c7',padding:'5px',placeContent:'initial'}}
-			                          fullWidth
-			                          href="https://nid.naver.com/oauth2.0/authorize?client_id=5vSPppBEGLWEwMT8p9kZ&redirect_uri=http://localhost:5000/auth/naver/callback&response_type=code&state=12345"
-			                          target="_blank"
-			                        >&nbsp;&nbsp;<img src={NaverIcon} alt="네이버SNS" width="40" height="40"></img>&nbsp;&nbsp;&nbsp;&nbsp;LOGIN TO USER NAVER ACCESS
-			                        </Button>
-			                      </div>
-			                        <div className="button-container">
-			                          <Button
-			                            style={{backgroundColor:'#3f51b5',padding:'5px',placeContent:'initial'}}
-			                            href="https://www.facebook.com/v5.0/dialog/oauth?client_id=184064786168643&redirect_uri=http://localhost:5000/auth/facebook/callback&response_type=code&state=12345"
-			                            target="_blank"
-			                            fullWidth
-			                          >&nbsp;&nbsp;<img src={FaceIcon} alt="페이스북SNS" width="40" height="40"></img>&nbsp;&nbsp;&nbsp;&nbsp;LOGIN TO USER FACEBOOK ACCESS
-			                          </Button>
-			                        </div>
-			                      <div className="button-container">
-			                        <Button
-			                          style={{backgroundColor:'white',padding:'5px',color:'black',placeContent:'initial'}}
-			                          fullWidth
-			                          href="https://accounts.google.com/o/oauth2/v2/auth?client_id=684197542136-kkba8s7e8a1l6pnqdio46vgdgkfkhsmn.apps.googleusercontent.com&redirect_uri=http://localhost:5000/auth/google/callback&response_type=code&scope=profile&state=12345"
-			                          target="_blank"
-			                        >&nbsp;&nbsp;<img src={GoogleIcon} alt="구글SNS" width="40" height="40"></img>&nbsp;&nbsp;&nbsp;&nbsp;LOGIN TO USER GOOGLE ACCESS
-			                        </Button>
-			                        </div>
-			                        <p>* SNS계정으로 간편하게 가입하여 서비스를 이용하실 수 있습니다.</p>
-
-		                    </GridItem>
-		                    <GridItem xs={12} sm={12} md={1} style={{textAlignLast:'center'}}>
-		                    </GridItem>
-		                 </GridContainer>
-                  </CardBody>
-                </form>
-              </Card>
-            </GridItem>
-          </GridContainer>
-        </div>
+      ><div className={classes.container}>
+      <JoinPage mode="0" /></div>
         <Footer whiteFont />
       </div>
     </div>

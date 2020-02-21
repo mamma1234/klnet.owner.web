@@ -72,7 +72,7 @@ class SearchToCntr extends React.Component {
   }
 
   cntrSearch = () => {
-    return fetch('/api/exportDemDetCntr')
+    return fetch('/loc/exportDemDetCntr')
       .then(res => res.json())
       .then(cntrData => this.setState({cntrData}));
   }

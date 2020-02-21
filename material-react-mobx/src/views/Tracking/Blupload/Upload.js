@@ -62,7 +62,7 @@ export default function TableList() {
   
   useEffect(() => {
 	    console.log('effect');
-	    axios.post("/api/getCarrierInfo").then(res => setSelectData(res.data));
+	    axios.post("/loc/getCarrierInfo").then(res => setSelectData(res.data));
 	    //.then(res => console.log(JSON.stringify(res.data)));
 	    
 	    return () => {
@@ -89,8 +89,8 @@ export default function TableList() {
   return (	
     <div style={{width:820,height:580,overflow:"auto"}}>
       	<Card style={{marginBottom:'1px'}}>
-	        <CardHeader color="warning" stats icon >
-		        <CardIcon color="warning">
+	        <CardHeader color="info" stats icon >
+		        <CardIcon color="info">
 		        <Icon>content_copy</Icon>
 		        </CardIcon>
 			    <h4 className={classes.cardTitleBlack}>BL No. UpLoad</h4>
@@ -130,14 +130,14 @@ export default function TableList() {
 						        />
 				      		</GridItem>
 						    <GridItem  xs={12} sm={12} md={2}>
-								<SearchButton color="warning">Search</SearchButton>
+								<SearchButton color="info">Search</SearchButton>
 							</GridItem>
 			 </GridContainer>
 		  </GridItem>
           <GridItem style={{textAlignLast:'right'}}>
 			<Button
 			variant="contained"
-			color="warning"
+			color="info"
 			size="sm"
 			style={{lineHeight:"1",}}
 			startIcon={<BackupIcon/>}
@@ -147,7 +147,7 @@ export default function TableList() {
       &nbsp;&nbsp;
 		<Button
 			variant="contained"
-			color="warning"
+			color="info"
 			size="sm"
 			style={{lineHeight:"1",}}
 			startIcon={<StarIcon/>}
@@ -175,7 +175,7 @@ export default function TableList() {
 	  </GridItem>
       <GridItem xs={12} sm={12} md={12}>
             <Table
-              tableHeaderColor="warning"
+              tableHeaderColor="info"
               tableHead={["No", "BL No.", "Carrier", "Register Time"]}
               tableData={[
                 ["1", "SNKO000000001", "SNKO", "2020-01-15 09:30"],

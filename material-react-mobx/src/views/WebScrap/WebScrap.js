@@ -56,7 +56,7 @@ class WebScrapList extends React.Component {
         this.searchYmlWebScrap(bl_no, search_date);
     }
     searchSnkWebScrap = (bl_no, search_date) => {
-        return fetch("/api/snkMasterList"
+        return fetch("/loc/snkMasterList"
         ,{method:'POST', body: JSON.stringify({
             bl_no : bl_no
            ,search_date : search_date
@@ -67,7 +67,7 @@ class WebScrapList extends React.Component {
         .then(snk_master_data => this.setState({snk_master_data}));
     }
     searchKmdWebScrap = (bl_no, search_date) => {
-        return fetch("/api/kmdMasterList"
+        return fetch("/loc/kmdMasterList"
         ,{method:'POST', body: JSON.stringify({
             bl_no : bl_no
            ,search_date : search_date
@@ -78,7 +78,7 @@ class WebScrapList extends React.Component {
         .then(kmd_master_data => this.setState({kmd_master_data}));
     }
     searchYmlWebScrap = (bl_no, search_date) => {
-        return fetch("/api/ymlMasterList"
+        return fetch("/loc/ymlMasterList"
         ,{method:'POST', body: JSON.stringify({
             bl_no : bl_no
            ,search_date : search_date

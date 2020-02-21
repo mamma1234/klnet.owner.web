@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import React from "react";
+import React,{useState} from "react";
 import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 // react components for routing our app without refresh
@@ -22,21 +22,44 @@ import Button from "components/CustomButtons/Button.js";
 
 import styles from "assets/jss/material-kit-react/components/headerLinksStyle.js";
 
+import Modal from '@material-ui/core/Modal';
+import JoinPage from "components/Form/Common/JoinPage.js";
+
+
 const useStyles = makeStyles(styles);
 
 export default function HeaderLinks(props) {
 
   const classes = useStyles();
+  const [openJoin,setOpenJoin] = useState(false);
+  
+  const handleOpenJoin = () => {
+	  setOpenJoin(true);
+  };
+  
+  const handleJoinClose = () => {
+	  setOpenJoin(false);
+  }
+  
+  
   return (
     <List className={classes.list}>
 	  <ListItem className={classes.listItem}>
 	    <Button
-	      href="/login"
+	      //href="/login"
+	    	  onClick={handleOpenJoin}
 	      color="transparent"
 	      className={classes.navLink}
 	    ><LoginIcon/>
 	      Login
 	    </Button>
+	      <Modal
+      	//aria-labelledby="simple-modal-title"
+      	//aria-describedby="simple-modal-description"
+      	open={openJoin}
+        	onClose={handleJoinClose}
+          //onBackdropClick={handleJoinClose}
+        ><JoinPage mode="0" reTurnText="Login"/></Modal>
 	  </ListItem>
       <ListItem className={classes.listItem}>
         <CustomDropdown
@@ -48,10 +71,10 @@ export default function HeaderLinks(props) {
           }}
           buttonIcon={LocationIcon}
           dropdownList={[
-            <Link to="/own/tracking" className={classes.dropdownLink}>
+            <Link to="/svc/tracking" className={classes.dropdownLink}>
               Tracking Service
             </Link>,
-            <Link to="/own/demDet" className={classes.dropdownLink}>
+            <Link to="/svc/demDet" className={classes.dropdownLink}>
               Dem/Det Service
             </Link>
           ]}
@@ -68,15 +91,18 @@ export default function HeaderLinks(props) {
           }}
           buttonIcon={ScheduleIcon}
           dropdownList={[
-            <Link to="/own/scrap_sch" className={classes.dropdownLink}>
+            <Link to="/svc/scrap_sch" className={classes.dropdownLink}>
               Scrap Schedule
-            </Link>
+            </Link>,
+            <Link to="/svc/fcl_sch" className={classes.dropdownLink}>
+            Fcl Schedule
+          </Link>
           ]}
         />
       </ListItem> 
       <ListItem className={classes.listItem}>
         <Button
-          href="https://www.creative-tim.com/product/material-kit-react?ref=mkr-navbar"
+          href="/"
           color="transparent"
           target="_blank"
           className={classes.navLink}

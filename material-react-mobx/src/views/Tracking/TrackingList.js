@@ -32,6 +32,8 @@ import Blupload from "views/Tracking/Blupload/Upload.js";
 import HotSet from "views/Tracking/HotSet/HotSet.js";
 import Map from "views/Tracking/Map/Map.js";
 import FixedPlugin from "views/Tracking/Setting/CustomFixedPlugin.js";
+import Modal from '@material-ui/core/Modal';
+import JoinPage from "components/Form/Common/JoinPage.js";
 
 
 const styles = {
@@ -111,6 +113,7 @@ export default function ScheduleList() {
   //const [anchorE4, setAnchorE4] = useState(null);
   const [fixedClasses, setFixedClasses] = React.useState("dropdown");
   //const [viewVlaue, setViewVlaue] = React.useState("list");
+  const [openJoin,setOpenJoin] = useState(false);
   
   
   const handleViewClick = () => {
@@ -137,7 +140,7 @@ export default function ScheduleList() {
   const onPortSearchValue = (e) => {
 	    const values = e.target.value;
 	    if(values != "" && values.length > 2) {
-	    	axios.post("/api/getPortCodeInfo",{ portCode:values})
+	    	axios.post("/loc/getPortCodeInfo",{ portCode:values})
 		    .then(res => setPortData(res.data));
 	    }  
   }
@@ -161,7 +164,7 @@ export default function ScheduleList() {
   
   const onSubmit = () => {
 	  //search
-	  axios.post("/api/getTrackingList"
+	  axios.post("/loc/getTrackingList"
 			  //{ carrierCode:carrierCode,
 		//  								  startDate:moment(fromDate).format('YYYYMMDD'),
 		 // 								  endDate:moment(toDate).format('YYYYMMDD'),
@@ -170,7 +173,14 @@ export default function ScheduleList() {
 		  //								  vesselName:vesselName
 	  									//})
 			  )
-	    .then(res => setTrackingList(res.data));
+	    .then(res => setTrackingList(res.data))
+	    .catch(err => {
+	        console.log(err.response.status);
+	        if(err.response.status == "403") {
+	        	setOpenJoin(true);
+	        }
+	        //window.location.href = "/Landing";
+	    });
 	  alert("Tracking Info Search onSubmit");
   }
   
@@ -190,12 +200,20 @@ export default function ScheduleList() {
   const id_map = open_map ? 'simple-popover3':undefined;
   //const id_set = open_set ? 'simple-popover4':undefined;
   
+  const handleOpenJoin = () => {
+	  setOpenJoin(true);
+  };
+  
+  const handleJoinClose = () => {
+	  setOpenJoin(false);
+  }
+  
   const classes = useStyles();
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
         <Card>
-        <CardHeader color="warning">
+        <CardHeader color="info" >
         <h4 className={classes.cardTitleWhite}>Tacking Service</h4>
         <p className={classes.cardCategoryWhite}>
           Here is a subtitle for this table
@@ -298,14 +316,21 @@ export default function ScheduleList() {
 				        	 </GridContainer>
 			        	 </GridItem>
 			        	<GridItem xs={12} sm={12} md>
-			        		<Button color="warning" onClick = {onSubmit} fullWidth>Search</Button>
+			        		<Button color="info" onClick = {onSubmit} fullWidth>Search</Button>
+			                <Modal
+			            	//aria-labelledby="simple-modal-title"
+			            	//aria-describedby="simple-modal-description"
+			            	open={openJoin}
+			              	onClose={handleJoinClose}
+			                //onBackdropClick={handleJoinClose}
+			              ><JoinPage mode="0" /></Modal>
 			        	</GridItem>
 		        	</GridContainer>
 		          </GridItem>
 		          <GridItem style={{textAlignLast:'right'}}>
   						<Button
   							variant="contained"
-  							color="warning"
+  							color="info"
   							size="sm"
   							startIcon={<BackupIcon/>}
   							onClick={e=>setAnchorE1(e.currentTarget)}
@@ -325,7 +350,7 @@ export default function ScheduleList() {
   			            &nbsp;&nbsp;
   						<Button
 	  							variant="contained"
-	  	  						color="warning"
+	  	  						color="info"
 	  	    					size="sm"
 	  							startIcon={<StarIcon/>}
 	      						onClick={e=>setAnchorE2(e.currentTarget)}
@@ -345,7 +370,7 @@ export default function ScheduleList() {
 			            &nbsp;&nbsp;
 						<Button
 								variant="contained"
-		  						color="warning"
+		  						color="info"
 		  	  					size="sm"
 								startIcon={<MapIcon/>}
 	    						onClick={e=>setAnchorE3(e.currentTarget)}
@@ -368,7 +393,7 @@ export default function ScheduleList() {
           			<GridContainer>
           				<GridItem xs={12}>
           					<Table
-		                        tableHeaderColor="warning"
+		                        tableHeaderColor="info"
 		                        tableHead={["BL No", "HOT", "I/E", "CARRIER", "VESSEL/VOYAGE","CURRENT","POL/ETD","POD/ETA","ACTION"]}
 	          					tableData={trackingList}
 		                     /> 

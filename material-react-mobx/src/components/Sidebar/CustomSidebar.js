@@ -37,11 +37,17 @@ export default function Sidebar(props) {
   const [open,setOpen] = React.useState(true);
   const [scheduleopen,setScheduleopen] = React.useState(false);
   const handleClick = () => {
-	  setOpen(!open);
+	  if(scheduleopen) {
+		  setScheduleopen(!scheduleopen); 
+	  }
+	  setOpen(!open); 
   }
   
   const scheduleHandleClick = () => {
-	  setScheduleopen(!scheduleopen);
+	  if(open){
+		  setOpen(!open);
+	  }
+	  setScheduleopen(!scheduleopen);  
   }
   
   var links = (
@@ -78,7 +84,7 @@ export default function Sidebar(props) {
 	            activeClassName="active"
 	            key={key}
 	          >
-	            <ListItem button className={classes.itemLink + listItemClasses} onClick={e=>setScheduleopen(false)}>
+	            <ListItem button className={classes.itemLink + listItemClasses} >
 	              {typeof prop.icon === "string" ? (
 	                <Icon
 	                  className={classNames(classes.itemIcon, whiteFontClasses, {
@@ -138,7 +144,7 @@ export default function Sidebar(props) {
 	            activeClassName="active"
 	            key={key}
 	          >
-	            <ListItem button className={classes.itemLink + listItemClasses} onClick={e=>setOpen(false)}>
+	            <ListItem button className={classes.itemLink + listItemClasses} >
 	              {typeof prop.icon === "string" ? (
 	                <Icon
 	                  className={classNames(classes.itemIcon, whiteFontClasses, {
@@ -171,7 +177,7 @@ export default function Sidebar(props) {
   var brand = (
     <div className={classes.logo}>
       <a
-        href="/own"
+        href="/Landing"
         className={classNames(classes.logoLink, {
           [classes.logoLinkRTL]: props.rtlActive
         })}

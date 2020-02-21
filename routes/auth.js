@@ -490,16 +490,12 @@ router.get('/linkedin/callback', isLoggedPass, (req, res, next) => {
 // });
  
 router.get('/logout', isLoggedIn, (req, res) => {
-	console.log(">>>>>LOG OUT");
+	console.log(">>>>>LOG OUT SERVER");
     req.logout();
     delete req.session.sUser;
-    //req.session.destroy();
-/*    req.session.destroy(function(err){
-    	res.redirect('/');
-    });*/
     req.session.save(function(){
-    	res.redirect('/');
     	console.log("정상로그아웃 되었습니다.");
+    	res.redirect('/');
     })
     
 });

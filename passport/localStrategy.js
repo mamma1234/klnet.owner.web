@@ -89,6 +89,7 @@ module.exports = (passport) => {
 	                let sql = "select  * from own_comp_user where user_id = upper('"+userid+"')";
 	                //let sql = "select  * from own_comp_user ";
 	                     pgsqlPool.connect(function(err,conn) {
+	                    	 
 	                    if(err){
 	                        console.log("err" + err);
 	                    }
@@ -146,4 +147,6 @@ module.exports = (passport) => {
                 done(error);
             }
     }));
+    
+   
 };

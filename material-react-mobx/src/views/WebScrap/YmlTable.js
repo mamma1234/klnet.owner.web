@@ -77,7 +77,7 @@ class TableRows extends React.Component {
 
     // 테이블 조회
     // searchSnkWebScrap = () => {
-    //     return fetch('/api/vesselroute')
+    //     return fetch('/loc/vesselroute')
     //     .then(res => res.json())
     //     .then(port => this.setState({port}));
     // }

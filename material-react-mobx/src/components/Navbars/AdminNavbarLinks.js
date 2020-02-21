@@ -18,7 +18,8 @@ import Search from "@material-ui/icons/Search";
 // core components
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
-
+import Modal from '@material-ui/core/Modal';
+import JoinPage from "components/Form/Common/JoinPage.js";
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 import axios from 'axios';
 const useStyles = makeStyles(styles);
@@ -28,6 +29,8 @@ export default function AdminNavbarLinks() {
   const classes = useStyles();
   const [openNotification, setOpenNotification] = React.useState(null);
   const [openProfile, setOpenProfile] = React.useState(null);
+  const [openJoin,setOpenJoin] = React.useState(false);
+  
   const handleClickNotification = event => {
     if (openNotification && openNotification.contains(event.target)) {
       setOpenNotification(null);
@@ -50,22 +53,31 @@ export default function AdminNavbarLinks() {
   };
   
   const logOut = () => {
-	   console.log(">>>logout start");
+	   console.log(">>>logout button click");
 	    axios.get("/auth/logout")
 	    .then(res => {
-	        console.log(">>>>>"+res);
 	        if (res.data.message) alert(res.data.message);
-	        else window.location.href = "/login"; //alert(res.data.userid + " ·Î±×ÀÎ ¼º°ø");
+	        else setOpenJoin(true);
+	        	//window.location.href = "/login"; //alert(res.data.userid + " ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 	    })
 	    .catch(err => {
 	        console.log(err);
+	        window.location.href = "/Landing";
 	    })
 	  
 	 // window.location.href = "/auth/logout";
   };
+    
+  const handleJoinClose = () => {
+	  setOpenJoin(false);
+  }
   
   return (
     <div>
+    <Modal
+	open={openJoin}
+  	onClose={handleJoinClose}
+    ><JoinPage mode="0" reTurnText="ì •ìƒì ìœ¼ë¡œ LogOut ë˜ì—ˆìŠµë‹ˆë‹¤."/></Modal>
       {/*}<div className={classes.searchWrapper}>
         <CustomInput
           formControlProps={{

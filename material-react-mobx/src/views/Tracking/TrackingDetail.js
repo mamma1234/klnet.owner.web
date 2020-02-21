@@ -217,7 +217,7 @@ ToggleTable.propTypes = {
   scheduleToSearch = () => {
 
 /*    return axios ({
-		url:'/api/getScheduleDetailList',
+		url:'/loc/getScheduleDetailList',
 		method:'POST',
 		data: {carrierCode : this.props.data.LINE_CODE,
 			   startPort : this.props.data.START_PORT,
@@ -265,28 +265,28 @@ ToggleTable.propTypes = {
 
     return [
       <TableRow  key={this.props.index}  >
-        <TableCell style={{padding:'5px',textAlignLast:'center'}} onClick={this.handleClickOpen}>{data.BL_BKG}</TableCell>	
-        <TableCell style={{padding:'5px',textAlignLast:'center'}}><StarIcon /></TableCell>
-        <TableCell style={{padding:'5px',textAlignLast:'center'}}>{data.IE_TYPE}</TableCell>
-        <TableCell style={{padding:'5px',textAlignLast:'center'}}>SNKO</TableCell>
-        <TableCell style={{padding:'5px',textAlignLast:'center'}}>{data.VSL_NAME}({data.VOYAGE})</TableCell>
-        <TableCell style={{padding:'5px',textAlignLast:'center'}}>{data.CURRENT_STATUS}</TableCell>
-        <TableCell style={{padding:'5px',textAlignLast:'center'}}>{data.POL}({data.POL_ETD})</TableCell>
-        <TableCell style={{padding:'5px',textAlignLast:'center'}}>{data.POD}({data.POD_ETA})</TableCell>
-        <TableCell style={{padding:'5px',textAlignLast:'center'}}><Icon style={{color:'orange'}} onClick={this.toggleExpander}>{this.state.iconstate}</Icon></TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center'}} onClick={this.handleClickOpen}>{data[0]}</TableCell>	
+        <TableCell style={{padding:'5px',textAlignLast:'center'}}><StarIcon style={{color:'#00acc1'}} /></TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center'}}>{data[1]}</TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center'}}>{data[2]}</TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center'}}>{data[3]}{data[4]?"("+data[4]+")":""}</TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center'}}>{data[5]}</TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center'}}>{data[6]}{data[7]?"("+data[7]+")":""}</TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center'}}>{data[8]}{data[9]?"("+data[9]+")":""}</TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center'}}><Icon style={{color:'#00acc1'}} onClick={this.toggleExpander}>{this.state.iconstate}</Icon></TableCell>
       </TableRow>,
       this.state.expanded && (
         <TableRow key = {this.props.index+1} style={{marginTop:'5px',marginBottom:'5px'}}>
           <TableCell colSpan={9} style={{padding:'5px'}}>
             <div ref="expanderBody"> 
-		          <Stepper classes={{padding: '10px'}}
+		          <Stepper style={{padding: '10px',color:'#00acc1'}}
 		          	stepData ={[['POD: KRPUS','DT: 2020-01-29','T/T: 0'],['POD: KRINC','DT: 2020-01-29','T/T: 0']]}
 		            active ={0}
 		          />
 		        <Grid>
 		          	<GridContainer>
 		          		<GridItem xs={12} sm={12} md={6}>
-		          		<div><Access color="primary"/>DEM / DET Service</div>
+		          		<div><Access style={{color:'#00acc1'}} />DEM / DET Service</div>
 			          		<Card style={{marginTop:'5px',marginBottom:'5px'}}>
 			          		
 					          	<TableList
@@ -300,7 +300,7 @@ ToggleTable.propTypes = {
 				          	</Card>
 			          	</GridItem>
 			          	<GridItem xs={12} sm={12} md={6}>
-			          		<div><Assign color="primary" />CUSTOM</div>
+			          		<div><Assign style={{color:'#00acc1'}} />CUSTOM</div>
 				          	<Card style={{marginTop:'5px',marginBottom:'5px'}}>
 				          	
 					          	<TableList
