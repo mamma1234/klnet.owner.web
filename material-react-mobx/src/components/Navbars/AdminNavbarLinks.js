@@ -1,5 +1,6 @@
 import React from "react";
 import classNames from "classnames";
+import { Link } from '@material-ui/core';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -22,6 +23,7 @@ import Modal from '@material-ui/core/Modal';
 import JoinPage from "components/Form/Common/JoinPage.js";
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 import axios from 'axios';
+import { NavLink } from "react-router-dom";
 const useStyles = makeStyles(styles);
 
 export default function AdminNavbarLinks() {
@@ -30,6 +32,25 @@ export default function AdminNavbarLinks() {
   const [openNotification, setOpenNotification] = React.useState(null);
   const [openProfile, setOpenProfile] = React.useState(null);
   const [openJoin,setOpenJoin] = React.useState(false);
+  
+  React.useEffect(() => {
+	    console.log('effect');
+	    
+	    function handleTouchMove(event) {
+	    	if(openJoin) {
+	    		event.preventDefault();
+	    	}
+	    }
+	    
+	    window.addEventListener("touchmove",handleTouchMove, {
+	    	passive: false
+	    });
+
+	    return () => {
+	      console.log('cleanup');
+	      window.removeEventListener("touchmove",handleTouchMove);
+	    };
+}, [openJoin]);
   
   const handleClickNotification = event => {
     if (openNotification && openNotification.contains(event.target)) {
@@ -72,12 +93,13 @@ export default function AdminNavbarLinks() {
 	  setOpenJoin(false);
   }
   
+  const handleEvents = name => e => {
+	  //name == "Profile"?return <Link href="/svc/user"}></Link>:window.location.href = "/svc/setting"
+	  return (<Link href="/svc/user"></Link>);
+  }
+  
   return (
     <div>
-    <Modal
-	open={openJoin}
-  	onClose={handleJoinClose}
-    ><JoinPage mode="0" reTurnText="정상적으로 LogOut 되었습니다."/></Modal>
       {/*}<div className={classes.searchWrapper}>
         <CustomInput
           formControlProps={{
@@ -222,18 +244,27 @@ export default function AdminNavbarLinks() {
               <Paper>
                 <ClickAwayListener onClickAway={handleCloseProfile}>
                   <MenuList role="menu">
+    	          <NavLink
+  	            	to="/svc/user"
+  	            	activeClassName="active"
+  	            	>
                     <MenuItem
-                      onClick={handleCloseProfile}
+                      //onClick={handleEvents('Profile')}
                       className={classes.dropdownItem}
                     >
                       Profile
                     </MenuItem>
+                    </NavLink>
+                    <NavLink
+  	            	to="/svc/setting"
+  	            	activeClassName="active"
+  	            	>
                     <MenuItem
-                      onClick={handleCloseProfile}
+                      //onClick={handleEvents('setting')}
                       className={classes.dropdownItem}
                     >
                       Settings
-                    </MenuItem>
+                    </MenuItem></NavLink>
                     <Divider light />
                     <MenuItem
                       onClick={logOut}
@@ -247,6 +278,10 @@ export default function AdminNavbarLinks() {
             </Grow>
           )}
         </Poppers>
+        <Modal
+	  	open={openJoin}
+	    onClose={handleJoinClose}
+	  ><JoinPage mode="0" page="/Landing" onClose ={()=>setOpenJoin(false)} reTurnText="정상적으로 LogOut 되었습니다."/></Modal>
       </div>
     </div>
   );

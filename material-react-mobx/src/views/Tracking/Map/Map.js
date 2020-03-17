@@ -8,186 +8,120 @@ import GridContainer from "components/Grid/GridContainer.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
+import Button from "components/CustomButtons/Button.js";
+import CustomInput from "components/CustomInput/CustomInput.js";
+//import CardIcon from "components/Card/CardIcon.js";
+// other import
+//import moment from 'moment';
 import Icon from "@material-ui/core/Icon";
 import CardIcon from "components/Card/CardIcon.js";
-import TerminalList from 'views/Tracking/Map/TerminalList.js';
-//import axios from 'axios';
-import axios from 'axios';
-import {
-  InfoWindow,
-  withScriptjs,
-  withGoogleMap,
-  GoogleMap,
-  Marker,
-} from "react-google-maps";
-import { compose, withStateHandlers, withHandlers, renderComponent } from "recompose";
-const portLocation = [];
-
-
-{
-/*axios.post("/pg/getPort").then(res => {
-  for (let v = 0; v < res.data.length; v++) {
-    const element = res.data[v];
-    portLocation.push({
-      portCode: element.port_code,
-      portName: element.port_name,
-      portKname: element.port_kname,
-      lng: element.wgs84_x,
-      lat: element.wgs84_y
-    })
-  }
-});*/
-}
-  
-
-
-
-
-
-
-
-const getPortInfo = (port, props) =>  {
-  //Marker 정보 Parameter = portInfo
-  //axios.post("/pg/getPortLocation", {portCode: [ portInfo.portCode ]}).then(res => setUsePort(res.data));
-  console.log(port);
-  return(
-    <InfoWindow>
-        <TerminalList  
-        	port={port}
-        />
-    </InfoWindow>
-  )
-}
-
-// 작성 문구 : 보여줄 TERMINAL 항목
-
-
-
-
-
-  const Map = compose(
-    withStateHandlers(() => ({
-      isOpen: false,
-      port: ""
-    }), 
-    {
-    onToggleOpen: ({ isOpen }) =>(portCode) => ({
-      isOpen: !isOpen,
-      port: portCode
-    }), 
-  }
-  ),
-    withScriptjs,
-    withGoogleMap
-  )
-
-    (props =>
-      <GoogleMap
-      defaultZoom={7}
-      defaultCenter={ {lat: 35.837395, lng: 127.782544} }
-        defaultOptions={{
-          scrollwheel: true,
-          zoomControl: true
-      }}>
-      
-      {
-        portLocation.map((value) => 
-        {
-            return(
-              <Marker 
-                key = {value.portCode}
-                draggable = {false} 
-                position={{lat:value.lat, lng:value.lng}} // 마커 위치 설정 {lat: ,lng: }   
-                icon={require("assets/img/marker.png")}
-                onClick={() => props.onToggleOpen(value.portCode) }>
-                {props.isOpen && value.portCode == props.port && getPortInfo(value, props)}  
-              </Marker>
-            )
-        })
-      }
-       
-     </GoogleMap>
-         
-    )
-
+import Grid from '@material-ui/core/Grid';
+import CustomSelect from "components/CustomInput/CustomSelect.js";
+import SearchButton from "components/CustomButtons/Button.js";
+import CalendarBox from "components/CustomInput/CustomCalendar.js";
+import Table from "components/Table/TablePaging.js";
 const styles = {
-  cardCategoryWhite: {
-    "&,& a,& a:hover,& a:focus": {
-      color: "rgba(255,255,255,.62)",
-      margin: "0",
-      fontSize: "14px",
-      marginTop: "0",
-      marginBottom: "0"
-    },
-    "& a,& a:hover,& a:focus": {
-      color: "#FFFFFF"
-    }
-  },
-  cardTitleWhite: {
-    color: "#FFFFFF",
-    marginTop: "0px",
-    minHeight: "auto",
-    fontWeight: "300",
-    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-    marginBottom: "3px",
-    textDecoration: "none",
-    "& small": {
-      color: "#777",
-      fontSize: "65%",
-      fontWeight: "400",
-      lineHeight: "1"
-    }
-  },
-  cardTitleBlack: {
-	    textAlign: "left",
-	    color: "#000000",
-	    minHeight: "auto",
-	    fontWeight: "300",
-	    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-	    marginBottom: "3px",
-	    textDecoration: "none",
-	    "& small": {
-	      color: "#777",
-	      fontSize: "65%",
-	      fontWeight: "400",
-	      lineHeight: "1"
-	    }
+	cardTitleBlack: {
+		  textAlign: "left",
+		  color: "#000000",
+		  minHeight: "auto",
+		  fontWeight: "300",
+		  fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+		  marginBottom: "3px",
+		  textDecoration: "none",
+		  "& small": {
+			color: "#777",
+			fontSize: "65%",
+			fontWeight: "400",
+			lineHeight: "1"
+		  }
+		},
+	  gridStyle1: {
+		  paddingTop:'1px',
+		  paddingBottom:'1px',
 	  },
-};
-
+	  cardStyle: {
+		display: 'block',
+		transitionDuration: '0.3s',
+		height: '45vw'
+	  }
+  };
+  
 const useStyles = makeStyles(styles);
 
 export default function TableList() {
-  const classes = useStyles();
+	const [dateGbSet,setDateGbSet] = useState("VESSEL");
+	const classes = useStyles();
   
-  return (
-    <GridContainer
-    style={{height: '650px',width: '650px'}}>
-      <GridItem xs={12} sm={12} md={12} style={{height: `100%`,width: `100%`}}>
-        <Card>
-          <CardHeader color="warning" stats icon>
-            <CardIcon color="warning">
-              <Icon>content_copy</Icon>
-            </CardIcon>
-            <h4 className={classes.cardTitleBlack}>View Map</h4>
-            <p className={classes.cardTitleBlack}>Here is a subtitle for this table</p>
-	        </CardHeader>
-          
-          <CardBody>
-
-
-
-            <Map    
-              googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBK2wBJD1QHGAquIsW0V5_XVQeu6muFmZ0"
-              loadingElement={<div style={{ height: `90%` }} />}
-              containerElement={<div style={{ height: `50vh` }} />}
-              mapElement={<div style={{ height: `100%` }} />}>
-            </Map>
-
-
-          </CardBody>
-        </Card>
-      </GridItem>
-    </GridContainer>
+	return (
+	<Card className={classes.cardStyle}>
+    	<CardHeader color="info" stats icon style={{paddingBottom:'2px'}}>
+	    	<CardIcon color="info" style={{height:'26px'}}>
+				<Icon style={{width:'26px',fontSize:'20px',lineHeight:'26px'}}>content_copy</Icon>
+      		</CardIcon>
+				<h4 className={classes.cardTitleBlack}>Tracking Map</h4>
+				<p className={classes.cardTitleBlack}>
+					Here is a subtitle for this table
+				</p>
+      	</CardHeader>
+      	<CardBody style={{paddingBottom:'2px'}}>
+			<GridContainer>
+				<GridItem xs={12} sm={12} md={12}>
+		  			<Grid item xs={12} sm={12} md={12} >
+						<Grid container spacing={4}>
+							<Grid item xs={12} sm={12} md={3}>
+								<CustomSelect
+									id="searchGubun"
+									labelText = "구분"
+									setValue = {dateGbSet}
+									option = {["VESSEL","ROUTE", "BL"]}
+									inputProps={{onChange:event => setDateGbSet(event.target.value) || console.log(event.target.value)}}
+									formControlProps={{fullWidth: true}}/>
+							</Grid>
+						</Grid>
+						<Grid container spacing={4}>
+							<Grid item xs={12} sm={12} md={3}>
+							<CustomInput
+								labelText="Vessel Name"
+								id="vesselName"
+								formControlProps={{fullWidth: true}}/>
+							</Grid>
+							<Grid item xs={12} sm={12} md={2}>
+							<CustomInput
+								labelText="POL"
+								id="pol"
+								formControlProps={{fullWidth: true}}/>
+							</Grid>
+							<Grid item xs={12} sm={12} md={2}>
+								<CustomInput
+									labelText="POD"
+									id="pod"
+									formControlProps={{fullWidth: true}}/>
+							</Grid>
+							<Grid item xs={12} sm={12} md={3}>
+								<CustomInput
+									labelText="BLNo."
+									id="BLNO"
+									formControlProps={{fullWidth: true}}/>
+							</Grid>
+							<Grid item xs={12} sm={12} md={2}>
+								<Button>Search</Button>
+									
+							</Grid>
+						</Grid>
+					</Grid>
+						
+				</GridItem>
+			</GridContainer>
+			<Grid item item xs={12} sm={12} md={12}>
+				<form target="maplink"> 
+					{/* {src='http://route.seavantage.com/#/'} */}
+					<iframe name="maplink" src='http://route.seavantage.com/#/'  width="100%" height="600" display='block' border='none' position="absolute" frameBorder="0" scrolling="auto" allowFullScreen></iframe>
+				</form>
+			</Grid>
+						
+			
+		</CardBody>
+	</Card> 
   );
 }

@@ -86,7 +86,7 @@ module.exports = (passport) => {
             	
             	if(userid) {
             		var storepassword = "";
-	                let sql = "select  * from own_comp_user where user_id = upper('"+userid+"')";
+	                let sql = "select  * from own_comp_user where user_email = upper('"+userid+"')";
 	                //let sql = "select  * from own_comp_user ";
 	                     pgsqlPool.connect(function(err,conn) {
 	                    	 
@@ -102,6 +102,9 @@ module.exports = (passport) => {
 	                            console.log("SQL:"+sql);
 	                            console.log("DB DATA:"+result.rows[0].user_pw);
 	                            storepassword = result.rows[0].user_pw.toString();
+	                            
+	                            const userName = result.rows[0].user_person;
+	                            const userNo = result.rows[0].user_no;
 	                            // const storepassword = "admin00"; 
 	                            
 	                            // let hash = bcrypt.hashSync(exUser.password, 10);
@@ -112,20 +115,19 @@ module.exports = (passport) => {
 	                           
 	                            const exUser = {userid, password}
 
-	                            sUser.provider = 'local';
-	                            sUser.userid = userid;
-	                            sUser.username = 'test',
-	                            sUser.displayName = 'test',
-	                            sUser.email = 'test@klnet.co.kr';
-	                            req.session.sUser = sUser;
-	                            
 	                            const inputpassword = crypto.pbkdf2Sync(password, 'salt', 100000, 64, 'sha512').toString('hex');
 	                            let resultSet = false; 
 	                                 
 	                                 if (inputpassword == storepassword) resultSet = true;
-	                                 
 	                                 // console.log("result:"+result);
 	                                 if(resultSet) {
+	     	                            sUser.provider = 'local';
+	    	                            sUser.userid = userid;
+	    	                            sUser.userno = userNo;
+	    	                            sUser.username = userName,
+	    	                            sUser.displayName = 'test',
+	    	                            sUser.email = 'test@klnet.co.kr';
+	                                	 req.session.sUser = sUser;
 	                                     console.log('정상 로그인되었습니다.');
 	                                     done(null, exUser);
 	                                 } else {

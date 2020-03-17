@@ -31,7 +31,6 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
 // router.post('/login', isNotLoggedIn, (req, res, next) => {
 router.post('/login', isLoggedPass, (req, res, next) => {
     console.log("(auth.js) req.isAuthenticated():", req.isAuthenticated());
-    
     passport.authenticate('local', (authError, user, info) => {
         console.log("authError:",authError,",user:",user,",info:",info);
         if(authError) {
@@ -42,7 +41,6 @@ router.post('/login', isLoggedPass, (req, res, next) => {
             console.log("!user", user);
             // req.flash('loginError', info.message);
             // return res.redirect('/');
-
             res.status(200).json(info);
             return;
         }

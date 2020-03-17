@@ -10,44 +10,47 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Button from "components/CustomButtons/Button.js";
 import TablePaging from "views/Tracking/Blupload/UploadTable.js";
+import CardIcon from "components/Card/CardIcon.js";
+import IconM from "@material-ui/core/Icon";
+import axios from 'axios';
 
 export default class ExcelPage extends Component {
-  constructor(props) { 
-    super(props); 
-    this.state = { 
-      cols: [], 
-      rows: [], 
-      errorMessage: null, 
-      columns: [ 
-        { 
-          title: "BL No.", 
-          dataIndex: "name", 
-          editable: true 
-        }, 
-        { 
-          title: "Carrier Code", 
-          dataIndex: "carrierCode", 
-          editable: true 
-        }, 
-        { 
-          title: "Action", 
-          dataIndex: "action", 
-          render: (text, record) => 
-            this.state.rows.length >= 1 ? ( 
-              <Popconfirm 
-                title="Sure to delete?" 
-                onConfirm={() => this.handleDelete(record.key)} 
-              > 
-                <Icon 
-                  type="delete" 
-                  theme="filled" 
-                  style={{ color: "red", fontSize: "20px" }} 
-                /> 
-              </Popconfirm> 
-            ) : null 
-        } 
+  constructor(props) {
+  super(props);
+  this.state = {
+    cols: [],
+    rows: [],
+    errorMessage: null,
+    columns: [
+      {
+        title: "BL No.",
+        dataIndex: "name",
+        editable: true
+      },
+      {
+        title: "Carrier Code",
+        dataIndex: "carrierCode",
+        editable: true
+      },
+      {
+        title: "Action",
+        dataIndex: "action",
+        render: (text, record) => 
+        this.state.rows.length >= 1 ? (
+          <Popconfirm
+          title="Sure to delete?"
+          onConfirm={() => this.handleDelete(record.key)}
+          >
+          <Icon
+            type="delete"
+            theme="filled"
+            style={{ color: "red", fontSize: "20px" }}
+          />
+          </Popconfirm>
+        ) : null
+      }
       ] 
-    }; 
+    };
   } 
 
   handleSave = row => { 
@@ -61,19 +64,19 @@ export default class ExcelPage extends Component {
     this.setState({ rows: newData }); 
   }; 
 
-  checkFile(file) { 
+  checkFile(file) {
     let errorMessage = ""; 
     if (!file || !file[0]) { 
       return; 
     } 
     const isExcel = 
-      file[0].type === "application/vnd.ms-excel" || 
-      file[0].type === 
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; 
+    file[0].type === "application/vnd.ms-excel" || 
+    file[0].type === 
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; 
     if (!isExcel) { 
       errorMessage = "You can only upload Excel file!";
-    } 
-    console.log("file", file[0].type); 
+    }
+    console.log("file", file[0].type);
     const isLt2M = file[0].size / 1024 / 1024 < 2; 
     if (!isLt2M) { 
       errorMessage = "File must be smaller than 2MB!";
@@ -82,94 +85,102 @@ export default class ExcelPage extends Component {
     return errorMessage; 
   } 
 
-  fileHandler = fileList => { 
-    console.log("fileList", fileList); 
+  fileHandler = fileList => {
+  console.log("fileList", fileList); 
     let fileObj = fileList; 
-    if (!fileObj) { 
-      this.setState({ 
-        errorMessage: "No file uploaded!" 
-      }); 
+      if (!fileObj) {
+        this.setState({ 
+          errorMessage: "No file uploaded!" 
+        }); 
       return false; 
     } 
     console.log("fileObj.type:", fileObj.type); 
-    if ( 
-      !( 
+    if (!( 
         fileObj.type === "application/vnd.ms-excel" ||
         fileObj.type === 
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" 
-      ) 
-    ) { 
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" 
+    ) ) { 
       this.setState({ 
         errorMessage: "Unknown file format. Only Excel files are uploaded!"
-      }); 
-      return false; 
-    } 
+      });
+    return false; 
+    }
     //just pass the fileObj as parameter 
-    ExcelRenderer(fileObj, (err, resp) => { 
+    ExcelRenderer(fileObj, (err, resp) => {
       if (err) { 
         console.log(err); 
-      } else { 
-        let newRows = []; 
-        resp.rows.slice(1).map((row, index) => { 
-          if (row && row !== "undefined") { 
-            newRows.push([row[0],row[1],row[2]]); 
-          } 
-        }); 
+      } else {
+        let newRows = [];
+        resp.rows.slice(1).map((row, index) => {
+          if (row && row !== "undefined") {
+            newRows.push([row[0],row[1],row[2],row[3]]);
+          }
+        });
 
-        if (newRows.length === 0) { 
-          this.setState({ 
-            errorMessage: "No data found in file!" 
+        if (newRows.length === 0) {
+          this.setState({
+            errorMessage: "No data found in file!"
           }); 
           return false; 
-        } else { 
-          this.setState({ 
-            cols: resp.cols, 
-            rows: newRows, 
-            errorMessage: null 
-          }); 
-        } 
-      } 
-    }); 
+        } else {
+          this.setState({
+            cols: resp.cols,
+            rows: newRows,
+            errorMessage: null
+          });
+        }
+      }
+    });
     return false; 
   }; 
 
   handleSubmit = async () => { 
-    console.log("submitting: ", this.state.rows); 
+    // console.log("submitting: ", this.state.rows);
+    let dataRows = this.state.rows;
+    axios.post("/loc/saveBlList", { dataRows:dataRows })
+    .then(response => {
+      alert(" 정상 처리되었습니다.");
+      this.setState({ rows: [] });
+    })
+    .catch(error => {
+      console.log(error)
+      alert(error);
+    })
     //submit to API 
     //if successful, banigate and clear the data 
     //this.setState({ rows: [] }) 
-  }; 
+  };
 
-  handleDelete = key => { 
-    const rows = [...this.state.rows]; 
+  handleDelete = key => {
+    const rows = [...this.state.rows];
     this.setState({ rows: rows.filter(item => item.key !== key) });
   }; 
-  /*handleAdd = () => { 
-    const { count, rows } = this.state; 
-    const newData = { 
-      key: count, 
-      name: "User's name", 
-      age: "22", 
-      gender: "Female" 
-    }; 
-    this.setState({ 
-      rows: [newData, ...rows], 
-      count: count + 1 
-    }); 
-  }; */
+/*handleAdd = () => { 
+const { count, rows } = this.state; 
+const newData = { 
+key: count, 
+name: "User's name", 
+age: "22", 
+gender: "Female" 
+}; 
+this.setState({ 
+rows: [newData, ...rows], 
+count: count + 1 
+}); 
+}; */
 
-  render() { 
-    const components = { 
-      body: { 
-        row: EditableFormRow, 
-        cell: EditableCell 
-      } 
+  render() {
+    const components = {
+      body: {
+        row: EditableFormRow,
+        cell: EditableCell
+      }
     }; 
-    const columns = this.state.columns.map(col => { 
-      if (!col.editable) { 
-        return col; 
-      } 
-      return { 
+    const columns = this.state.columns.map(col => {
+      if (!col.editable) {
+        return col;
+      }
+      return {
         ...col, 
         onCell: record => ({ 
           record, 
@@ -180,40 +191,43 @@ export default class ExcelPage extends Component {
         }) 
       }; 
     }); 
-    return ( 
-    		<div style={{width:380,overflow:"auto"}}>
-    	   		<Card>
-    		    <CardHeader color="info" style={{padding:'0px'}}>
-    	   			<h4 >Importing Excel Component</h4>
-    	        </CardHeader>
-    	        <CardBody>
-    	        	<GridContainer>
-    	          		<GridItem xs={12} sm={12} md={7}>
-    	          			<Upload 
-    	          				name="file" 
-    	          				beforeUpload={this.fileHandler} 
-    	          				onRemove={() => this.setState({ rows: [] })} 
-    	          				multiple={false} 
-    	          			> 
-		                    <Button style={{width:200}} color="info"> 
-		                    <Icon type="upload" /> Click to Upload Excel File
-		                    </Button> 
-		                    </Upload>
-		                 </GridItem>
-	    	          	<GridItem xs={12} sm={12} md={5}>
-	    	          		<Button color="info" style={{width:100}} onClick={this.handleSubmit} > Submit Data </Button>
-	    	          	</GridItem>
-    	          		</GridContainer>
-		                <TablePaging
-		                	tableHeaderColor="info"
-		                	tableHead={["No", "BL No.", "CARRIER CODE"]}
-		                	tableData={this.state.rows}
-		                />
-    	          </CardBody>
-		                </Card>
-    	       </div>
-    	       
-    	    
-    ); 
+    return (
+      <div>
+      <Card>
+        <CardHeader color="info" stats icon >
+          <CardIcon color="info" style={{height:'26px'}}>
+            <IconM style={{width:'26px',fontSize:'20px',lineHeight:'26px'}}>
+              content_copy
+            </IconM>
+          </CardIcon>
+            <h4 style={{textAlign: "left",color:"#000000"}}>Importing Excel Component</h4>
+        </CardHeader>
+        <CardBody>
+          <GridContainer>
+            <GridItem xs={12} sm={12} md={7}>
+              <Upload
+                name="file"
+                beforeUpload={this.fileHandler}
+                onRemove={() => this.setState({ rows: [] })}
+                multiple={false}
+              >
+                <Button  color="info" size="sm">
+                  <Icon type="upload" /> Click to Upload Excel File
+                </Button>
+              </Upload>
+            </GridItem>
+            <GridItem xs={12} sm={12} md={5}>
+              <Button color="info"  onClick={this.handleSubmit} size="sm"> Submit Data </Button>
+            </GridItem>
+          </GridContainer>
+        </CardBody>
+      </Card>
+      <TablePaging
+        tableHeaderColor="info"
+        tableHead={["No",  "Carrier Code","BL No.","Container No."]}
+        tableData={this.state.rows}
+      />
+      </div>
+    );
   } 
 }

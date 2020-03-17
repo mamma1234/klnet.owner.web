@@ -14,6 +14,12 @@ import CardBody from "components/Card/CardBody.js";
 import TextField from '@material-ui/core/TextField';
 //import MenuItem from '@material-ui/core/MenuItem';
 import Button from "components/CustomButtons/Button.js";
+import CardIcon from "components/Card/CardIcon.js";
+import IconM from "@material-ui/core/Icon";
+import Modal from '@material-ui/core/Modal';
+import JoinPage from "components/Form/Common/JoinPage.js";
+import axios from 'axios';
+
 
 const useStyless = makeStyles(theme => ({
 	  root: {
@@ -61,15 +67,45 @@ export default function TableList() {
   //const classess = useStyless();
   
   const [ietype,setIetype] = useState("");
+  const [selectData,setSelectData] = useState([]);
+  const [openJoin,setOpenJoin] = useState(false);
+  
+  React.useEffect(() => {
+	    console.log('effect');
+	    getCarrierInfo();
+	    //.then(res => console.log(JSON.stringify(res.data)));
+	    
+	    return () => {
+	      console.log('cleanup');
+	    };
+	  }, []);
+  
+  function getCarrierInfo() {
+	  return axios.post("/com/getCarrierInfo").then(setSelectData([])).then(res => setSelectData(res.data))
+	    .catch(err => {
+		       //console.log(err.response.status);
+		        if(err.response.status == "403") {
+		        	setOpenJoin(true);
+		        }
+		    });
+  }
+  
+  const handleOpenJoin = () => {
+	  setOpenJoin(true);
+  };
+  
+  const handleJoinClose = () => {
+	  setOpenJoin(false);
+  }
   
   return (
         <Card>
-        <CardHeader color="info">
-        <h4 className={classes.cardTitleWhite}>Carrier Code Search Service</h4>
-        <p className={classes.cardCategoryWhite}>
-          Here is a subtitle for this table
-        </p>
-      </CardHeader>
+ 		<CardHeader color="info" stats icon >
+		<CardIcon color="info" style={{height:'26px'}}>
+			<IconM style={{width:'26px',fontSize:'20px',lineHeight:'26px'}}>content_copy</IconM>
+        </CardIcon>
+        <h4 style={{textAlign: "left",color:"#000000"}}>Carrier Code Search</h4>
+  </CardHeader>
           <CardBody>
 	 	     	<GridItem>
 	 	     		<GridContainer>
@@ -84,17 +120,17 @@ export default function TableList() {
 		         <GridItem>
 				     <Table
 				          tableHeaderColor="info"
-				          tableHead={["Carrier Code", "English Name", "Korean Name"]}
-				          tableData={[
-				            ["SNKO", "sinokorea shipper", "시노코 코리아"],
-				            ["KMD", "korea m shipper", "고려해운"],
-				            ["SKR", "test shipper", "장금상선"],
-				            ["DYS", "test shipper", "동영해운"],
-				            ["APL", "test shipper", "APL"],
-				          ]}
+				          tableHead={["Carrier", "Line Carrier", "Korean ShipperName","English ShipperName"]}
+				          tableData={selectData}
 				        />
 				     </GridItem>
           </CardBody>
+          <Modal
+	   		open={openJoin}
+	  		onClose={handleJoinClose}
+	      >
+	      <JoinPage mode="0" page="/svc/tracking" reTurnText="Login" />
+	   </Modal>
         </Card>
   );
 }

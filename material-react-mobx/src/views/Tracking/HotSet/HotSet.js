@@ -7,7 +7,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 // core components
-import Grid from '@material-ui/core/Grid';
+//import Grid from '@material-ui/core/Grid';
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 //import Table from "components/Table/Table.js";
@@ -16,17 +16,18 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Icon from "@material-ui/core/Icon";
 import CardIcon from "components/Card/CardIcon.js";
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
+//import TextField from '@material-ui/core/TextField';
+//import MenuItem from '@material-ui/core/MenuItem';
 import Button from "components/CustomButtons/Button.js";
-import DeleteIcon from '@material-ui/icons/DeleteForever';
+//import DeleteIcon from '@material-ui/icons/DeleteForever';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
+//import DialogContent from '@material-ui/core/DialogContent';
+//import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
+import Modal from '@material-ui/core/Modal';
+import JoinPage from "components/Form/Common/JoinPage.js";
 import axios from 'axios';
 
 const useStyless = makeStyles(theme => ({
@@ -85,20 +86,27 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-export default function TableList() {
+export default function TableList(props) {
   const classes = useStyles();
-  const classess = useStyless();
+//  const classess = useStyless();
   
   const [selectData,setSelectData] = useState([]);
-  const [ietype,setIetype] = useState("");
+  //const [ietype,setIetype] = useState("");
   const [open, setOpen] = useState(false);
   const [delSeq, setDelSeq] = useState("");
-  
+  const [openJoin,setOpenJoin] = useState(false);
  /* const onClickDelete = () => {
 	  confirm({description:'정말로 삭제 하시겠습니까?'}).then(()=>{});
 	  console.log(">>>>>");
   };*/
 
+  const handleOpenJoin = () => {
+	  setOpenJoin(true);
+  };
+  
+  const handleJoinClose = () => {
+	  setOpenJoin(false);
+  }
   
   const handleClose = () => {
 	setOpen(false);  
@@ -106,12 +114,15 @@ export default function TableList() {
   
   useEffect(() => {
 	    console.log('호출....');
-	    axios.post("/loc/getHotInfo").then(res => setSelectData(res.data))
+	    axios.post("/loc/getBookMark").then(setSelectData([])).then(res => setSelectData(res.data))
+	    //.then(res => console.log(JSON.stringify(res.data)))
 	    .catch(err => {
-	        console.log(err);
-	        //window.location.href = "/login";
-	    });
-	    //.then(res => console.log(JSON.stringify(res.data)));
+		       //console.log(err.response.status);
+		        if(err.response.status == "403") {
+		        	setOpenJoin(true);
+		        }
+		    });
+	    
 	    return () => {
 	      console.log('cleanup');
 	    };
@@ -123,15 +134,16 @@ export default function TableList() {
 	    } = e; 
 
 	    const tempRows = selectData.map(row => { 
-	      if (row.SEQ == id) {
+	    	console.log(">>>"+row[0]);
+	      if (row[0] == id) {
 		    if(name == "vessel") {   
-		      row["VESSEL_NAME"] = value; 
+		      row[1] = value; 
 		    } else if (name == "ie") { 
-		      row["IE_TYPE"] = value; 
+		      row[2] = value; 
 		    } else if (name == "pol") { 
-		      row["POL"] = value; 
+		      row[3] = value; 
 		    } else if (name == "pod") { 
-		      row["POD"] = value; 
+		      row[4] = value; 
 		    } 
 	      } 
 	      return row; 
@@ -141,13 +153,10 @@ export default function TableList() {
 	  }; 
 
 	  const addRow = () => { 
-	    let data = { 
-	      SEQ: selectData.length + 1, 
-	      VESSEL_NAME: "", 
-	      IE_TYPE:"", 
-	      POL:"", 
-	      POD:"" 
-	    }; 
+		  console.log("add row"+selectData.length);
+		  const seq = selectData.length +1;
+	    let data = [seq,"","","",""]; 
+	    
 	    setSelectData([...selectData, data]); 
 	  }; 
 	  
@@ -159,7 +168,7 @@ export default function TableList() {
 	  
 	  const handleDelete = id => () => {
 		  let tempRows = selectData.filter(row => {
-		      return row.SEQ !== id; 
+		      return row[0] !== id; 
 		    }); 
 		    setSelectData(tempRows);
 		    handleClose();
@@ -168,8 +177,8 @@ export default function TableList() {
   return (
         <Card>
         	<CardHeader color="info" stats icon style={{paddingBottom:'2px'}}>
-        		<CardIcon color="info">
-        			<Icon>content_copy</Icon>
+	    		<CardIcon color="info" style={{height:'26px'}}>
+				<Icon style={{width:'26px',fontSize:'20px',lineHeight:'26px'}}>content_copy</Icon>
         		</CardIcon>
         		<h4 className={classes.cardTitleBlack}>HOT Setting</h4>
         		<p className={classes.cardTitleBlack}>
@@ -206,37 +215,37 @@ export default function TableList() {
 				                      <TableCell className={classes.tableCell} style={{padding:'3px'}}>
 					                      <input 
 					                      	type="text" 
-					                        onChange={changeText(data.SEQ,'vessel')} 
-					                        value={data.VESSEL_NAME?data.VESSEL_NAME:""}
+					                        onChange={changeText(data[0],'vessel')} 
+					                        value={data[1]?data[1]:""}
 					                        style={{width:'150px',height:'21px'}}
 					                      />
 				                      </TableCell>
 				                      <TableCell className={classes.tableCell} style={{padding:'3px'}}>
 					                      <input 
 					                      	type="text" 
-					                      	onChange={changeText(data.SEQ,'ie')} 
-					                      	value={data.IE_TYPE?data.IE_TYPE:""} 
+					                      	onChange={changeText(data[0],'ie')} 
+					                      	value={data[2]?data[2]:""} 
 					                        style={{width:'25px',height:'21px'}}
 					                       />
 				                      </TableCell>
 				                      <TableCell className={classes.tableCell} style={{padding:'3px'}}>
 					                      <input 
 					                      	type="text"
-					                      	onChange={changeText(data.SEQ,'pol')} 
-					                      	value={data.POL?data.POL:""}
+					                      	onChange={changeText(data[0],'pol')} 
+					                      	value={data[3]?data[3]:""}
 					                        style={{width:'60px',height:'21px'}}
 					                      />
 				                      </TableCell>
 				                      <TableCell className={classes.tableCell} style={{padding:'3px'}}>
 					                      <input 
 					                      	type="text" 
-					                      	onChange={changeText(data.SEQ,'pod')} 
-					                      	value={data.POD?data.POD:""}
+					                      	onChange={changeText(data[0],'pod')} 
+					                      	value={data[4]?data[4]:""}
 					                        style={{width:'60px',height:'21px'}}
 					                      />
 				                      </TableCell>
 					                  <TableCell className={classes.tableCell} style={{padding:'5px'}}> 
-					                  	<Button color="info" size="sm" onClick={deleteRow(data.SEQ)}>삭제</Button> 
+					                  	<Button color="info" size="sm" onClick={deleteRow(data[0])}>삭제</Button> 
 					                  </TableCell>
 				                </TableRow>
 				              );
@@ -255,6 +264,12 @@ export default function TableList() {
 				          </TableBody>
 				     	</Table>	
 				     </GridItem>
+				        <Modal
+			     		open={openJoin}
+			    		onClose={handleJoinClose}
+			        >
+			        <JoinPage mode="0" page="/svc/tracking" onClose ={()=>setOpenJoin(false)} reTurnText="Login" />
+			     </Modal>
           </CardBody>
         </Card>
   );

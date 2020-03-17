@@ -11,6 +11,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableFooter from "@material-ui/core/TableFooter";
 import TablePagination from "@material-ui/core/TablePagination";
+import TableSortLabel from "@material-ui/core/TableSortLabel"; 
 import IconButton from "@material-ui/core/IconButton";
 import FirstPageIcon from "@material-ui/icons/FirstPage";
 import LastPageIcon from "@material-ui/icons/LastPage";
@@ -20,21 +21,57 @@ import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import MButton from '@material-ui/core/Button';
 
+
 // core components
 import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
 import { slideDown, slideUp } from "components/Slide/Slide.js";
 import ExpandTable from "components/Table/Table.js";
-
+import CntrDetail from "views/DemDet/CntrDetail.js";
+import SimpleTable from "views/DemDet/CustomTable.js";
 import axios from 'axios';
 import Stepper from 'components/Navbars/Stepper.js';
+
+import Popover from '@material-ui/core/Popover';
+import Typography from '@material-ui/core/Typography';
+
+import Slider from "components/Slide/Slider.js";
+import Grid from '@material-ui/core/Grid';
+import Access from "@material-ui/icons/AccessAlarm";
+import Card from "components/Card/Card.js";
+import TableList from "components/Table/TableSmallLine.js";
+
+
 
 const classes = makeStyles(theme => ({
   root: {
     padding: 0,
   },
+  visuallyHidden: {
+    border: 0,
+    clip: 'rect(0 0 0 0)',
+    height: 1,
+    margin: -1,
+    overflow : 'hidden',
+    padding : 0,
+    position: 'absolute',
+    top: 20,
+    width: 1,
+  },
 }));
 
-const useStyles = makeStyles(styles);
+const useStyles = makeStyles(styles => ({
+  visuallyHidden: {
+    border: 0,
+    clip: 'rect(0 0 0 0)',
+    height: 1,
+    margin: -1,
+    overflow : 'hidden',
+    padding : 0,
+    position: 'absolute',
+    top: 20,
+    width: 1,
+  }
+}));
 
 const useStyles1 = makeStyles(theme => ({
 	root:{
@@ -42,6 +79,9 @@ const useStyles1 = makeStyles(theme => ({
 		marginLeft: theme.spacing(2.5),
 	}
 }));
+
+const useStyles2 = makeStyles(styles);
+
 
 
 function TablePageinationActions(props) {
@@ -109,15 +149,44 @@ TablePageinationActions.propTypes = {
 		rowsPerPage:PropTypes.number.isRequired,
 }
 
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+function getComparator(order, orderBy) {
+  return order === 'desc'
+  ? (a, b) => descendingComparator(a, b, orderBy)
+  : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function stableSort(array, comparator) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a,b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] = b[1];
+  });
+  return stabilizedThis.map(el => el[0]);
+}
+
 export default function ToggleTable(props) {
 
 
-  const classes = useStyles();
+  const classes = useStyles2();
   const { tableHead, tableData, tableHeaderColor } = props;
   const [page,setPage] = React.useState(0);
   const [rowsPerPage,setRowsPerPage] = React.useState(5);
-  console.log(tableData);
-  console.log(props);
+  console.log(">>> tableData : ",tableData);
+  //console.log(props);
+
+  const { order, orderBy, onRequestSort} = props;
+
   
   const emptyRows = rowsPerPage - Math.min(rowsPerPage,tableData.length - page * rowsPerPage);
   
@@ -130,7 +199,10 @@ export default function ToggleTable(props) {
 	  setPage(0);
   }
   
-  
+  const createSortHandler = property => event => {
+    onRequestSort(event, property);
+  }
+
   return (
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
@@ -139,11 +211,12 @@ export default function ToggleTable(props) {
             <TableRow className={classes.tableHeadRow}>
               {tableHead.map((prop, key) => {
                 return (
-                  <TableCell
+                  <TableCell 
                     className={classes.tableCell + " " + classes.tableHeadCell}
                     key={key}
+                    align = "center"
                   >
-                    {prop}
+                      <b>{prop}</b>
                   </TableCell>
                 );
               })}
@@ -151,9 +224,10 @@ export default function ToggleTable(props) {
           </TableHead>
         ) : null}
         <TableBody>
-           {(rowsPerPage > 0?tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) :  tableData).map((prop, key) => {
+           {
+           (rowsPerPage > 0?  tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) :  tableData).map((prop, idx, key) => {
                   return (
-                    <TableRows key={key} index={key + 1} data={prop} />
+                    <TableRows key={idx} index={idx + 1} data={prop} />
                   );
                 })}
                 
@@ -201,91 +275,78 @@ ToggleTable.propTypes = {
 };
 
 
- class TableRows extends React.Component {
-  state = { tarrifExpanded: false , cntrExpanded: false, list: []};
+class TableRows extends React.Component {
+  state = {tarrifExpanded: false , cntrExpanded: false};
 
-  componentDidMount() {
-	    //this.scheduleToSearch();
-	  }
-  
-  // ���̺� ��ȸ
-  scheduleToSearch = () => {
+  tarrifExpander = () => {
+    this.setState({ cntrExpanded: false });
 
-    return axios ({
-		url:'/sch/getScheduleDetailList',
-		method:'POST',
-		data: {carrierCode : this.props.data.LINE_CODE,
-			   startPort : this.props.data.START_PORT,
-			   endPort : this.props.data.END_PORT,
-			   voyage : this.props.data.VOYAGE_NO,
-			   vesselName : this.props.data.VESSEL_NAME
-			   }
-	}).then(response => this.setState({list:response.data }));
-    
-  }
- 
-  // �ο� ���� 
-  toggleExpander = (id,col) => {
-    return(event) => {
+    if (!this.state.tarrifExpanded) {
+      this.setState({ tarrifExpanded: true }, () => {
+        if (this.refs.expandTarrif) {slideDown(this.refs.expandTarrif);}
+      });
+    } else {
+      slideUp(this.refs.expandTarrif, {onComplete: () => {this.setState({ tarrifExpanded: false });}});
+    }
+  }; 
 
-      console.log(col);
-      this.setState({ tarrifExpanded: false });
-      this.setState({ cntrExpanded: false });
+  cntrExpander = () => {
+    this.setState({ tarrifExpanded: false });
 
-      if (col=="LINE_CODE") {
-        if (!this.state.tarrifExpanded) {
-          this.setState({ tarrifExpanded: true }, () => {
-            if (this.refs.expandTarrif) {slideDown(this.refs.expandTarrif);}
-          });
-        } else {
-          slideUp(this.refs.expandTarrif, {onComplete: () => {this.setState({ tarrifExpanded: false });}});
-        }
-      } else if (col=="CNTR_NO") {
-        if (!this.state.cntrExpanded) {
-          this.setState({ cntrExpanded: true }, () => {
-            if (this.refs.expandCntr) {slideDown(this.refs.expandCntr);}
-          });
-        } else {
-          slideUp(this.refs.expandCntr, {onComplete: () => {this.setState({ cntrExpanded: false });}});
-        }
-      }
-
-      
-      
+    if (!this.state.cntrExpanded) {
+      this.setState({ cntrExpanded: true }, () => {
+        if (this.refs.expandCntr) {slideDown(this.refs.expandCntr);}
+      });
+    } else {
+      slideUp(this.refs.expandCntr, {onComplete: () => {this.setState({ cntrExpanded: false });}});
     }
   };
+
+ 
 
 
   
   render() {
-    //const { data } = this.props;
-     const { list } = this.state;
-     let point =0;
+    const { data, index } = this.props;
+    const { list } = this.state;
+    let point =0;
 
-
-     list.map((data, index) => {
-     if (data[3] == "Y") { 
-    	 point = index;
-     	}
-     	});
     
+
+    
+  
+    
+console.log("index:", index+3000)
+
     return [
+      
       <TableRow  key={this.props.index}  >
-        <TableCell >
+        <TableCell align="center" >
           <Checkbox
           value="secondary"
           color="primary"
           inputProps={{ 'aria-label': 'secondary checkbox' }}
           />
         </TableCell>
-        <TableCell onClick={this.toggleExpander(this.props.data.id,"LINE_CODE")}>{this.props.data.LINE_CODE}</TableCell>
-        <TableCell onClick={this.toggleExpander(this.props.data.id,"CNTR_NO")}>{this.props.data.CNTR_NO}</TableCell>
-        <TableCell >{this.props.data.DET}</TableCell>
-        <TableCell >{this.props.data.DEM}</TableCell> 
-        <TableCell >{this.props.data.COMBINE}</TableCell>
-        <TableCell >{this.props.data.STORAGE}</TableCell>
-        <TableCell >{this.props.data.REMARK}</TableCell>
-        <TableCell >
+        <TableCell align="center" onClick={this.tarrifExpander}><b><a>{this.props.data[0]}</a></b></TableCell>
+        
+        <TableCell align="center" onClick={this.cntrExpander} ><b><a>{this.props.data[3]}</a></b></TableCell>
+        
+         {/* <Popover
+          anchorReference="anchorPosition"
+          anchorPosition={{top:80,left:650}}
+          anchorOrigin={{vertical:'bottom',horizontal:'center',}}
+          transformOrigin={{vertical:'top',horizontal:'center',}}
+          >
+          테스트
+        </Popover> */}
+        
+        <TableCell align="right">{this.props.data[31]} {this.props.data[33]}</TableCell>
+        <TableCell align="right">{this.props.data[34]} {this.props.data[36]}</TableCell> 
+        <TableCell align="right">{this.props.data[37]} {this.props.data[39]}</TableCell>
+        <TableCell align="right">{this.props.data[40]} {this.props.data[42]}</TableCell>
+        <TableCell >{this.props.data[43]}</TableCell>
+        <TableCell align="center">
           <MButton
             variant="contained"
             //color="primary"
@@ -296,33 +357,39 @@ ToggleTable.propTypes = {
           >DO신청
           </MButton>
         </TableCell>
-      </TableRow>,
-      this.state.tarrifExpanded && (
-        
-
+      </TableRow>
+      ,this.state.tarrifExpanded && (
+        <TableRow key = {index+8000} style={{marginTop:'5px',marginBottom:'5px'}}>
+          <TableCell colSpan={11} style={{padding:'5px'}}>
             <div ref="expandTarrif"> 
-           <Table
-              tableHeaderColor="primary"
-              tableHead={["1","2"]}
-              tableData={["1","2"]}
-            />
-            </div>
-
-        
-      ),
-      this.state.cntrExpanded && (
-        <TableRow key = {this.props.index+1}>
-          <TableCell colSpan={9}>
-            <div ref="expandCntr"> 
-            <GridContainer>
-              <GridItem xs={12} sm={2}>
-                규격
-              </GridItem>
-            </GridContainer>
+            expandTarrif
             </div>
           </TableCell>
-        </TableRow>
+        </TableRow>    
       )
+      ,this.state.cntrExpanded && (
+        <TableRow key = {index+9000} style={{marginTop:'5px',marginBottom:'5px'}}>
+          <TableCell colSpan={11} style={{padding:'5px'}}>
+            <div ref="expandCntr"> 
+              <TableList
+                  tableHeaderColor={this.props.color}
+                  tableHead={["SZ/TP","M-BL","H-BL","VSL","VOY","POL","POD","ATA","양하","GATE OUT","GATE IN"]}
+                  tableData={[
+                              [this.props.data[4], this.props.data[5], this.props.data[6]
+                              ,this.props.data[8],this.props.data[10]
+                              ,this.props.data[12],this.props.data[13]
+                              ,this.props.data[18],this.props.data[22]
+                              ,this.props.data[24],this.props.data[27]
+                              ]
+                            ]}
+              />
+            </div>
+          </TableCell>
+        </TableRow>    
+      )
+      
+      
+     
     ];
   }
 }

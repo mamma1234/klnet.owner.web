@@ -17,6 +17,8 @@ import Parallax from "components/Parallax/Parallax.js";
 
 import styles from "assets/jss/material-kit-react/views/landingPage.js";
 
+import styles2 from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
+
 // Sections for this page
 import ProductSection from "./Sections/ProductSection.js";
 import TeamSection from "./Sections/TeamSection.js";
@@ -24,23 +26,44 @@ import WorkSection from "./Sections/WorkSection.js";
 import axios from 'axios';
 import Modal from '@material-ui/core/Modal';
 import JoinPage from "components/Form/Common/JoinPage.js";
-
+import PerfectScrollbar from "perfect-scrollbar";
+import "perfect-scrollbar/css/perfect-scrollbar.css";
 
 const dashboardRoutes = [];
 
 const useStyles = makeStyles(styles);
-
+const useStyles2 = makeStyles(styles2);
+let ps;
 
 export default function LandingPage() {
 
 	const [openJoin,setOpenJoin] = useState(false);
-	
-	
-  const classes = useStyles();
+	const [mobileOpen, setMobileOpen] = React.useState(false);
+    const classes = useStyles();
+    const classes2 = useStyles2();
+    const mainPanel = React.createRef();
+  
+    React.useEffect(() => {
+    	console.log(navigator.platform);
+        if (navigator.platform.indexOf("Win") > -1) {
+          ps = new PerfectScrollbar(mainPanel.current, {
+            suppressScrollX: true,
+            suppressScrollY: false
+          });
+          document.body.style.overflow = "hidden";
+        }
+
+        // Specify how to clean up after this effect:
+        return function cleanup() {
+          if (navigator.platform.indexOf("Win") > -1) {
+            ps.destroy();
+          }
+        };
+      }, [mainPanel]);      
   
   function loginCheck() {
 	   //alert(">>id:"+loginId+"pw:"+loginPw);
-   axios.post("/")
+   axios.post("/auth/login")
    .then(res => {
        console.log(res.session);
        if (res.data.message) alert(res.data.message);
@@ -55,8 +78,8 @@ export default function LandingPage() {
  }
   
   const handleOpenJoin = () => {
-	  //setOpenJoin(true);
-	  loginCheck();
+	  setOpenJoin(true);
+	  //loginCheck();
   };
   
   const handleJoinClose = () => {
@@ -64,7 +87,7 @@ export default function LandingPage() {
   }
   
   return (
-    <div>
+    <div className={classes2.wrapper} ref={mainPanel}>
       <Header
         color="transparent"
         routes={dashboardRoutes}
@@ -81,13 +104,13 @@ export default function LandingPage() {
           <GridContainer style={{textAlignLast:'end'}}>
           <GridItem xs={12} sm={12} md={6} ></GridItem>
             <GridItem xs={12} sm={12} md={6} >
-              <h2 className={classes.title}>Welcome To Plism Plus.</h2>
-              <h4 style={{textAlign:'-webkit-right'}}>
+              <h3 className={classes.title}>Welcome To Plism Plus.</h3>
+              <h5 style={{textAlign:'-webkit-right'}}>
                 Every landing page needs a small description after the big bold
                 title, that{"'"}s why we added this text here. Add here all the
                 information that can make you or your product create the first
                 impression.
-              </h4>
+              </h5>
               <br />
               <Button
                 color="danger"
@@ -103,7 +126,7 @@ export default function LandingPage() {
             	open={openJoin}
               	onClose={handleJoinClose}
                 //onBackdropClick={handleJoinClose}
-              ><JoinPage mode="1" reTurnText="KLNET 회원가입" /></Modal>
+              ><JoinPage mode="1" onClose ={()=>setOpenJoin(false)} reTurnText="KLNET 회원가입" /></Modal>
             </GridItem>
           </GridContainer>
          

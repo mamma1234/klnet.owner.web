@@ -61,7 +61,7 @@ export default function Sidebar(props) {
 	</ListItem>
 		<Collapse in={open} timeout="auto" unmountOnExit>
 	      {routes.map((prop, key) => { 
-	    	if(prop.path == "/tracking" || prop.path == "/demDet" ) {
+	    	if(prop.path == "/tracking" || prop.path == "/demDet" || prop.path == "/mapService" ) {
 	        var activePro = " ";
 	        var listItemClasses;
 	        if (prop.path === "/upgrade-to-pro") {
@@ -82,8 +82,7 @@ export default function Sidebar(props) {
 	            to={prop.layout + prop.path}
 	            className={activePro + classes.item}
 	            activeClassName="active"
-	            key={key}
-	          >
+	            key={key}>
 	            <ListItem button className={classes.itemLink + listItemClasses} >
 	              {typeof prop.icon === "string" ? (
 	                <Icon
@@ -105,8 +104,7 @@ export default function Sidebar(props) {
 	                className={classNames(classes.itemText, whiteFontClasses, {
 	                  [classes.itemTextRTL]: props.rtlActive
 	                })}
-	                disableTypography={true}
-	              />
+	                disableTypography={true}/>
 	            </ListItem>
 	          </NavLink>
 	        );
@@ -121,7 +119,7 @@ export default function Sidebar(props) {
 		</ListItem>
 		<Collapse in={scheduleopen} timeout="auto" unmountOnExit>
 	      {routes.map((prop, key) => { 
-	    	if(prop.path != "/tracking" && prop.path != "/demDet" ) {
+	    	if(prop.path != "/tracking" && prop.path != "/demDet" && prop.path != "/mapService" && prop.path != "/user" && prop.path != "/setting" ) {
 	        var activePro = " ";
 	        var listItemClasses;
 	        if (prop.path === "/upgrade-to-pro") {

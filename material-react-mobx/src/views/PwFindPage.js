@@ -162,73 +162,41 @@ export default function LoginPage(props) {
         }}
       >
         <div className={classes.container}>
-            <GridItem xs={12} sm={12} md={4}>
-              <Card className={classes[cardAnimaton]}>
-                <form className={classes.form}>
-                  <CardHeader color="primary" className={classes.cardHeader}>
-                    <h4>PassWord Find</h4>
-                  </CardHeader>
-                  <p className={classes.divider}>회원가입시 입력하셨던 이메일과 이름, 연락처를 입력해주세요.</p>
+        <GridContainer justify="center">
+        <GridItem xs={12} sm={12} md={6}>
+              <Card className={classes[cardAnimaton]} style={{width:'94%'}}>
+                  <CardHeader color="info" className={classes.cardHeader} style={{paddingBottom:'2px'}}>
+                    <h4 style={{marginTop:'0px',marginBottom:'0px'}}>PassWord Find</h4>
+                    <p style={{marginTop:'0px'}}>회원가입시 입력하셨던 이메일과 이름, 연락처를 입력해주세요.</p>
+                  </CardHeader> 
                   <CardBody>
-                  <TextField id="userEmail" label="Email Address" type="text" fullWidth />
-                  <TextField id="userName" label="Name" type="text" fullWidth />
-            		<Grid container spacing={1}>
-	                	<Grid item xs={12} sm={12} md={7} style={{height:'48px'}}>
-	                		<TextField id="userPhone" label="Phone" type="text" placeholder="'-' 제외 하고 입력해주세요." fullWidth />
-	                	</Grid>
-	                	<Grid item xs={12} sm={12} md={1}>
-                        	<Button  style={{minWidth:'100px'}} color="info" onClick={handleSendNum} fullWidth>{scTitle}</Button>
-                        </Grid>
-                    </Grid>
-		            <Collapse in={openNum} timeout="auto" unmountOnExit>
-              			<TextField id="reNumber" placeholder="인증번호를 입력해주세요" type="text" fullWidth />
-	                </Collapse>
+	                  <GridContainer justify="center">
+	                  	<GridItem xs={12} sm={12} md={8}>
+		                  <TextField id="userEmail" label="Email Address" type="text" fullWidth />
+		                  <TextField id="userName" label="Name" type="text" fullWidth />
+		            		<Grid container spacing={2}>
+			                	<Grid item xs={12} sm={12} md={8} style={{height:'48px'}}>
+			                		<TextField id="userPhone" label="Phone" type="text" placeholder="'-' 제외 하고 입력해주세요." helperText="'-' 제외 하고 입력해주세요." fullWidth />
+			                	</Grid>
+			                	<Grid item xs={12} sm={12} md={1}>
+		                        	<Button  style={{minWidth:'100px'}} color="info" onClick={handleSendNum} fullWidth>{scTitle}</Button>
+		                        </Grid>
+		                    </Grid>
+				            <Collapse in={openNum} timeout="auto" unmountOnExit>
+		              			<TextField id="reNumber" placeholder="인증번호를 입력해주세요" type="text" style={{marginTop:'15px'}} fullWidth />
+			                </Collapse>
+			                <br/>   
+				             <Button color="info" size="lg" onClick={handleClick} fullWidth>확인</Button>
+			                </GridItem>
+		                </GridContainer> 
                   </CardBody>
-                  <CardFooter className={classes.cardFooter}>
-                  
-		             <Button color="primary" size="lg" onClick={handleClick}>
-		               Get started
-		             </Button>
-                  </CardFooter>
-		          <CardFooter>
-         			New Here? <Link to="/own/register">Create an account</Link>
-         			</CardFooter>
-                </form>
+                  <br/> 
               </Card>
-            </GridItem>
-
+              </GridItem>
+              </GridContainer>
         </div>
         <Footer whiteFont />
       </div>
     </div>
   );
 }
-
-
-class LoginCheck extends React.Component {
-	
-	  state = { expanded: false , port: []};
-
-	  componentDidMount() {
-		  console.log(">>>>");
-		  return axios ({
-				url:'/api/getScheduleDetailList',
-				method:'POST',
-				data: {carrierCode : this.props.data.LINE_CODE,
-					   startPort : this.props.data.START_PORT,
-					   endPort : this.props.data.END_PORT,
-					   voyage : this.props.data.VOYAGE_NO,
-					   vesselName : this.props.data.VESSEL_NAME
-					   }
-			}).then(response => this.setState({port:response.data }));
-		  }
-
-	  render() {
-
-	     const { port } = this.state;
-
-	    return [
-	      
-	    ];
-	  }
-	}

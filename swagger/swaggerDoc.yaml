@@ -12,7 +12,7 @@ components:
       in: header
       name: apikey
 security:
-  basicAuth: []
+ - basicAuth: []
 
 tags:
   - name: pg
@@ -21,13 +21,15 @@ tags:
     description: "api 관련"
   - name: ora
     description: "orcla 관련"
+  - name: loc
+    description: "loc"
 
 paths:
-  /pg/getTestSimple:
+  /loc/getTestSimple:
     get:
       summary: test
       description: getTestSimple
-      tags: [pg]
+      tags: [loc]
       security:
         - basicAuth: []
       responses:
@@ -48,8 +50,32 @@ paths:
       default:
         description: Error
 
+  /loc/getPort:
+    post:
+      security:
+        - basicAuth: []
+      summary: GET PORT
+      description: getPort
+      tags: [pg]
+      responses:
+        "401":
+            description: UnauthorizedError
+            $ref: "#/definitions/UnauthorizedError"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/definitions/setPortCode"
 
-  /pg/getPortLocation:
+
+      
+      
+      
+        
+
+
+
+  /loc/getPortLocation:
     post:
       summary: GET PORTCODE LOCATION
       tags: [pg]
@@ -65,7 +91,7 @@ paths:
         default:
           description: Error
  
-  /pg/getTestQuerySample:
+  /loc/getTestQuerySample:
     get:
       summary: test
       tags: [pg]
@@ -75,7 +101,7 @@ paths:
         default:
           description: Error
 
-  /pg/getTestQueryParamSample:
+  /loc/getTestQueryParamSample:
     get:
       summary: test
       tags: [pg]
@@ -95,7 +121,7 @@ paths:
           description: Error
 
 
-  /pg/getTestQueryAttibuteSample:
+  /loc/getTestQueryAttibuteSample:
     post:
       summary: test
       tags: [pg]
@@ -110,7 +136,7 @@ paths:
         default:
           description: Error
           
-  /api/getUserInfoSample:
+  /com/getUserInfoSample:
     post:
       summary: test
       tags: [api]
@@ -126,7 +152,7 @@ paths:
         default:
           description: Error
 
-  /ora/getTestQueryAttibuteSample:
+  /sch/getTestQueryAttibuteSample:
     post:
       summary: test
       tags: [ora]
@@ -141,7 +167,7 @@ paths:
         default:
           description: Error
     
-  /api/snkMasterList:
+  /sch/snkMasterList:
     post:
       summary: SNK GET BL LIST
       tags: [api]
@@ -156,7 +182,7 @@ paths:
         default:
           description: Error
 
-  /api/kmdMasterList:
+  /sch/kmdMasterList:
     post:
       summary: KMD GET BL LIST
       tags: [api]
@@ -177,7 +203,7 @@ paths:
           description: Error
 
 
-  /api/ymlMasterList:
+  /sch/ymlMasterList:
     post:
       summary: YML GET BL LIST
       tags: [api]
@@ -195,7 +221,7 @@ paths:
 
 
 
-  /api/getCarrierInfo:
+  /sch/getCarrierInfo:
     post:
       summary: Get Carrier
       tags: [api]
@@ -207,7 +233,7 @@ paths:
 
   
 
-  /api/getScheduleList:
+  /sch/getScheduleList:
     post:
       summary: SchduleList
       tags: [api]
@@ -223,7 +249,7 @@ paths:
           description: Error
 
 
-  /api/getPortCodeInfo:
+  /sch/getPortCodeInfo:
     post:
       summary: Port Info
       tags: [api]
@@ -238,7 +264,7 @@ paths:
         default:
           description: Error
   
-  /api/getScheduleDetailList:
+  /sch/getScheduleDetailList:
     post:
       summary: GET SCHEDULE DETAIL
       tags: [api]
@@ -252,8 +278,28 @@ paths:
           description: OK
         default:
           description: Error
+    
+    /loc/getHotInfo:
+      post:
+        summary: Tracking Info
+        tags: [pg]
+        
 
   
+  # /loc/test:
+  #   post:
+  #     summary: test
+  #     tags: [loc]
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: '#/definitions/setPort'
+  #     responses:
+  #       200:
+  #         description: OK
+  #       default:
+  #         description: Error
 
 
           # complex objects have schema definitions
@@ -340,7 +386,40 @@ definitions:
         type: array
         items:
           type: string
-            
+  setPort:
+    
+    type: object
+    properties:
+      portId:
+        type: string
+        description: portId
+      portName:
+        type: string
+        description: portName
+      unlocode:
+        type: string
+        description: unlocode
+      portAlias:
+        type: string
+        description: portAlias
+      nationCode:
+        type: string
+        description: nationCode
+      latitude:
+        type: string
+        description: latitude  
+      longitude:
+        type: string
+        description: longitude  
+      timezone:
+        type: string
+        description: timezone  
+      geoData:
+        type: string
+        description: geoData  
+      portShipType:
+        type: string
+        description: portShipType 
   
   UnauthorizedError:
     description: API key is missing or invalid
@@ -354,3 +433,11 @@ definitions:
         schema:
           type: string
         description: AuthPassword
+  setPortCode:
+    description: set PortCode get PortInfomation
+    headers:
+      portCode:
+        schema:
+          type: string
+        
+        

@@ -34,11 +34,9 @@ import styles from "assets/jss/material-dashboard-react/components/tableStyle.js
 import { slideDown, slideUp } from "components/Slide/Slide.js";
 
 import axios from 'axios';
-import Stepper from 'components/Navbars/Stepper.js';
+import VerticalStepper from 'components/Navbars/VerticalStepper.js';
 
 import CntrListTable from "views/Tracking/TrackingCntrList.js";
-import Slider from "components/Slide/Slider.js";
-
 
 const classes = makeStyles(theme => ({
   root: {
@@ -128,7 +126,6 @@ export default function ToggleTable(props) {
   const { tableHead, tableData, tableHeaderColor } = props;
   const [page,setPage] = React.useState(0);
   const [rowsPerPage,setRowsPerPage] = React.useState(10);
-
   console.log(tableData);
   
   const emptyRows = rowsPerPage - Math.min(rowsPerPage,tableData.length - page * rowsPerPage);
@@ -145,14 +142,13 @@ export default function ToggleTable(props) {
   
   return (
     <div className={classes.tableResponsive} style={{marginTop:'0px'}}>
-      <Table className={classes.table}>
+      <Table className={classes.table} >
         {tableHead !== undefined ? (
           <TableHead className={classes[tableHeaderColor + "TableHeader"]} style={{padding:'5px',textAlignLast:'center'}}>
-            <TableRow className={classes.tableHeadRow}>
+            <TableRow className={classes.tableHeadRow} style={{height:'1px'}}>
               {tableHead.map((prop, key) => {
                 return (
                   <TableCell
-                    style={{borderBottomWidth:'3px'}}
                     className={classes.tableCell + " " + classes.tableHeadCell}
                     key={key}
                   >
@@ -214,32 +210,24 @@ ToggleTable.propTypes = {
 
 
  class TableRows extends React.Component {
-  state = { openPopup:false,expanded: false , port: [], iconstate:"add_circle", rowStyle:"borderTopStyle:'dashed'"};
-
+  state = { expanded: false , cntrData: [], iconstate:"add_circle"};
   componentDidMount() {
-	    this.scheduleToSearch();
-	  }
-  
-  // 테이블 조회
-  scheduleToSearch = () => {
+	  axios ({
+    		url:'/loc/getCntrDetailList',
+    		method:'POST',
+    		data: {carriercode : this.props.data[0],
+    			   blno : this.props.data[1],
+    			   cntrno : this.props.data[2]
+    			   }
+    		}).then(response => this.setState({cntrData:response.data }));
+      //.then(res => console.log(JSON.stringify(res.data)));
 
-/*    return axios ({
-		url:'/loc/getScheduleDetailList',
-		method:'POST',
-		data: {carrierCode : this.props.data.LINE_CODE,
-			   startPort : this.props.data.START_PORT,
-			   endPort : this.props.data.END_PORT,
-			   voyage : this.props.data.VOYAGE_NO,
-			   vesselName : this.props.data.VESSEL_NAME
-			   }
-	}).then(response => this.setState({port:response.data }));*/
-    
-  }
+	  }
  
   // 로우 생성
   toggleExpander = () => {
     if (!this.state.expanded) {
-      this.setState({ expanded: true ,iconstate:"remove_circle",rowStyle:"borderTopStyle:'dashed'"}, () => {
+      this.setState({ expanded: true ,iconstate:"remove_circle"}, () => {
         if (this.refs.expanderBody) {
           slideDown(this.refs.expanderBody);
         }
@@ -253,93 +241,28 @@ ToggleTable.propTypes = {
     }
 
   };
-  
-  handleClickOpen = () => {
-	  this.setState({ openPopup: true });
-  }
-  
-  handleClickClose = () => {
-	  this.setState({ openPopup: false });
-  }
+
   
   
   render() {
      const { data } = this.props;
-     const { port } = this.state;
-     let point =0;
-     
-     port.map((data, index) => {
-     if (data[3] == "Y") {
-    	 point = index;
-     	}
-     	});
-
+     const { cntrData } = this.state;
     return [
-      <TableRow  key={this.props.index} className={this.staterowStyle} style={{borderCollapse:'separate',borderSpacing:'2px 2px',paddingTop:'5px'}} >
-        <TableCell style={{padding:'0px',textAlignLast:'center',borderBottomWidth:'3px'}} >{data[0]}{data[1] == 0?<StarIcon style={{color:'#00acc1'}} />:<StarBorderIcon style={{color:'#00acc1'}} />}</TableCell>
-        <TableCell style={{padding:'0px',textAlignLast:'center',borderBottomWidth:'3px'}}>{data[2]}</TableCell>
-        <TableCell style={{padding:'0px',textAlignLast:'center',borderBottomWidth:'3px'}}>{data[3] !=""?<img src={require("images/carrier/"+data[3]+".gif")} />:<img src={require("images/carrier/No-Image.gif")} />}</TableCell>
-        <TableCell style={{padding:'0px',textAlignLast:'center',borderBottomWidth:'3px'}}>{data[4]}<br/>{data[5]?"("+data[5]+")":""}</TableCell>
-        <TableCell style={{padding:'0px',textAlignLast:'center',borderBottomWidth:'3px'}} onClick={this.handleClickOpen}>{data[6]}
-		</TableCell>
-		<Popover
-      	id="popover"
-      	open={this.state.openPopup}
-      	onClose={this.handleClickClose}
-		anchorReference="anchorPosition"
-		anchorPosition={{top:80,left:550}}
-      	anchorOrigin={{vertical:'bottom',horizontal:'center',}}
-      	transformOrigin={{vertical:'top',horizontal:'center',}}
-        > <CntrListTable blNo={data[0]} carrierCode={data[3]}/>
-	</Popover>
-        <TableCell style={{padding:'5px',textAlignLast:'center',borderBottomWidth:'3px'}}>{data[7]}<br/>{data[8]}{data[8]?"("+data[9]+")":""}</TableCell>
-        <TableCell style={{padding:'5px',textAlignLast:'center',borderBottomWidth:'3px'}}>{data[10]}<br/>{data[11]}{data[11]?Math.sign(data[12])==1?"("+data[12]+")":"("+data[12]+")":""}</TableCell>
-        <TableCell style={{padding:'5px',textAlignLast:'center',borderBottomWidth:'3px'}}><Icon style={{color:'#00acc1'}} onClick={this.toggleExpander}>{this.state.iconstate}</Icon></TableCell>
+      <TableRow  key={this.props.index}  onClick={this.toggleExpander}>
+      	<TableCell style={{padding:'5px',textAlignLast:'center'}}>{this.props.index}</TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center'}}>{data[2]}</TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center'}}>{data[4]}/{data[5]}{data[6]!=""?"("+data[6]+")":data[6]}</TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center'}}>{data[7]}</TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center'}}>{data[8]}</TableCell>
       </TableRow>,
       this.state.expanded && (
-        <TableRow key = {this.props.index+1} style={{marginTop:'5px',marginBottom:'5px',borderTopStyle:'double',borderTopColor:'whitesmoke'}}>
-          <TableCell colSpan={11} style={{padding:'10px'}}>
+        <TableRow key = {this.props.index+1} style={{marginTop:'5px',marginBottom:'5px'}}>
+          <TableCell colSpan={5} style={{padding:'5px'}}>
             <div ref="expanderBody"> 
-           	
-	          {/*<Stepper style={{padding: '10px',color:'#00acc1'}}
-	          	stepData ={[['POD: KRPUS','DT: 2020-01-29','T/T: 0'],['POD: KRINC','DT: 2020-01-29','T/T: 0']]}
-	            active ={0}
-	          />
-*/}				<GridItem xs={12}>
-					<div><Assign style={{color:'#00acc1'}} />PROGRESS</div>
-	          		<Slider />
-	          	</GridItem>
-	          	<GridItem xs={12}>
-		          	<GridContainer>
-		          		<GridItem xs={12} sm={12} md={6}>
-		          		<div><Access style={{color:'#00acc1'}} />DEM / DET Service</div>
-			          		<Card style={{marginTop:'5px',marginBottom:'5px'}}>
-			          		
-					          	<TableList
-					                tableHeaderColor={this.props.color}
-					                tableHead={["ACT", "DEM", "DET"]}
-										tableData={[
-							            ["DEPATURE 2020-01-29", "2020-01-29", "2020-01-29"],
-							            ["LOGING 2020-01-29", "2020-01-29", "2020-01-29"]
-							          ]}
-					          	/>
-				          	</Card>
-			          	</GridItem>
-			          	<GridItem xs={12} sm={12} md={6}>
-			          		<div><Assign style={{color:'#00acc1'}} />CUSTOM</div>
-				          	<Card style={{marginTop:'5px',marginBottom:'5px'}}>
-					          	<TableList
-					                tableHeaderColor={this.props.color}
-					                tableHead={["EXPORT LICENSE", "INSPECT", "CLEARLANCE"]}
-										tableData={[
-							            ["Y", "N", "반입신고(2020-01-29 00:00)"],
-							            ["N", "N", ""]
-							          ]}
-					          	/>
-				          	</Card>			          
-			          	</GridItem>
-			          	</GridContainer>
-			          </GridItem>
+		          <VerticalStepper
+		          	stepData ={cntrData}
+		            active ={cntrData.length-1}
+		          />
             </div>
           </TableCell>
         </TableRow>    

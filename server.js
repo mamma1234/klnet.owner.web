@@ -26,7 +26,7 @@ const { isLoggedIn, isNotLoggedIn } = require('./routes/middlewares');
 const app = express();
 // sequelize.sync();
 passportConfig(passport);
-//const swaggerRouter = require('./routes/swaggerDoc'); //swagger 설정 정의
+//const swaggerRouter = require('./swagger/swaggerDoc'); //swagger 설정 정의
 const sUser = require('./models/sessionUser');
 //console.log("sUser:",sUser);
 
@@ -49,7 +49,7 @@ app.use(session({   //express-session: 세션 관리용 미들웨어, 로그인 
         //store:sessionStore,
         //saveUninitialized:true,
         cookie: {
-          maxAge: 1000 * 60 * 60 * 60, // 유효기간 1시간
+          maxAge: 1000 * 60 * 60, // 유효기간 1시간
           httpOnly:true
         }
     },
@@ -142,17 +142,15 @@ app.route(/^((?!\/auth\/|\/login).)*$/s).all(isLoggedIn,function(req, res, next)
       //next('not login');
    // }
  if ( req.session.sUser ) { 
- 	console.dir( req.session.sUser );
- 	console.log('로그인 정보 남아 있음.');
- 	console.log(req.originalUrl);
- 	next();
+    console.dir( req.session.sUser );
+    console.log('로그인 정보 남아 있음.');
+    console.log(req.originalUrl);
+    next();
  } else {
-	var fullUrl = req.protocol + '://' + req.headers.host + req.originalUrl;
- 	console.log( fullUrl );
+    var fullUrl = req.protocol + '://' + req.headers.host + req.originalUrl;
+    console.log( fullUrl );
     console.log('로그인 정보 없음 예외 처리');
     console.log(req.headers.host);
-    // return res.redirect('http://' + req.headers.host + '/login/?redirect=' + fullUrl);
-    //return res.redirect('http://' + req.headers.host + '/login');
     return;
  }
 });
@@ -191,10 +189,25 @@ app.post("/loc/getPort",dao.postgresql.getPort);
 app.get("/loc/getTestQuerySample", dao.postgresql.getTestQuerySample);
 app.get("/loc/getTestQueryParamSample", dao.postgresql.getTestQueryParamSample);
 app.post("/loc/getTestQueryAttibuteSample", dao.postgresql.getTestQueryAttibuteSample);
-
+app.get("/com/getPortCodeInfo", dao.pgcodes.getPortCodeInfo);
+app.post("/loc/getCustomLineCode", dao.tracking.getCustomLineCode);
 app.post("/loc/getTrackingList", dao.pgtracking.getTrackingList);
+app.post("/loc/getMyBlList", dao.pgtracking.getMyBlList);
+app.post("/loc/updateMyBlNo", dao.pgtracking.updateMyBlNo);
+app.post("/loc/getPkMyBlList", dao.pgtracking.getPkMyBlList);
+app.post("/loc/deleteMyBlNo", dao.pgtracking.deleteMyBlNo);
+app.post("/loc/getBookMark", dao.pgtracking.getBookMark);
+app.post("/loc/getCntrList", dao.pgtracking.getCntrList);
+app.post("/loc/getCntrDetailList", dao.pgtracking.getCntrDetailList);
+app.post("/loc/saveBlList", dao.pgtracking.saveBlList);
 
-app.post("/svc/getUserInfoSample", dao.postgresql.getUserInfoSample);
+app.post("/com/getUserSetting", dao.pgtracking.getUserSetting);
+app.post("/com/getCarrierInfo", dao.pgtracking.getCarrierInfo);
+app.post("/com/setUserSetting", dao.pgtracking.setUserSetting);
+app.post("/com/getUserInfo", dao.pgusers.getUserInfo);
+
+
+app.post("/com/getUserInfoSample", dao.postgresql.getUserInfoSample);
 
 //app.get("/ora/getTestSimple", dao.oracle.getTestSimple);
 //app.get("/ora/getTestQuerySample", dao.oracle.getTestQuerySample);
@@ -213,6 +226,8 @@ app.post("/sch/getScheduleDetailList", dao.schedule.getScheduleDetailList);
 
 app.post("/loc/getHotInfo", dao.tracking.getHotInfo);
 
+
+app.post("/loc/getDemDetList", dao.pgdemdet.getDemDetList);
 
 //에러 처리 미들웨어: error라는 템플릿 파일을 렌더링한다. 404에러가 발생하면 404처리 미들웨어에서 넣어준 값을 사용한다.
 app.use((req, res, next) => {

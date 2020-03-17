@@ -2,6 +2,7 @@ import React,{useState,useEffect} from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "components/Table/TablePaging.js";
+import TableS from "views/Tracking/TrackingCurrent.js";
 // core components
 ///import Grid from '@material-ui/core/Grid';
 //import GridItem from "components/Grid/GridItem.js";
@@ -71,9 +72,13 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-export default function TableList() {
+export default function TableList(props) {
   const classes = useStyles();
   //const classess = useStyless();
+  
+  const {blNo,carrierCode} = props;
+  
+  console.log(blNo);
   
   const [selectData,setSelectData] = useState([]);
   const [ietype,setIetype] = useState("");
@@ -91,82 +96,30 @@ export default function TableList() {
   };
   
   useEffect(() => {
-	    console.log('호출....');
-	    axios.post("/loc/getHotInfo").then(res => setSelectData(res.data));
+	  console.log("blNo:"+blNo+"carrer:"+carrierCode);
+	    axios.post("/loc/getCntrList",{ carriercode:carrierCode,blno: blNo, }).then(res => setSelectData(res.data))
 	    //.then(res => console.log(JSON.stringify(res.data)));
 	    return () => {
 	      console.log('cleanup');
 	    };
 	  }, []);
   
-  const changeText = (id,name) => e => { 	     
-	    const { 
-	      target: { value } 
-	    } = e; 
-
-	    const tempRows = selectData.map(row => { 
-	      if (row.SEQ == id) {
-		    if(name == "vessel") {   
-		      row["VESSEL_NAME"] = value; 
-		    } else if (name == "ie") { 
-		      row["IE_TYPE"] = value; 
-		    } else if (name == "pol") { 
-		      row["POL"] = value; 
-		    } else if (name == "pod") { 
-		      row["POD"] = value; 
-		    } 
-	      } 
-	      return row; 
-	    }); 
-	  console.log("!!:"+JSON.stringify(tempRows)); 
-	  setSelectData(tempRows); 
-	  }; 
-
-	  const addRow = () => { 
-	    let data = { 
-	      SEQ: selectData.length + 1, 
-	      VESSEL_NAME: "", 
-	      IE_TYPE:"", 
-	      POL:"", 
-	      POD:"" 
-	    }; 
-	    setSelectData([...selectData, data]); 
-	  }; 
-	  
-	  const deleteRow = id => () => { 
-		  setDelSeq(id);  
-		  setOpen(true);  
-	  };
-	  
-	  
-	  const handleDelete = id => () => {
-		  let tempRows = selectData.filter(row => {
-		      return row.SEQ !== id; 
-		    }); 
-		    setSelectData(tempRows);
-		    handleClose();
-	  };
+  
   
   return (
         <Card>
-        	<CardHeader color="warning" stats icon style={{paddingBottom:'2px'}}>
-        		<CardIcon color="warning">
+        	<CardHeader color="info" stats icon style={{paddingBottom:'2px'}}>
+        		<CardIcon color="info">
         			<Icon>content_copy</Icon>
         		</CardIcon>
         		<h4 className={classes.cardTitleBlack}>Container List</h4>
+        		<p className={classes.cardTitleBlack}>BL & BKG NO :{blNo}</p>
         	</CardHeader>
         	<CardBody style={{paddingBottom:'2px'}}>   
-	        	<Table
-	            tableHeaderColor="primary"
-	            tableHead={["no", "Container No", "Move"]}
-	            tableData={[
-	              ["1", "AAAA1233456", "YARD"],
-	              ["2", "AAAA1233457", "GATE PICKUP"],
-	              ["3", "AAAA1233458", "LOADING"],
-	              ["4", "AAAA1233459", "DISCHARGING"],
-	              ["5", "AAAA1233450", "GATE OUT FULL"],
-	              ["6", "AAAA1233452", "EMPTY"],
-	            ]}
+	        	<TableS
+	            tableHeaderColor="info"
+	            tableHead={["no", "Container No", "TIME/VESSEL VOYAGE","EVENT","LOCATION"]}
+	            tableData={selectData}
 	          />	
           </CardBody>
         </Card>

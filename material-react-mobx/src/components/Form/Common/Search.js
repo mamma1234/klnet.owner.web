@@ -11,7 +11,7 @@ import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
-
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -49,7 +49,8 @@ export default function RecipeReviewCard() {
 
   return (
     
-
+    <Card>
+    <CardContent>
       <GridContainer>
              <GridItem xs={12} sm={12} md={3}>
                 <CustomInput
@@ -75,44 +76,46 @@ export default function RecipeReviewCard() {
           </GridContainer>
           <GridContainer>
             <GridItem xs={12} sm={12} md={12}>   
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
-              <CardContent className = {classes.card}>
-                <GridContainer>
-                  <GridItem xs={12} sm={12} md={3}>
-                    <CustomInput
-                      labelText="Do 번호"
-                      id="doNo"
-                      formControlProps={{
-                        fullWidth: true
-                      }}
-                    />
-                  </GridItem> 
-                  <GridItem xs={12} sm={12} md={3}>
-                    <CustomInput
-                      labelText="Booking No"
-                      id="bkgNo"
-                      formControlProps={{
-                        fullWidth: true
-                      }}
-                    />
-                  </GridItem>  
-                </GridContainer>
-              </CardContent>
-            </Collapse>
+	            <Collapse in={expanded} timeout="auto" unmountOnExit>
+	              <CardContent className = {classes.card}>
+	                <GridContainer>
+	                  <GridItem xs={12} sm={12} md={3}>
+	                    <CustomInput
+	                      labelText="Do 번호"
+	                      id="doNo"
+	                      formControlProps={{
+	                        fullWidth: true
+	                      }}
+	                    />
+	                  </GridItem> 
+	                  <GridItem xs={12} sm={12} md={3}>
+	                    <CustomInput
+	                      labelText="Booking No"
+	                      id="bkgNo"
+	                      formControlProps={{
+	                        fullWidth: true
+	                      }}
+	                    />
+	                  </GridItem>  
+	                </GridContainer>
+	              </CardContent>
+	            </Collapse>
             </GridItem>
+            
             <GridItem xs={12} sm={12} md={12} > 
-            <CardActions className = {classes.gridcss}>
-                <IconButton 
-                  className={clsx(classes.expand, {
-                    [classes.expandOpen]: expanded,
-                    })}
-                    onClick={handleExpandClick}
-                    aria-expanded={expanded}
-                    aria-label="show more"
-                  ><ExpandMoreIcon />
-                </IconButton>
-              </CardActions> 
+	            <CardActions className = {classes.gridcss}>
+	                <IconButton 
+	                  className={clsx(classes.expand, {
+	                    [classes.expandOpen]: expanded,
+	                    })}
+	                    onClick={handleExpandClick}
+	                    aria-expanded={expanded}
+	                    aria-label="show more"
+	                  ><ExpandMoreIcon />
+	                </IconButton>
+	            </CardActions> 
             </GridItem>
+            
           </GridContainer>
       </CardContent> 
     </Card>

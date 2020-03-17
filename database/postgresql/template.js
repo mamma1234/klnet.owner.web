@@ -228,10 +228,6 @@ const getSnkMasterList = (request, response) => {
       response.status(400).send();
       return;
     }
-
-
-
-
     let idx = 0;
     let sql = "SELECT terminal, terminal_kname, terminal_ename, wgs84_x, wgs84_y FROM own_terminal_info "
         sql += " where 1=1 ";
@@ -269,11 +265,39 @@ const getSnkMasterList = (request, response) => {
   
   }
 
+  const getAllPort = (request, response) => {
+    console.log(request.body);
+    const port = request.body.portCode;
+    
 
+    let sql = "SELECT port_code, port_name, port_kname, float8(wgs84_x) as wgs84_x, float8(wgs84_y) as wgs84_y FROM own_code_port "
+        sql += " where 1=1 ";
+        sql += " and use_yn = 'Y'"
+        sql += " and port_id is not null"
+    port == "" ? sql +="" : sql += " and port_code = '" + port + "'" 
+
+    console.log("query == ",sql);    
+    pgsqlPool.connect(function(err,client,done) {
+      if(err){
+        console.log("err" + err);
+        response.status(400).send(err);
+      }
+      client.query(sql, function(err,result){
+        done();
+        if(err){
+          console.log(err);
+          response.status(400).send(err);
+        }
+        response.status(200).send(result.rows);
+      });
+  
+    });
+  
+  }
 
 
   const getPort = (request, response) => {
-    console.log(request.body);
+    console.log(request);
     const port = request.body.portCode;
     
 
@@ -303,6 +327,120 @@ const getSnkMasterList = (request, response) => {
     });
   
   }  
+//   const getPortwgx84 = (request, response) => {
+//     const DataSet = request.body ;
+//     pgsqlPool.connect(function(err,client,done) {
+//       if(err){
+//         console.log("err" + err);
+//       }
+//     DataSet.forEach(element => {
+      
+//       console.log('element',element);
+      
+//       if (element.unlocode !== undefined){ 
+//         console.log( element.unlocode );
+//         let sql1 = " update own_code_port set "
+//         sql1 += " wgs84_x = '" + element.longitude + "', "
+//         sql1 += " wgs84_y = '" + element.latitude + "', "
+//         element.portAlias == null ? sql1 +="" : sql1 += " port_alias = '" + element.portAlias + "', "
+//         element.timezone == null ? sql1 +="" : sql1 += " timezone = '" + element.timezone + "', " 
+//         element.geoData == null ? sql1 +="" : sql1 += " geo_data = '" + element.geoData + "', " 
+//         element.portShipType == null ? sql1 +="" : sql1 += " port_ship_type = '" + element.portShipType + "', " 
+//         element.portId == null ? sql1 +="" : sql1 += " port_id = '" + element.portId + "' "
+//         sql1 += " where port_code = '"+ element.unlocode +"'"
+
+//         console.log(sql1);
+        
+        
+//         client.query(sql1, function(err,result){
+//           done();
+//           if(err){
+//             console.log(err);
+//             response.status(400).send(err);
+//           }
+//           console.log('success');
+//           result.
+//           response.status(200).send("SUCCESS");
+
+//         });
+        
+      
+//       } else{
+//         console.log('success1');
+//         response.status(200).send("SUCCESS");
+//       }
+//     });
+//     response.status(200).send("SUCCESS");
+//   });
+// }
+
+
+
+const getPortwgx84 = (request, response) => {
+  const DataSet = request.body ;
+  pgsqlPool.connect(function(err,client) {
+    if(err){
+      console.log("err" + err);
+    }
+  DataSet.forEach(element => {
+    
+    console.log('element',element);
+    
+    if (element.unlocode !== undefined){ 
+      console.log( element.unlocode );
+      let sql1 = " update own_code_port set "
+      sql1 += " wgs84_x = '" + element.longitude + "', "
+      sql1 += " wgs84_y = '" + element.latitude + "', "
+      element.portAlias == null ? sql1 +="" : sql1 += " port_alias = '" + element.portAlias + "', "
+      element.timezone == null ? sql1 +="" : sql1 += " timezone = '" + element.timezone + "', " 
+      element.geoData == null ? sql1 +="" : sql1 += " geo_data = '" + element.geoData + "', " 
+      element.portShipType == null ? sql1 +="" : sql1 += " port_ship_type = '" + element.portShipType + "', " 
+      element.portId == null ? sql1 +="" : sql1 += " port_id = '" + element.portId + "' "
+      sql1 += " where port_code = '"+ element.unlocode +"'"
+
+      console.log(sql1);
+      
+      
+      client.query(sql1, function(err,result){
+        if(err){
+          console.log(err);
+          //response.status(400).send(err);
+        }
+        console.log('success');
+        client.query('COMMIT');
+
+      });
+      
+    
+    } else{
+      console.log('err');
+    }
+  });
+  response.status(200).send("SUCCESS");
+});
+}
+
+    // let sql = "select count(*) from own_code_port where port_code = unlocode";
+    // port == "" ? sql +="" : sql += " and port_code = '" + port + "'" 
+
+    // console.log("query == ",sql);    
+    // pgsqlPool.connect(function(err,client,done) {
+    //   if(err){
+    //     console.log("err" + err);
+    //     response.status(400).send(err);
+    //   }
+    //   client.query(sql, function(err,result){
+    //     done();
+    //     if(err){
+    //       console.log(err);
+    //       response.status(400).send(err);
+    //     }
+    //     console.log(result.rows);
+    //     response.status(200).send(result.rows);
+    //   });
+  
+    // });
+  
 module.exports = {
     getTestSimple,
     getTestQuerySample,
@@ -314,4 +452,6 @@ module.exports = {
     getUserInfoSample,
     getPortLocation,
     getPort,
+    getAllPort,
+    getPortwgx84,
 }

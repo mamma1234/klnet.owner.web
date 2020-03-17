@@ -37,9 +37,9 @@ import nodeExpress from "./pages/nodeExpress.js";
 
 import Service from "layouts/Service.js";
 import ServiceUser from "layouts/Service_user.js";
-import Login from "views/LoginPage/LoginPage.js";
 import Landing from "views/LandingPage/LandingPage.js";
-import CntrList from "views/Tracking/CntrList.js";
+
+import PwFind from "views/PwFindPage.js";
 
 const hist = createBrowserHistory();
 
@@ -48,10 +48,9 @@ ReactDOM.render(
     <Router history={hist}>
       <Switch>
         <Route path="/admin" component={Admin} />
+        <Route path="/pwfind" component={PwFind} />
         <Route path="/svc" component={ServiceUser} />
-        <Route path="/cntrlist" component={CntrList} />
         <Route path="/rtl" component={RTL} />
-        <Route path="/login" component={Login} />
         <Route path="/Landing" component={Landing} />
         <Route path="/mobx" component={Mobx} />
         <Route path="/home" component={Home} />

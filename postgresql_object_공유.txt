@@ -1,0 +1,31 @@
+장진오
+-- 선사 스크래핑 대상 정보 
+own_web_scrp_manage 
+
+-- 선사스크래핑 취합 데이터 
+own_web_선사코드3자리_bl 
+own_web_선사코드3자리_tracking 
+own_web_선사코드3자리_ts 
+
+-- 선사 스크래핑 화면 제공 테이블 
+own_tracking_bl 
+own_tracking_cntr 
+own_tracking_loc 
+
+-- 선사별 PORT 코드(스크래핑용) 
+own_line_port
+
+
+박준영1
+- 사용자 정보 
+own_comp_user 
+- ui 설정 정보 
+own_user_ui_setting 
+- 즐겨찾기 정보 
+own_book_mark
+
+
+장진오
+-- function 선사스크래핑 화면 제공 테이블로 insert 작업 
+insert_tracking 
+insert_tracking_선사코드3자리

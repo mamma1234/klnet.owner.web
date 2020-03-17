@@ -19,19 +19,18 @@ import MButton from '@material-ui/core/Button';
 import Popover from  '@material-ui/core/Popover';
 import ExcelUpload from "views/DemDet/PopUp/ExcelUpload.js";
 
-
+import CardIcon from "components/Card/CardIcon.js";
+import Icon from "@material-ui/core/Icon";
 import BackupIcon from "@material-ui/icons/Backup";
 import CancelIcon from "@material-ui/icons/CancelPresentation";
 import AddIcon from "@material-ui/icons/AddBox";
 import DetailTable from "views/DemDet/DetailTable.js";
-
 import axios from 'axios';
 
 const styles = {
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
       color: "rgba(255,255,255,.62)",
-      margin: "0",
       fontSize: "14px",
       marginTop: "0",
       marginBottom: "0"
@@ -42,7 +41,6 @@ const styles = {
   },
   cardTitleWhite: {
     color: "#FFFFFF",
-    marginTop: "0px",
     minHeight: "auto",
     fontWeight: "300",
     fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
@@ -54,7 +52,22 @@ const styles = {
       fontWeight: "400",
       lineHeight: "1"
     }
-  }
+  },
+  cardTitleBlack: {
+	    textAlign: "left",
+	    color: "#000000",
+	    minHeight: "auto",
+	    fontWeight: "300",
+	    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+	    marginBottom: "3px",
+	    textDecoration: "none",
+	    "& small": {
+	      color: "#777",
+	      fontSize: "65%",
+	      fontWeight: "400",
+	      lineHeight: "1"
+	    }
+	  },
 };
 
 
@@ -69,22 +82,11 @@ export default function DemDetList(props) {
   const [anchorAdd, setAnchorAdd] = useState(null);
   
   
-  
+  const [demDetList,setDemDetList] = useState([]);
+  const [openJoin,setOpenJoin] = useState(false);
+
   const [lineData, setLineData] = useState([]);
-  const [listData, setListData] = useState([
-    {CHK:"",LINE_CODE:"CMA",CNTR_NO:"CMAU4328321",DET:"10,000 KRW",DEM:"20,000 KRW",COMBINE:"30,000 KRW",STORAGE:"5,000 KRW",REMARK:"화주입력",DO:"I"},
-    {CHK:"",LINE_CODE:"MAE",CNTR_NO:"MSKU4378241",DET:"",DEM:"20,000 KRW",COMBINE:"30,000 KRW",STORAGE:"5,000 KRW",REMARK:"",DO:"I"},
-    {CHK:"",LINE_CODE:"CMA",CNTR_NO:"CMAU4238321",DET:"20,000 KRW",DEM:"150,000 KRW",COMBINE:"30,000 KRW",STORAGE:"5,000 KRW",REMARK:"화주요청",DO:"I"},
-    {CHK:"",LINE_CODE:"APL",CNTR_NO:"APLU1234560",DET:"40,000 KRW",DEM:"34,000 KRW",COMBINE:"30,000 KRW",STORAGE:"5,000 KRW",REMARK:"1/27 반납예정",DO:"I"},
-    {CHK:"",LINE_CODE:"KMD",CNTR_NO:"KMDU4328321",DET:"",DEM:"10,000 KRW",COMBINE:"30,000 KRW",STORAGE:"5,000 KRW",REMARK:"재수출",DO:"I"},
-    {CHK:"",LINE_CODE:"KMD",CNTR_NO:"TEST1234560",DET:"",DEM:"50,000 KRW",COMBINE:"30,000 KRW",STORAGE:"5,000 KRW",REMARK:"정산완료",DO:"I"},
-    {CHK:"",LINE_CODE:"YML",CNTR_NO:"TEST1234560",DET:"",DEM:"",COMBINE:"30,000 KRW",STORAGE:"5,000 KRW",REMARK:"",DO:"I"},
-    {CHK:"",LINE_CODE:"ZIM",CNTR_NO:"TEST1234560",DET:"25,000 KRW",DEM:"20,000 KRW",COMBINE:"30,000 KRW",STORAGE:"5,000 KRW",REMARK:"",DO:"I"},
-  ]
-  );
-
-
-  console.log(listData);
+  
 
   const [mblNo,setMblNo] = useState("");
   const [cntrNo,setCntrNo] = useState("");
@@ -104,23 +106,50 @@ export default function DemDetList(props) {
   const excelHandleClose = () => {
     setAnchorExcel(null);
   }
-  console.log(paramData);
-  const open_bl = Boolean(anchorExcel);
-  const id_bl = open_bl ? 'simple-popover1':undefined;
+  const onSubmit = () => {
+	  //search
+	  axios.post("/loc/getDemDetList"
+			  //{ carrierCode:carrierCode,
+		//  								  startDate:moment(fromDate).format('YYYYMMDD'),
+		 // 								  endDate:moment(toDate).format('YYYYMMDD'),
+		  //								  startPort:sPort,
+		  //								  endPort:ePort,
+		  //								  vesselName:vesselName
+	  									//})
+        )
+      
+	    .then(res => setDemDetList(res.data))
+	    .catch(err => {
+	       //console.log(err.response.status);
+	        if(err.response.status == "403") {
+	        	setOpenJoin(true);
+	        }
+	        //window.location.href = "/Landing";
+	    });
+    //alert("Tracking Info Search onSubmit");
+    console.log(">>> demDetList : ",demDetList) ;
+  }
+  //console.log(paramData);
   
   const classes = useStyles();  
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
         <Card>
-          <CardHeader color="primary">
+          {/* <CardHeader color="primary">
             <h4 className={classes.cardTitleWhite}>DEM/DET/STORAGE</h4>
             <p className={classes.cardCategoryWhite}>Demurrage & Detention</p>
-          </CardHeader>
+          </CardHeader> */}
+          <CardHeader color="info" stats icon style={{paddingBottom:'2px'}}>
+		<CardIcon color="info" style={{height:'26px'}}>
+			<Icon style={{width:'26px',fontSize:'20px',lineHeight:'26px'}}>content_copy</Icon>
+		</CardIcon>
+		<h4 className={classes.cardTitleBlack}>DEM/DET/STORAGE</h4>
+	  </CardHeader>
           <CardBody>
           
             <GridContainer>
-              <GridItem xs={1} sm={1}>
+              <GridItem xs={12} sm={1}>
                 <Autocomplete
                   options = {lineData}
                   getOptionLabel = { option => "["+option.carrier_code+"] "+option.carrier_hname}
@@ -134,7 +163,7 @@ export default function DemDetList(props) {
                   )}
                 />
               </GridItem>
-              <GridItem xs={2} sm={2} md={2}>
+              <GridItem xs={12} sm={2} md={2}>
                 <CustomInput
                   labelText="M-B/L NO"
                   id="mblNo"
@@ -143,117 +172,37 @@ export default function DemDetList(props) {
                 />
                 
               </GridItem>
-              <GridItem xs={2} sm={2} md={2}>
+              <GridItem xs={12} sm={2} md={2}>
                 <CustomInput
                   labelText="CNTR NO"
                   id="cntrNo"
                   inputProps={{onChange:event => setCntrNo(event.target.value)}}
                   formControlProps={{
                     fullWidth: true
-                  }}
+                  }} 
                 />
               </GridItem>
             
-              <GridItem xs={7} sm={7} md={7} style={{textAlignLast:'right'}}>
-                <MButton
-                  variant="contained"
-                  //color="primary"
-                  size="small"
-                  style={{lineHeight:"1",}}
-                  startIcon={<CancelIcon/>}
-                  onClick={e=>setAnchorCancel(e.currentTarget)}
-                >초기화
-                </MButton>
-                &nbsp;&nbsp;
-                <MButton
-                  variant="contained"
-                  //color="primary"
-                  size="small"
-                  style={{lineHeight:"1",}}
-                  startIcon={<BackupIcon/>}
-                  onClick={e=>setAnchorExcel(e.currentTarget)}
-                >엑셀 업로드
-                </MButton>
-                  <Popover
-                    id={id_bl}
-                    open={open_bl}
-                    anchorEl={anchorExcel}
-                    onClose={excelHandleClose}
-                    anchorOrigin={{vertical:'bottom',horizontal:'center',}}
-                    transformOrigin={{vertical:'top',horizontal:'center',}}
-                  ><ExcelUpload/>
-                  </Popover>
-                  &nbsp;&nbsp;
-                  <MButton
-                  variant="contained"
-                  //color="primary"
-                  size="small"
-                  style={{lineHeight:"1",}}
-                  startIcon={<AddIcon/>}
-                  onClick={e=>setAnchorAdd(e.currentTarget)}
-                >추가
-                </MButton>
+              <GridItem xs={12} sm={7} md={7} style={{textAlignLast:'right'}}>
+                <Button color="info" onClick = {onSubmit} startIcon={<CancelIcon/>}>초기화</Button>
+                <Button color="info" onClick = {onSubmit} startIcon={<BackupIcon/>}>엑셀업로드</Button>
+                <Button color="info" onClick = {onSubmit} startIcon={<AddIcon/>}>추가</Button>
               </GridItem>
+              <GridItem xm={12} sm={12} md={12} style={{textAlignLast:'right',paddingRight:'0px'}}>
+              <Button color="info" onClick = {onSubmit}  >조회</Button>
+              <Button color="info" onClick = {onSubmit}  >저장</Button>
+              <Button color="info" onClick = {onSubmit}  >삭제</Button>
+              <Button color="info" onClick = {onSubmit}  >엑셀다운로드</Button>
+              <Button color="info" onClick = {onSubmit}  >상세보기</Button>
+            </GridItem>
             </GridContainer>
-          
-            
-          
-          
-          <CardContent className = {classes.card}>
-            
-            <GridContainer>
-              <GridItem xm={12} sm={12} md={12} style={{textAlignLast:'right'}}>
-                <MButton
-                  variant="contained"
-                  //color="primary"
-                  size="small"
-                  style={{lineHeight:"1",}}
-                  startIcon={<BackupIcon/>}
-                  onClick={e=>setAnchorExcel(e.currentTarget)}
-                >저장
-                </MButton>
-                &nbsp;&nbsp;
-                <MButton
-                  variant="contained"
-                  //color="primary"
-                  size="small"
-                  style={{lineHeight:"1",}}
-                  startIcon={<BackupIcon/>}
-                  onClick={e=>setAnchorExcel(e.currentTarget)}
-                >삭제
-                </MButton>
-                &nbsp;&nbsp;
-                <MButton
-                  variant="contained"
-                  //color="primary"
-                  size="small"
-                  style={{lineHeight:"1",}}
-                  startIcon={<BackupIcon/>}
-                  onClick={e=>setAnchorExcel(e.currentTarget)}
-                >엑셀 다운로드
-                </MButton>
-                &nbsp;&nbsp;
-                <MButton
-                  variant="contained"
-                  //color="primary"
-                  size="small"
-                  style={{lineHeight:"1",}}
-                  startIcon={<BackupIcon/>}
-                  onClick={e=>setAnchorExcel(e.currentTarget)}
-                >상세보기
-                </MButton>
-              </GridItem>
-              <GridItem xm={12} sm={12} md={12}>
-                <DetailTable 
-                  tableHeaderColor = "primary"
-                  tableHead = {["선택","선사", "CNTR NO", "DETENTION", "DEMURRAGE", "COMBINED","STORAGE","REMARKS","DO신청"]}
-                  tableData = { listData }
-                />
-                
-              </GridItem>
-            </GridContainer>
-          </CardContent>
-        
+          <GridItem xm={12} sm={12} md={12}>
+          <DetailTable 
+            tableHeaderColor = "info"
+            tableHead = {["선택","선사", "CNTR NO", "DETENTION", "DEMURRAGE", "COMBINED","STORAGE","REMARKS","DO신청"]}
+            tableData = { demDetList }
+          />
+        </GridItem>
       
           </CardBody>
         </Card>

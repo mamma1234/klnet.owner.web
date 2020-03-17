@@ -33,6 +33,25 @@ export default function HeaderLinks(props) {
   const classes = useStyles();
   const [openJoin,setOpenJoin] = useState(false);
   
+  React.useEffect(() => {
+	    console.log('effect header links');
+	    
+	    function handleTouchMove(event) {
+	    	if(openJoin) {
+	    		event.preventDefault();
+	    	}
+	    }
+	    
+	    window.addEventListener("touchmove",handleTouchMove, {
+	    	passive: false
+	    });
+
+	    return () => {
+	      console.log('cleanup');
+	      window.removeEventListener("touchmove",handleTouchMove);
+	    };
+}, []);
+  
   const handleOpenJoin = () => {
 	  setOpenJoin(true);
   };
@@ -59,7 +78,7 @@ export default function HeaderLinks(props) {
       	open={openJoin}
         	onClose={handleJoinClose}
           //onBackdropClick={handleJoinClose}
-        ><JoinPage mode="0" reTurnText="Login"/></Modal>
+        ><JoinPage mode="0" page="/" onClose ={()=>setOpenJoin(false)} reTurnText="Login"/></Modal>
 	  </ListItem>
       <ListItem className={classes.listItem}>
         <CustomDropdown

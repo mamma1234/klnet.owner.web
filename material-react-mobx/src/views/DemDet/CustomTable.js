@@ -30,8 +30,8 @@ export default function SimpleTable(props) {
                     </TableHead>
                 ) : null}
                 <TableBody>
-                    {tableData.map(row => (
-                        <TableRow key={row.bkg_no}>
+                    {tableData.map((row, index) => (
+                        <TableRow key={index}>
                             <TableCell align='center'>{row.shipper_code}</TableCell>
                             <TableCell align='center'>{row.ca_code}</TableCell>
                             <TableCell align='center'>{row.bkg_no}</TableCell>

@@ -20,6 +20,7 @@ export default function CustomSelects(props) {
     id,
     option,
     inputProps,
+    labelProps,
     setValue,
     error,
     success
@@ -40,15 +41,17 @@ export default function CustomSelects(props) {
     <FormControl
       {...formControlProps}
     >
-        <InputLabel className={classes.labelRoot + labelClasses}>{labelText}</InputLabel>
+        <InputLabel className={classes.labelRoot + labelClasses} {...labelProps}>{labelText}</InputLabel>
         <Select
+          native
           id = {id}
           value={value}
           {...inputProps}
         >
-        {option.map((prop) => {
+        <option value=""></option>
+        {option.map((prop,index) => {
                 return (
-                  <MenuItem key={prop} value={prop}>{prop}</MenuItem>
+                  <option key={prop+index} value={prop}>{prop}</option>
                 );
               })}
         </Select>

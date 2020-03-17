@@ -1,42 +1,32 @@
-import React,{ useState, useEffect } from "react";
+import React,{ useState, useEffect, Component } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-
+import { createPortal } from 'react-dom';
+import PropTypes from 'prop-types';
+import {MAP} from 'react-google-maps/lib/constants'
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-import CustomTable from "views/DemDet/CustomTable.js";
 import { CardContent, TextField } from "@material-ui/core";
-import CustomInput from "components/CustomInput/CustomInput";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import Button from "components/CustomButtons/Button.js";
-import Grid from '@material-ui/core/Grid';
-import MButton from '@material-ui/core/Button';
-
-import Popover from  '@material-ui/core/Popover';
-import ExcelUpload from "views/DemDet/PopUp/ExcelUpload.js";
-
-
-import BackupIcon from "@material-ui/icons/Backup";
-import CancelIcon from "@material-ui/icons/CancelPresentation";
-import AddIcon from "@material-ui/icons/AddBox";
 import TerminalList from 'views/DemDet/Map/TerminalList.js';
 import axios from 'axios';
+import Button from "components/CustomButtons/Button.js";
+import MapSkin from './CustomMap';
+import CustomInput from "components/CustomInput/CustomInput";
 import {
-    InfoWindow,
     withScriptjs,
     withGoogleMap,
     GoogleMap,
-    Marker,
+    Marker
   } from "react-google-maps";
-import { compose, withStateHandlers, withHandlers, renderComponent } from "recompose";
-
-
-
-
+import { compose, withStateHandlers, withProps } from "recompose";
+import Switch from '@material-ui/core/Switch';
+import dotenv from "dotenv";
+dotenv.config();
 
 
 const styles = {
@@ -95,33 +85,30 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-
-
 export default function DemDetList() {
+ 
+const [portCode, setPortCode] = useState([]);
+const [portCodeCopy, setPortCodeCopy] = useState([]);
+const [lineData, setLineData] = useState([]);
+const portwgs84 = {lat: 35.837395, lng: 127.782544};
+useEffect(() => {
+  console.log('호출....');
+  axios.post("/loc/getPort",{ portCode:""}).then(res => setPortCode(res.data));
   
-  const [anchorCancel, setAnchorCancel] = useState(null);
-  const [anchorExcel, setAnchorExcel] = useState(null);
-  const [anchorAdd, setAnchorAdd] = useState(null);
-  const [portCode, setPortCode] = useState([]);
-  const [portCodeCopy, setPortCodeCopy] = useState([]);
-  const [lineData, setLineData] = useState([]);
-
-  useEffect(() => {
-		
-    console.log('호출....');
-    axios.post("/pg/getPort",{ portCode:""}).then(res => setPortCode(res.data));
-    
-    axios.post("/pg/getPort",{ portCode:""}).then(res => setPortCodeCopy(res.data));
-    
-    return () => {
-        console.log('cleanup');
-      };
-  },[]);
+  axios.post("/loc/getPort",{ portCode:""}).then(res => setPortCodeCopy(res.data));
+  return () => {
+      console.log('cleanup');
+    };
+},[]);
 
 const getPort = (port) => {
     if (port != null) {
-        axios.post("/pg/getPort",{ portCode:port.port_code}).then(res => setPortCode(res.data));
-    }
+        axios.post("/loc/getPort",{ portCode:port.port_code}).then(res => setPortPostion(res.data));
+      }
+}
+
+const setPortPostion = (data) => {
+  setPortCode(data);
 }
 
 
@@ -132,29 +119,137 @@ const getPortInfo = (port, props) =>  {
     />
     )
   }
-  const Map = compose(
+  const Map=compose(
+    
+    withProps({
+
+      googleMapURL: "https://maps.googleapis.com/maps/api/js?key="+process.env.REACT_APP_GOOGLE_MAPS_API_KEY+"&language=en&region=KR",
+      loadingElement: <div style={{height: `100%`}}/>,
+      containerElement: <div style={{width:'100%', height: `50vw`, position: `relative` }}/>,
+      mapElement: <div style={{ height: `100%` }}/>,
+    }),
     withStateHandlers(() => ({
       isOpen: false,
-      port: ""
+      port: "",
+      centerPosition: portwgs84,
+      map: "map"
     }), 
     {
-    onToggleOpen: ({ isOpen }) =>(portCode) => ({
+    onToggleOpen: ({ isOpen }) =>(portCode, positionX, positionY) => ({
       isOpen: !isOpen,
-      port: portCode
-    }), 
-  }
-  ),
+      port: portCode,
+      centerPosition: {lat: positionY, lng: positionX} 
+    }),
+    
+    },
+    
+    ),
+    withStateHandlers(() => ({
+      setStyle: []
+    }),
+    {
+    onSetMapStyle: () =>(skin) => ({
+      setStyle: skin
+    }),
+      
+    }
+    ),
+    withStateHandlers(() => ({
+      markerVisible: true
+    }),
+    {
+    onMarkerView: () =>(switchMarker) => ({
+      markerVisible: switchMarker
+    }),
+    }
+    ),
     withScriptjs,
     withGoogleMap
+  
   )
+  
   (props =>
+    <div id = 'map'>
+      
+     <GridContainer>  
+      <GridItem xm={12} sm={12} md={2}>
+       <h4>View Port</h4>
+       </GridItem>
+       <GridItem xm={12} sm={12} md={1}>       
+        <Switch defaultChecked={true}
+            labelText = "구분"
+	      		onChange={e => props.onMarkerView(e.target.checked)}
+	      		value="MapSwitch"/>
+      </GridItem>
+      
+    </GridContainer>  
+
+       
+    
     <GoogleMap
-    defaultZoom={7}
-    defaultCenter={ {lat: 35.837395, lng: 127.782544} }
-      defaultOptions={{
-        scrollwheel: true,
-        zoomControl: true
-    }}>
+    id = {props.map}
+    defaultZoom={6}
+    center={props.centerPosition}
+    defaultCenter={ props.centerPosition }
+    defaultOptions={{
+      scrollwheel: true,
+      zoomControl: true,
+      disableDefaultUI: true,
+      keyboardShortcuts: true,
+      styles: props.setStyle,
+      mapTypeControl: true,
+      mapTypeControlOptions: {
+        mapTypeIds: ['styled_map']
+      }
+    }}
+    options={{
+      scrollwheel: true,
+      zoomControl: true,
+      disableDefaultUI: true,
+      keyboardShortcuts: true,
+      styles: props.setStyle,
+      mapTypeControl: true,
+      mapTypeControlOptions: {
+        mapTypeIds: ['styled_map']
+      }
+    }}
+    
+    >
+      <MapControl position = {window.google.maps.ControlPosition.TOP_CENTER}>
+        <GridItem xm={12} sm={12} md={6}>
+        <Autocomplete
+                              options = {portCodeCopy}
+                              getOptionLabel = { option => "["+option.port_kname+"] "+option.port_code}
+                              id="portCodeCopy"
+                              onChange={(e, value) => getPort(value) }
+                              renderInput={params => (<TextField {...params} label="PORT" fullWidth />)}/>
+        </GridItem>
+
+      </MapControl>
+      <MapControl position = {window.google.maps.ControlPosition.BOTTOM_CENTER}>
+        <div>
+        <GridContainer>
+      <GridItem xm={12} sm={12} md={2}>
+        <Button onClick= {() => props.onSetMapStyle(MapSkin.MapStyleSilver)}>Silver</Button>
+      </GridItem>
+      <GridItem xm={12} sm={12} md={2}>
+        <Button onClick ={() => props.onSetMapStyle(MapSkin.MapAubergine)}>Aubergine</Button>
+      </GridItem>
+      <GridItem xm={12} sm={12} md={2}>
+        <Button onClick ={() => props.onSetMapStyle(MapSkin.MapStyleDark)}>Dark</Button>
+      </GridItem>
+      <GridItem xm={12} sm={12} md={2}>
+        <Button onClick ={() => props.onSetMapStyle(MapSkin.MapStyleNight)}>Night</Button>
+      </GridItem>
+      <GridItem xm={12} sm={12} md={2}>
+        <Button onClick ={() => props.onSetMapStyle(MapSkin.MapStyleRetro)}>Retro</Button>
+      </GridItem>
+      <GridItem xm={12} sm={12} md={2}>
+        <Button onClick ={() => props.onSetMapStyle([])}>Normar</Button>
+      </GridItem>
+    </GridContainer>  
+        </div>
+      </MapControl>
     {
       portCode.length !== 0 && (portCode.map((data, index) => {
 
@@ -165,7 +260,10 @@ const getPortInfo = (port, props) =>  {
               draggable = {false} 
               position={{lat:data.wgs84_y, lng:data.wgs84_x}} // 마커 위치 설정 {lat: ,lng: }   
               icon={require("assets/img/marker.png")}
-              onClick={() => props.onToggleOpen(data.port_code) }>
+              defaultVisible={props.markerVisible}
+              visible={props.markerVisible}
+              onClick={() => props.onToggleOpen(data.port_code, data.wgs84_x, data.wgs84_y) }>
+              
               {props.isOpen && data.port_code == props.port && getPortInfo(data) }  
             </Marker>
           )
@@ -173,65 +271,41 @@ const getPortInfo = (port, props) =>  {
           } 
       )
     )
-    }
+    } 
+   
    </GoogleMap>
+   </div>
   )
-  
+
   const classes = useStyles();  
   return (
     <GridContainer>
-      <GridItem xs={12} sm={12} md={12}>
-        <Card>
-            <CardHeader color="info">
-                <h4 className={classes.cardTitleWhite}>
-                    Map Service
-                </h4>
-                <p className={classes.cardCategoryWhite}>
-                    Demurrage | Detention | Storage
-                </p>
-            </CardHeader>
-            <CardBody>
-                <GridContainer>
-                    <GridItem xs={2} sm={2}>
-                        <Autocomplete
-                            options = {lineData}
-                            getOptionLabel = { option => "["+option.carrier_code+"] "+option.carrier_hname}
-                            id="lineCode"
-                            /*
-                            onKeyUp={this.onCarrierCodeSearch}
-                            */
-                            
-                            
-                            renderInput={params => (<TextField {...params} label="선사" fullWidth />)}/>
-                    </GridItem>
-                    <GridItem xs={4} sm={2}>
-                        <Autocomplete
-                            options = {portCodeCopy}
-                            getOptionLabel = { option => "["+option.port_kname+"] "+option.port_code}
-                            id="portCodeCopy"
-                            /*
-                            onKeyUp={this.onCarrierCodeSearch}
-                            onChange={this.onCarrierCodeChange}
-                            */
-                            onChange={(e, value) => getPort(value) }
-                            renderInput={params => (<TextField {...params} label="PORT" fullWidth />)}/>
-                    </GridItem>
-                </GridContainer>
-            <CardContent className = {classes.card}>
-                <GridContainer>
-                    <GridItem xm={12} sm={12} md={12}>
-                        <Map    
-                            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBK2wBJD1QHGAquIsW0V5_XVQeu6muFmZ0"
-                            loadingElement={<div style={{ height: `90%` }} />}
-                            containerElement={<div style={{ height: `50vh` }} />}
-                            mapElement={<div style={{ height: `100%` }} />}>
-                        </Map>
-                    </GridItem>
-                </GridContainer>
-            </CardContent>
-           </CardBody>
-        </Card>
-      </GridItem>    
+      <Map>
+      </Map> 
     </GridContainer>
  );
 }
+
+class MapControl extends Component {
+  static contextTypes = {
+    [MAP] : PropTypes.object
+  }
+
+  componentWillMount() {
+    this.map = this.context[MAP]
+    console.log('TTTTTTTT',this.map)
+    this.controlDiv = document.createElement('div');
+    this.map.controls[this.props.position].push(this.controlDiv);
+  }
+
+  componentWillUnmount() {
+    this.map.controls[this.props.position].removeAt(this.divIndex)
+  }
+  render() {
+    return createPortal(this.props.children,this.controlDiv)
+  }
+}
+
+
+
+

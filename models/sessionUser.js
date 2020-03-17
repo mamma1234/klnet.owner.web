@@ -12,6 +12,7 @@
 // class LinkedList {}
 module.exports = {
         provider:'',
+        userno:'',
         userid:'',
         id:'',
         email:'',

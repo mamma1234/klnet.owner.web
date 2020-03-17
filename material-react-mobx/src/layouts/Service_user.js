@@ -123,7 +123,6 @@ export default function Service({ ...rest }) {
           <div className={classes.map}>{switchRoutes}</div>
         )}
         {getRoute() ? <Footer /> : null}
-        {   }
       </div>
     </div>
   );
