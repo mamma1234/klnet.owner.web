@@ -23,12 +23,11 @@ import styles2 from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 import ProductSection from "./Sections/ProductSection.js";
 import TeamSection from "./Sections/TeamSection.js";
 import WorkSection from "./Sections/WorkSection.js";
-import axios from 'axios';
-import Modal from '@material-ui/core/Modal';
-import JoinPage from "components/Form/Common/JoinPage.js";
+
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
-
+import Login from "views/LoginPage/LoginPage.js";
+import Drawer from '@material-ui/core/Drawer';
 const dashboardRoutes = [];
 
 const useStyles = makeStyles(styles);
@@ -38,7 +37,6 @@ let ps;
 export default function LandingPage() {
 
 	const [openJoin,setOpenJoin] = useState(false);
-	const [mobileOpen, setMobileOpen] = React.useState(false);
     const classes = useStyles();
     const classes2 = useStyles2();
     const mainPanel = React.createRef();
@@ -60,32 +58,12 @@ export default function LandingPage() {
           }
         };
       }, [mainPanel]);      
-  
-  function loginCheck() {
-	   //alert(">>id:"+loginId+"pw:"+loginPw);
-   axios.post("/auth/login")
-   .then(res => {
-       console.log(res.session);
-       if (res.data.message) alert(res.data.message);
-       else window.location.href = "/own/tracking"; //alert(res.data.userid + " 로그인 성공");
-   })
-   .catch(err => {
-       console.log(err);
-       if(err.response.status == "403"){
-    	   setOpenJoin(true);
-       }
-   })
- }
-  
+    
   const handleOpenJoin = () => {
 	  setOpenJoin(true);
 	  //loginCheck();
   };
-  
-  const handleJoinClose = () => {
-	  setOpenJoin(false);
-  }
-  
+    
   return (
     <div className={classes2.wrapper} ref={mainPanel}>
       <Header
@@ -117,16 +95,20 @@ export default function LandingPage() {
                 size="lg"
                 //href ="/own/tracking"
                 rel="noopener noreferrer"
-                onClick={handleOpenJoin}
+                onClick={()=>setOpenJoin(true)}
               >Start Service
               </Button>
-              <Modal
-            	//aria-labelledby="simple-modal-title"
-            	//aria-describedby="simple-modal-description"
+{/*               <Modal
             	open={openJoin}
               	onClose={handleJoinClose}
                 //onBackdropClick={handleJoinClose}
-              ><JoinPage mode="1" onClose ={()=>setOpenJoin(false)} reTurnText="KLNET 회원가입" /></Modal>
+              ><JoinPage mode="1" onClose ={()=>setOpenJoin(false)} reTurnText="KLNET 회원가입" /></Modal> */}
+
+		      <Drawer anchor="top" open={openJoin} >
+		       <Login onClose ={()=>setOpenJoin(false)} /> 
+         </Drawer>
+
+
             </GridItem>
           </GridContainer>
          

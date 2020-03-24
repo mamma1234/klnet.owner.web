@@ -9,139 +9,43 @@ import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableFooter from "@material-ui/core/TableFooter";
-import TablePagination from "@material-ui/core/TablePagination";
-import IconButton from "@material-ui/core/IconButton";
-import FirstPageIcon from "@material-ui/icons/FirstPage";
-import LastPageIcon from "@material-ui/icons/LastPage";
-import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
-import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
-import Grid from '@material-ui/core/Grid';
+
+
 import GridContainer from "components/Grid/GridContainer.js";
 import TableList from "components/Table/TableSmallLine.js";
 import GridItem from "components/Grid/GridItem.js";
 import Popover from  '@material-ui/core/Popover';
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
-import Favorite from '@material-ui/icons/Favorite';
-import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
+
 import Card from "components/Card/Card.js";
 import Access from "@material-ui/icons/AccessAlarm";
 import Assign from "@material-ui/icons/AssignmentTurnedIn";
-import CardHeader from "components/Card/CardHeader.js";
+
 import Icon from '@material-ui/core/Icon';
 // core components
 import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
 import { slideDown, slideUp } from "components/Slide/Slide.js";
 
-import axios from 'axios';
-import Stepper from 'components/Navbars/Stepper.js';
-
 import CntrListTable from "views/Tracking/TrackingCntrList.js";
 import Slider from "components/Slide/Slider.js";
-
-
-const classes = makeStyles(theme => ({
-  root: {
-    padding: 0,   
-  },
-}));
+import Button from "components/CustomButtons/Button.js";
 
 const useStyles = makeStyles(styles);
 
-const useStyles1 = makeStyles(theme => ({
-	root:{
-		flexShrink:0,
-		marginLeft: theme.spacing(2.5),
-	}
-}));
-
-
-function TablePageinationActions(props) {
-	const classes = useStyles1();
-	const theme = useTheme();
-	const {count,page,rowsPerPage,onChangePage } =props;
-	
-	console.log(":"+count+":"+page+":"+rowsPerPage+":"+onChangePage);
-	
-	const handleFirstPageButtonClick = e => {
-		onChangePage(e,0);
-	}
-	
-	const handleBackButtonClick = e => {
-		onChangePage(e,page -1);
-	}
-	
-	const handleNextButtonClick = e => {
-		onChangePage(e,page +1);
-	}
-	
-	const handleLastPageButtonClick = e => {
-		onChangePage(e,Math.max(0,Math.ceil(count / rowsPerPage)-1));
-	}
-	
-	return (
-		<div className = {classes.root}>
-			<IconButton
-				onClick = {handleFirstPageButtonClick}
-				disabled={page === 0 }
-				aria-label="first page"
-			>
-			{theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon/>}
-			</IconButton>
-			<IconButton
-				onClick = {handleBackButtonClick}
-				disabled={page === 0 }
-				aria-label="previous page"
-			>
-		{theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-		</IconButton>
-		<IconButton
-			onClick = {handleNextButtonClick}
-			disabled={page >= Math.ceil(count / rowsPerPage) -1 }
-			aria-label="next page"
-		>
-	{theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-	</IconButton>
-		<IconButton
-			onClick = {handleLastPageButtonClick}
-			disabled={page >= Math.ceil(count / rowsPerPage)-1 }
-			aria-label="last page"
-		>
-		{theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon/>}
-		</IconButton>
-		</div>
-	);
-	
-}
-
-TablePageinationActions.propTypes = {
-		count:	PropTypes.number.isRequired,
-		onChangePage: PropTypes.func.isRequired,
-		page: PropTypes.number.isRequired,
-		rowsPerPage:PropTypes.number.isRequired,
-}
 
 export default function ToggleTable(props) {
 
 
   const classes = useStyles();
   const { tableHead, tableData, tableHeaderColor } = props;
-  const [page,setPage] = React.useState(0);
-  const [rowsPerPage,setRowsPerPage] = React.useState(10);
+
+  const handleAddFunction = () => {
+    props.onClickHandle();
+  }
 
   console.log(tableData);
-  
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage,tableData.length - page * rowsPerPage);
-  
-  const handleChagePage = (e,newPage) => {
-	  setPage(newPage);
-  }
-  
-  const handleChangeRowsPerPage = event => {
-	  setRowsPerPage(parseInt(event.target.value,10));
-	  setPage(0);
-  }
-  
+
   
   return (
     <div className={classes.tableResponsive} style={{marginTop:'0px'}}>
@@ -164,7 +68,7 @@ export default function ToggleTable(props) {
           </TableHead>
         ) : null}
         <TableBody>
-           {(rowsPerPage > 0?tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) :  tableData).map((prop, key) => {
+           {tableData.map((prop, key) => {
                   return (
                     <TableRows key={key} index={key + 1} data={prop} color={tableHeaderColor} />
                   );
@@ -172,22 +76,12 @@ export default function ToggleTable(props) {
            
         </TableBody>
         {(tableData.length >= 10 ?
-        <TableFooter>
-        	<TableRow>
-        		<TablePagination 
-        			rowsPerPageOptions={[10,15,20,{label:'All',value:-1}]}
-        			colSpan={11}
-        			count={tableData.length}
-        		    rowsPerPage={rowsPerPage}
-        			page={page}
-        			SelectProps={{
-        				inputProps: {'aria-label':'Rows Per Page'},
-        			    native:true,
-        			}}
-        			onChangePage={handleChagePage}
-        			onChangeRowsPerPage={handleChangeRowsPerPage}
-        			ActionsComponent={TablePageinationActions}
-        	/>
+        <TableFooter >
+        	<TableRow  >
+        	<TableCell style={{textAlignLast:'center'}} colSpan={tableHead.length}><Button
+				    color="info"
+					onClick={handleAddFunction}
+				>더보기</Button></TableCell>
         	</TableRow>
         </TableFooter>: null )}
       </Table>
@@ -276,11 +170,11 @@ ToggleTable.propTypes = {
 
     return [
       <TableRow  key={this.props.index} className={this.staterowStyle} style={{borderCollapse:'separate',borderSpacing:'2px 2px',paddingTop:'5px'}} >
-        <TableCell style={{padding:'0px',textAlignLast:'center',borderBottomWidth:'3px'}} >{data[0]}{data[1] == 0?<StarIcon style={{color:'#00acc1'}} />:<StarBorderIcon style={{color:'#00acc1'}} />}</TableCell>
-        <TableCell style={{padding:'0px',textAlignLast:'center',borderBottomWidth:'3px'}}>{data[2]}</TableCell>
-        <TableCell style={{padding:'0px',textAlignLast:'center',borderBottomWidth:'3px'}}>{data[3] !=""?<img src={require("images/carrier/"+data[3]+".gif")} />:<img src={require("images/carrier/No-Image.gif")} />}</TableCell>
-        <TableCell style={{padding:'0px',textAlignLast:'center',borderBottomWidth:'3px'}}>{data[4]}<br/>{data[5]?"("+data[5]+")":""}</TableCell>
-        <TableCell style={{padding:'0px',textAlignLast:'center',borderBottomWidth:'3px'}} onClick={this.handleClickOpen}>{data[6]}
+        <TableCell style={{padding:'0px',textAlignLast:'center',borderBottomWidth:'3px'}} >{data.bl_bkg}{data.ord == 0?<StarIcon style={{color:'#00acc1'}} />:<StarBorderIcon style={{color:'#00acc1'}} />}</TableCell>
+        <TableCell style={{padding:'0px',textAlignLast:'center',borderBottomWidth:'3px'}}>{data.ie_type}</TableCell>
+        <TableCell style={{padding:'0px',textAlignLast:'center',borderBottomWidth:'3px'}}>{data.carrier_code !="" && data.carrier_code != "SNK" && data.carrier_code.length ==3?<img src={require("images/carrier/"+data.carrier_code+".gif")} />:data.carrier_code}</TableCell>
+        <TableCell style={{padding:'0px',textAlignLast:'center',borderBottomWidth:'3px'}}>{data.vsl_name}<br/>{data.voyage?"("+data.voyage+")":""}</TableCell>
+        <TableCell style={{padding:'0px',textAlignLast:'center',borderBottomWidth:'3px'}} onClick={this.handleClickOpen}>{data.status}
 		</TableCell>
 		<Popover
       	id="popover"
@@ -290,25 +184,17 @@ ToggleTable.propTypes = {
 		anchorPosition={{top:80,left:550}}
       	anchorOrigin={{vertical:'bottom',horizontal:'center',}}
       	transformOrigin={{vertical:'top',horizontal:'center',}}
-        > <CntrListTable blNo={data[0]} carrierCode={data[3]}/>
+        > <CntrListTable blNo={data.bl_bkg} carrierCode={data.carrier_code}/>
 	</Popover>
-        <TableCell style={{padding:'5px',textAlignLast:'center',borderBottomWidth:'3px'}}>{data[7]}<br/>{data[8]}{data[8]?"("+data[9]+")":""}</TableCell>
-        <TableCell style={{padding:'5px',textAlignLast:'center',borderBottomWidth:'3px'}}>{data[10]}<br/>{data[11]}{data[11]?Math.sign(data[12])==1?"("+data[12]+")":"("+data[12]+")":""}</TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center',borderBottomWidth:'3px'}}>{data.pol}<br/>{data.pol_atd}{data.pol_atd?"("+data.pol_dday+")":""}</TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center',borderBottomWidth:'3px'}}>{data.pod}<br/>{data.pod_etd}{data.pod_etd?Math.sign(data.pod_dday)==1?"("+data.pod_dday+")":"("+data.pod_dday+")":""}</TableCell>
+        <TableCell style={{padding:'5px',textAlignLast:'center',borderBottomWidth:'3px'}}><Slider /></TableCell>
         <TableCell style={{padding:'5px',textAlignLast:'center',borderBottomWidth:'3px'}}><Icon style={{color:'#00acc1'}} onClick={this.toggleExpander}>{this.state.iconstate}</Icon></TableCell>
       </TableRow>,
       this.state.expanded && (
         <TableRow key = {this.props.index+1} style={{marginTop:'5px',marginBottom:'5px',borderTopStyle:'double',borderTopColor:'whitesmoke'}}>
-          <TableCell colSpan={11} style={{padding:'10px'}}>
-            <div ref="expanderBody"> 
-           	
-	          {/*<Stepper style={{padding: '10px',color:'#00acc1'}}
-	          	stepData ={[['POD: KRPUS','DT: 2020-01-29','T/T: 0'],['POD: KRINC','DT: 2020-01-29','T/T: 0']]}
-	            active ={0}
-	          />
-*/}				<GridItem xs={12}>
-					<div><Assign style={{color:'#00acc1'}} />PROGRESS</div>
-	          		<Slider />
-	          	</GridItem>
+          <TableCell colSpan={8} style={{padding:'10px'}}>
+            <div ref="expanderBody">
 	          	<GridItem xs={12}>
 		          	<GridContainer>
 		          		<GridItem xs={12} sm={12} md={6}>

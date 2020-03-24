@@ -29,7 +29,7 @@ const useStyles1 = makeStyles(theme => ({
 function TablePageinationActions(props) {
 	const classes = useStyles1();
 	const theme = useTheme();
-	const {count,page,rowsPerPage,onChangePage } =props;
+	const {count,page,rowsPerPage,onChangePage} =props;
 	
 	console.log(":"+count+":"+page+":"+rowsPerPage+":"+onChangePage);
 	
@@ -93,7 +93,7 @@ TablePageinationActions.propTypes = {
 
 export default function CustomTable(props) {
   const classes = useStyles();
-  const { tableHead, tableData, tableHeaderColor } = props;
+  const { tableHead, tableData, tableHeaderColor,colSpan } = props;
   const [page,setPage] = React.useState(0);
   const [rowsPerPage,setRowsPerPage] = React.useState(5);
   
@@ -147,7 +147,7 @@ export default function CustomTable(props) {
     	<TableRow>
     		<TablePagination 
     			rowsPerPageOptions={[5,10,15,{label:'All',value:-1}]}
-    			colSpan={5}
+    			colSpan={colSpan}
     			count={tableData.length}
     		    rowsPerPage={rowsPerPage}
     			page={page}

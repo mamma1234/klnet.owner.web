@@ -15,15 +15,17 @@ import Divider from "@material-ui/core/Divider";
 import Person from "@material-ui/icons/Person";
 import Notifications from "@material-ui/icons/Notifications";
 import Dashboard from "@material-ui/icons/Dashboard";
-import Search from "@material-ui/icons/Search";
+
 // core components
-import CustomInput from "components/CustomInput/CustomInput.js";
+
 import Button from "components/CustomButtons/Button.js";
 import Modal from '@material-ui/core/Modal';
 import JoinPage from "components/Form/Common/JoinPage.js";
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 import axios from 'axios';
 import { NavLink } from "react-router-dom";
+import Login from "views/LoginPage/LoginPage.js";
+import Drawer from '@material-ui/core/Drawer';
 const useStyles = makeStyles(styles);
 
 export default function AdminNavbarLinks() {
@@ -83,7 +85,7 @@ export default function AdminNavbarLinks() {
 	    })
 	    .catch(err => {
 	        console.log(err);
-	        window.location.href = "/Landing";
+	        //window.location.href = "/Landing";
 	    })
 	  
 	 // window.location.href = "/auth/logout";
@@ -278,10 +280,14 @@ export default function AdminNavbarLinks() {
             </Grow>
           )}
         </Poppers>
-        <Modal
+{/*        <Modal
 	  	open={openJoin}
 	    onClose={handleJoinClose}
-	  ><JoinPage mode="0" page="/Landing" onClose ={()=>setOpenJoin(false)} reTurnText="정상적으로 LogOut 되었습니다."/></Modal>
+	  ><JoinPage mode="0" page="/Landing" onClose ={()=>setOpenJoin(false)} reTurnText="정상적으로 LogOut 되었습니다."/></Modal>*/}
+		 <Drawer anchor="top" open={openJoin} >
+         {/* <JoinPage mode="0" onClose ={()=>setOpenJoin(false)} page="/svc" reTurnText="Login" /> */}
+		    <Login onClose ={()=>setOpenJoin(false)} /> 
+      </Drawer>
       </div>
     </div>
   );

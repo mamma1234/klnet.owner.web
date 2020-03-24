@@ -25,6 +25,53 @@ tags:
     description: "loc"
 
 paths:
+
+  /api/apiSchedule:
+    get:
+      summary: API Schedule
+      descrpition: API Schedule
+      tags: [api]
+      security:
+        - basicAuth: []
+
+      parameters:
+        - name: carrierCode
+          in: query
+          description: LINE CODE
+          type: string
+          example: 'CMA'
+          minLength: 3
+          maxLength: 8
+        - name: datafrom
+          in: query
+          type: date
+          description: start date
+          format: date
+          example: '20200203'
+          pattern: "YYYYMMDD"
+          minLength: 8
+          maxLength: 8
+        - name: datato
+          in: query
+          type: date
+          description: end date
+          format: date
+          example: '20200203'
+          pattern: "YYYYMMDD"
+          minLength: 8
+          maxLength: 8  
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: UnauthorizedError
+          $ref: "#/definitions/UnauthorizedError"
+      default:
+        description: Error           
+                  
+
+
+
   /loc/getTestSimple:
     get:
       summary: test

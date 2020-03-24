@@ -107,10 +107,56 @@ const getTestQueryAttibuteSample = (request, response) => {
     });
 }
 
+const getImpFlowSample = (request, response) => {
+
+    const sql = "SELECT * FROM mfedi.tcs_flow_import_tracking where cntr_no='"+request.body.cntrNo+"'";
+
+    oraclePool.getConnection(function(err,conn,done) {
+        if(err){
+            console.log("err" + err);
+            response.status(400).send(err);
+        }
+
+        conn.execute(sql, (error, results) => {
+            if (error) {
+                response.status(400).json({ "error": error.message });
+                return;
+            }
+
+            response.status(200).json(results.rows);
+
+        }); 
+    });
+}
+
+const getExpFlowSample = (request, response) => {
+	
+	const sql = "SELECT * FROM mfedi.tcs_flow_export_tracking where cntr_no='"+request.body.cntrNo+"'";
+	console.log(sql);
+    oraclePool.getConnection(function(err,conn,done) {
+        if(err){
+            console.log("err" + err);
+            response.status(400).send(err);
+        }
+
+        conn.execute(sql, (error, results) => {
+            if (error) {
+                response.status(400).json({ "error": error.message });
+                return;
+            }
+
+            response.status(200).json(results.rows);
+        });  
+
+    });
+}
+
 
 module.exports = {
 	    getTestSimple,
 	    getTestQuerySample,
 	    getTestQueryParamSample,
 	    getTestQueryAttibuteSample,
+	    getImpFlowSample,
+	    getExpFlowSample
 	}

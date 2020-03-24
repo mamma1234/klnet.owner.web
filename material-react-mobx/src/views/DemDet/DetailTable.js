@@ -80,7 +80,6 @@ const useStyles1 = makeStyles(theme => ({
 	}
 }));
 
-const useStyles2 = makeStyles(styles);
 
 
 
@@ -89,7 +88,7 @@ function TablePageinationActions(props) {
 	const theme = useTheme();
 	const {count,page,rowsPerPage,onChangePage } =props;
 	
-	console.log(":"+count+":"+page+":"+rowsPerPage+":"+onChangePage);
+	//console.log(":"+count+":"+page+":"+rowsPerPage+":"+onChangePage);
 	
 	const handleFirstPageButtonClick = e => {
 		onChangePage(e,0);
@@ -149,49 +148,25 @@ TablePageinationActions.propTypes = {
 		rowsPerPage:PropTypes.number.isRequired,
 }
 
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === 'desc'
-  ? (a, b) => descendingComparator(a, b, orderBy)
-  : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a,b) => {
-      const order = comparator(a[0], b[0]);
-      if (order !== 0) return order;
-      return a[1] = b[1];
-  });
-  return stabilizedThis.map(el => el[0]);
-}
 
 export default function ToggleTable(props) {
 
 
-  const classes = useStyles2();
+  const classes = useStyles();
   const { tableHead, tableData, tableHeaderColor } = props;
   const [page,setPage] = React.useState(0);
   const [rowsPerPage,setRowsPerPage] = React.useState(5);
-  console.log(">>> tableData : ",tableData);
+  //console.log(">>> tableData : ",tableData);
   //console.log(props);
 
-  const { order, orderBy, onRequestSort} = props;
+  
 
   
   const emptyRows = rowsPerPage - Math.min(rowsPerPage,tableData.length - page * rowsPerPage);
   
   const handleChagePage = (e,newPage) => {
-	  setPage(newPage);
+    //console.log(props);
+    setPage(newPage);
   }
   
   const handleChangeRowsPerPage = event => {
@@ -199,13 +174,11 @@ export default function ToggleTable(props) {
 	  setPage(0);
   }
   
-  const createSortHandler = property => event => {
-    onRequestSort(event, property);
-  }
+  
 
   return (
     <div className={classes.tableResponsive}>
-      <Table className={classes.table}>
+      <Table className={classes.table} id='tblExport'>
         {tableHead !== undefined ? (
           <TableHead className={classes[tableHeaderColor + "TableHeader"]}>
             <TableRow className={classes.tableHeadRow}>
@@ -227,7 +200,7 @@ export default function ToggleTable(props) {
            {
            (rowsPerPage > 0?  tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) :  tableData).map((prop, idx, key) => {
                   return (
-                    <TableRows key={idx} index={idx + 1} data={prop} />
+                    <TableRows key={idx} index={idx + 1} data={prop} expand={false}/>
                   );
                 })}
                 
@@ -238,13 +211,13 @@ export default function ToggleTable(props) {
         	<TableRow>
         		<TablePagination 
         			rowsPerPageOptions={[5,10,15,{label:'All',value:-1}]}
-        			colSpan={9}
+              colSpan={9}
         			count={tableData.length}
-        		    rowsPerPage={rowsPerPage}
+        		  rowsPerPage={rowsPerPage}
         			page={page}
         			SelectProps={{
         				inputProps: {'aria-label':'Rows Per Page'},
-        			    native:true,
+        			  native:true,
         			}}
         			onChangePage={handleChagePage}
         			onChangeRowsPerPage={handleChangeRowsPerPage}
@@ -275,15 +248,47 @@ ToggleTable.propTypes = {
 };
 
 
-class TableRows extends React.Component {
-  state = {tarrifExpanded: false , cntrExpanded: false};
+class TableRows extends React.Component { 
+  
+  state = {tarrifExpanded: false , cntrExpanded: false, tarrifList:[]};
+  
+  
+
+  // componentWillMountUpdate() {
+  //   this.setState({ tarrifExpanded: false });
+  //   this.setState({ cntrExpanded: false });
+  //   this.setState({ tarrifList:[] });
+  // }
+
+
+  //타리프 조회
+  searchTarrif = () => {
+    console.log(">>>> searchTarrif");
+    
+    console.log(">>> this :",this);
+      //const [tarrifData,setTarrifData] = useState([]);
+      this.setState({tarrifList:[]});
+      
+      axios.post("/loc/getTarrifList",{ lineCode:this.props.data[0],sizType:this.props.data[0] })
+      .then(res =>  this.setState({tarrifList:res.data}))
+      .catch(err => {
+        //console.log(err.response.status);
+          if(err.response.status == "403") {
+            //setOpenJoin(true);
+          }
+          
+      });
+
+      //console.log(">>> tarrifData : ",tarrifData) ;  
+    console.log(">>> tarrifList : ",this.state.tarrifList) ;
+
+  }
 
   tarrifExpander = () => {
     this.setState({ cntrExpanded: false });
-
     if (!this.state.tarrifExpanded) {
       this.setState({ tarrifExpanded: true }, () => {
-        if (this.refs.expandTarrif) {slideDown(this.refs.expandTarrif);}
+        if (this.refs.expandTarrif) {slideDown(this.refs.expandTarrif);this.searchTarrif();}
       });
     } else {
       slideUp(this.refs.expandTarrif, {onComplete: () => {this.setState({ tarrifExpanded: false });}});
@@ -307,17 +312,11 @@ class TableRows extends React.Component {
 
   
   render() {
-    const { data, index } = this.props;
-    const { list } = this.state;
+    const { data, index, expand } = this.props;
+    const { list, tarrifList } = this.state;
     let point =0;
-
-    
-
-    
-  
-    
-console.log("index:", index+3000)
-
+console.log(">>>>> render expand :",expand);
+    //this.state.tarrifExpanded = false;
     return [
       
       <TableRow  key={this.props.index}  >
@@ -329,18 +328,7 @@ console.log("index:", index+3000)
           />
         </TableCell>
         <TableCell align="center" onClick={this.tarrifExpander}><b><a>{this.props.data[0]}</a></b></TableCell>
-        
         <TableCell align="center" onClick={this.cntrExpander} ><b><a>{this.props.data[3]}</a></b></TableCell>
-        
-         {/* <Popover
-          anchorReference="anchorPosition"
-          anchorPosition={{top:80,left:650}}
-          anchorOrigin={{vertical:'bottom',horizontal:'center',}}
-          transformOrigin={{vertical:'top',horizontal:'center',}}
-          >
-          테스트
-        </Popover> */}
-        
         <TableCell align="right">{this.props.data[31]} {this.props.data[33]}</TableCell>
         <TableCell align="right">{this.props.data[34]} {this.props.data[36]}</TableCell> 
         <TableCell align="right">{this.props.data[37]} {this.props.data[39]}</TableCell>
@@ -362,7 +350,11 @@ console.log("index:", index+3000)
         <TableRow key = {index+8000} style={{marginTop:'5px',marginBottom:'5px'}}>
           <TableCell colSpan={11} style={{padding:'5px'}}>
             <div ref="expandTarrif"> 
-            expandTarrif
+              <TableList 
+                    tableHeaderColor={this.props.color}
+                    tableHead={["BOUND","CNTR TYPE","CNTR SIZE","시작일","종료일","단위","금액","적용 시작일자","적용 종료일자"]}
+                    tableData={tarrifList}
+                />
             </div>
           </TableCell>
         </TableRow>    
@@ -378,7 +370,7 @@ console.log("index:", index+3000)
                               [this.props.data[4], this.props.data[5], this.props.data[6]
                               ,this.props.data[8],this.props.data[10]
                               ,this.props.data[12],this.props.data[13]
-                              ,this.props.data[18],this.props.data[22]
+                              ,this.props.data[18],this.props.data[22]  
                               ,this.props.data[24],this.props.data[27]
                               ]
                             ]}

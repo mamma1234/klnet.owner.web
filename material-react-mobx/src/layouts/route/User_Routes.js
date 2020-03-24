@@ -7,6 +7,7 @@ import FclSchedule from "views/Schedule/FclScheduleList.js";
 import DemDetMapPage from 'views/DemDet/Map/DemDetMap.js';
 import UserProfile from "views/Member/UserProfile.js";
 import UserSetting from "views/Member/UserServiceSetting.js";
+import SampleData from "views/TestPage/SamplePage.js";
 //Icon
 import Person from "@material-ui/icons/Person";
 import ScrapIcon from '@material-ui/icons/Description';
@@ -14,6 +15,7 @@ import MapIcon from "@material-ui/icons/Map";
 import DemDetIcon from "@material-ui/icons/NotificationImportant";
 import DirectionsBoat from  "@material-ui/icons/DirectionsBoat";
 import LocalAirportIcon from "@material-ui/icons/LocalAirport";
+
 //import TestPage from "views/TestPage/TestPage1.js";
 
 const serviceRoutes = [
@@ -73,6 +75,14 @@ const serviceRoutes = [
     	 component: UserSetting,
     	 layout: "/svc"
        },
+   	  {
+      	 path: "/sample",
+      	 name: "Exp&Imp sample Data",
+      	 rtlName: "Exp&Imp sample Data",
+      	 icon: Person,
+      	 component: SampleData,
+      	 layout: "/svc"
+         },
 ];
 
 export default serviceRoutes;

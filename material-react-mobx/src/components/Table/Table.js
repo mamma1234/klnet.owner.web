@@ -9,12 +9,17 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 // core components
 import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
-
+import Button from "components/CustomButtons/Button.js";
+import TableFooter from "@material-ui/core/TableFooter";
 const useStyles = makeStyles(styles);
 
 export default function CustomTable(props) {
   const classes = useStyles();
-  const { tableHead, tableData, tableHeaderColor } = props;
+  const { tableHead, tableData, tableHeaderColor,tableaddYn } = props;
+  const handleAddFunction = () => {
+	    props.onClickHandle();
+	  }
+  
   return (
     <div>
       <Table className={classes.table}>
@@ -49,6 +54,15 @@ export default function CustomTable(props) {
             );
           })}
         </TableBody>
+        {(tableaddYn >="Y" && tableData.length >= 0 ?
+                <TableFooter>
+                 <TableRow  >
+        	     	<TableCell style={{textAlignLast:'center'}} colSpan={tableHead.length}><Button
+        					    color="info"
+        						onClick={handleAddFunction}
+        					>더보기</Button></TableCell>
+        	     	</TableRow>
+                </TableFooter>: null )}
       </Table>
     </div>
   );

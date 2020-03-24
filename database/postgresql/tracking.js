@@ -4,34 +4,45 @@ const pgsqlPool = require("../pool.js").pgsqlPool
 const basicauth = require("basic-auth");
 
   const getTrackingList = (request, response) => {
-    const sql = {
-        text: "select bl_bkg,ord,ie_type,carrier_code,vsl_name,voyage,status,pol,"+
-              " to_char(to_date(substring(case when pol_etd = '' or pol_etd is null then null else pol_etd end,1,8),'yyyymmdd'),'YYYY/MM/DD') as pol_etd,"+
-              " case when pol_etd='' or pol_etd is null then null else to_char(to_date(pol_etd,'yyyymmdd')-now(),'dd') end as pol_dday,"+
-              " pod, to_char(to_date(substring(case when pod_eta = '' or pod_eta is null then null else pod_eta end,1,8),'yyyymmdd'),'YYYY/MM/DD') as pol_etd,"+
-              " case when pod_eta='' or pod_eta is null then null else to_char(to_date(pod_eta,'yyyymmdd')- now(),'dd')end as pod_dday"+
-              " from ( select b.*, case when z.user_no is null then 9 else 0 end ord"+
-              " from own_user_bl a "+
-              " join own_tracking_bl b "+
-              " on a.user_no =$1 "+
-              " and a.carrier_code = b.carrier_code"+
-              " and a.bl_bkg = b.bl_bkg"+
-              " left outer join own_book_mark z "+
-              " on 1=1 "+
-              " and z.carrier_code = b.carrier_code"+
-              " and (z.vsl_name = b.vsl_name or z.ie_type = b.ie_type or z.pol = b.pol or z.pod = b.pod) ) x "+
-              " order by x.ord",
-        values: [request.session.sUser.userno],
-        rowMode: 'array',
-    }
+	
+	  
+	  console.log(">>>>>>"+request.body.blno);
+	 let sqlText ="";
+	 
+	 sqlText += "select bl_bkg,ord,ie_type,carrier_code,vsl_name,voyage,status,pol,pol_etd,";
+	 sqlText += " pol_dday,pod,pod_etd,pod_dday from ( ";
+	 sqlText += " select floor(((row_number() over()) -1) /10 +1) as curpage, bl_bkg,ord,";
+	 sqlText += " ie_type,carrier_code,vsl_name,voyage,status,pol,";
+	 sqlText += " to_char(to_date(substring(case when (pol_etd = '' or pol_etd is null) then null else pol_etd end,1,8),'yyyymmdd'),'YYYY/MM/DD') as pol_etd,";
+	 sqlText += " case when (pol_etd='' or pol_etd is null) then null else to_char(to_date(pol_etd,'yyyymmdd')-now(),'dd') end as pol_dday,";
+	 sqlText += " pod, to_char(to_date(substring(case when pod_eta = '' or pod_eta is null then null else pod_eta end,1,8),'yyyymmdd'),'YYYY/MM/DD') as pod_etd,";
+	 sqlText += " case when pod_eta='' or pod_eta is null then null else to_char(to_date(pod_eta,'yyyymmdd')- now(),'dd')end as pod_dday";
+	 sqlText += " from ( select b.*, case when z.user_no is null then 9 else 0 end ord ";
+	 sqlText += " from own_user_bl a ";
+	 sqlText += " join own_tracking_bl b ";
+	 sqlText += " on a.user_no = '"+request.session.sUser.userno+"'";
+	 sqlText += " and a.bl_bkg = b.bl_bkg ";
+	 if(request.body.blno) {
+		 sqlText += " and b.bl_bkg = '"+request.body.blno+"'";
+     }
+	 if(request.body.vslname) {
+		 sqlText += " and b.vsl_name like'"+request.body.vslname+"%' ";
+	 }
+	 sqlText += " left outer join own_book_mark z ";
+	 sqlText += " on 1=1 ";
+	 sqlText += " and z.carrier_code = b.carrier_code";
+	 sqlText += " and (z.vsl_name = b.vsl_name or z.ie_type = b.ie_type or z.pol = b.pol or z.pod = b.pod) ) x ";
+	 sqlText += " )a where curpage = '"+request.body.num+"'";
+	 sqlText += " order by pol_etd";
 
+console.log(sqlText);
     pgsqlPool.connect(function(err,conn,done) {
         if(err){
             console.log("err" + err);
             response.status(400).send(err);
         }
 
-        conn.query(sql, function(err,result){
+        conn.query(sqlText, function(err,result){
             done();
             if(err){
                 console.log(err);

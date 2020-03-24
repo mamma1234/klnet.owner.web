@@ -2,14 +2,14 @@ import React,{ useState, useEffect } from "react";
 
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-
+import Drawer from '@material-ui/core/Drawer';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import BackupIcon from "@material-ui/icons/Backup";
 import StarIcon from "@material-ui/icons/Stars";
 import MapIcon from "@material-ui/icons/Map";
-import AddBox from "@material-ui/icons/AddBox";
-import RemoveBox from "@material-ui/icons/IndeterminateCheckBox";
+import ExpandMore from "@material-ui/icons/ExpandMore";
+import ExpandLess from "@material-ui/icons/ExpandLess";
 //import FormControl from "@material-ui/core/FormControl";
 //import Icon from "@material-ui/core/Icon";
 import Popover from  '@material-ui/core/Popover';
@@ -45,7 +45,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Collapse from '@material-ui/core/Collapse';
 import TestForm from "components/Form/Common/Search.js";
 import Grid from '@material-ui/core/Grid';
-
+import Login from "views/LoginPage/LoginPage.js";
 const styles = {
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
@@ -90,7 +90,7 @@ const styles = {
 };
 
 const useStyles = makeStyles(styles);
-
+let numCnt =1;
 
 export default function ScheduleList() {
 
@@ -101,6 +101,7 @@ export default function ScheduleList() {
   const [sPort,setSPort] = useState("");
   const [ePort,setEPort] = useState("");
   const [vesselName,setVesselName] = useState("");
+  const [blNo,setBlNo] = useState("");
   const [selectData,setSelectData] = useState([]);
   const [portData,setPortData] = useState([]);
   const [trackingList,setTrackingList] = useState([]);
@@ -186,7 +187,9 @@ useEffect(() => {
   
   const onSubmit = () => {
 	  //search
-	  axios.post("/loc/getTrackingList"
+	  numCnt=1;
+	  if (blNo != "" || vesselName != "") {
+	  axios.post("/loc/getTrackingList",{blno:blNo,vslname:vesselName,num:numCnt})
 			  //{ carrierCode:carrierCode,
 		//  								  startDate:moment(fromDate).format('YYYYMMDD'),
 		 // 								  endDate:moment(toDate).format('YYYYMMDD'),
@@ -194,8 +197,6 @@ useEffect(() => {
 		  //								  endPort:ePort,
 		  //								  vesselName:vesselName
 	  									//})
-			  )
-		.then(setTrackingList([]))
 	    .then(res => setTrackingList(res.data))
 	    .catch(err => {
 	       //console.log(err.response.status);
@@ -205,7 +206,25 @@ useEffect(() => {
 	        //window.location.href = "/Landing";
 	    });
 	  //alert("Tracking Info Search onSubmit");
+	  } else {
+		  alert("BL No. 또는 Vessel Name 은 필수 입력 조건입니다.");
+		  return;
+	  }
   }
+
+   const handleAddRow = () => {
+
+    //page ++
+    numCnt=numCnt+1;
+
+    axios.post("/loc/getTrackingList",{blno:blNo,vslname:vesselName,num:numCnt}).then(res => setTrackingList([...trackingList,...res.data]))
+          .catch(err => {
+            if(err.response.status == "403") {
+	        	setOpenJoin(true);
+	        }
+            });
+            
+  };
   
   const handleClose = () => {
 	  setAnchorE1(null);
@@ -222,15 +241,7 @@ useEffect(() => {
   const id_hot = open_hot ? 'simple-popover2':undefined;
   const id_map = open_map ? 'simple-popover3':undefined;
   //const id_set = open_set ? 'simple-popover4':undefined;
-  
-  const handleOpenJoin = () => {
-	  setOpenJoin(true);
-  };
-  
-  const handleJoinClose = () => {
-	  setOpenJoin(false);
-  }
-  
+    
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
@@ -241,153 +252,139 @@ useEffect(() => {
   
   return (
     <GridContainer>
-      <GridItem xs={12} sm={12} md={12}>
-        <Card style={{marginBottom:'0px'}}>
-{/*        <CardHeader color="info" >
-        <h4 className={classes.cardTitleWhite}>Tacking Service</h4>
-        <p className={classes.cardCategoryWhite}>
-          Here is a subtitle for this table
-        </p>
-      </CardHeader>*/}
-      <CardHeader color="info" stats icon style={{paddingBottom:'2px'}}>
-		<CardIcon color="info" style={{height:'26px'}}>
-			<Icon style={{width:'26px',fontSize:'20px',lineHeight:'26px'}}>content_copy</Icon>
-		</CardIcon>
-		<h4 className={classes.cardTitleBlack}>Search To Tacking Info </h4>
-	  </CardHeader>
-          <CardBody style={{paddingBottom: '0px',paddingTop: '10px',paddingLeft: '15px',paddingRight: '15px'}}>
-          	 <Grid item xs={12}>
-			     <Grid container spacing={3}>
-			     	<Grid item xs={12} sm={9} md={10}>
-			      		<Grid container spacing={1}>
-			      			<Grid item xs={12} sm={12} md={6}>
-			      				<Grid container spacing={1}>
-			      					<Grid item xs={12} sm={12} md={2}>
-					      				<CustomSelect
-					      					id="dateGb"
-					      					labelText = "구분"
-					      					setValue = {dateGbSet}
-					      					option = {["ETA","ETD"]}
-					      					inputProps={{onChange:event => setDateGbSet(event.target.value)}}
-					      					formControlProps={{fullWidth: true}}
-					      				/>
-					      			</Grid>
-					      			<Grid item xs={12} sm={12} md={10}>
-					      				<Grid container spacing={1}>
-					      					<Grid item xs={12} sm={12} md={6}>
-								      			<CalendarBox
-									       			labelText ="From"
-									    			id="fromDate"
-									    			format="yyyy-MM-dd"
-									    			setValue={fromDate}
-									      			onChangeValue={date => setFromDate(date)}
-									       			formControlProps={{fullWidth: true}} 
-								      			/>
-								      		</Grid>
-							      			<Grid item xs={12} sm={12} md={6}>
-								      			<CalendarBox
-									       			labelText ="To"
-									    			id="toDate"
-									    			format="yyyy-MM-dd"
-									    			setValue={toDate}
-									      			onChangeValue={date => setToDate(date)}
-									       			formControlProps={{fullWidth: true}}
-								      			/>
-							      			</Grid>
-						      			</Grid>
-					      			</Grid>
-						      	</Grid>
-					        </Grid>
-					      	<Grid item xs={12} sm={12} md={6}>
-						        <Grid container spacing={1}>
-							       	<Grid item xs={12} sm={12} md={6}>
-				      					<Autocomplete
-							       			options = {portCode}
-							       			getOptionLabel = { options => options?"["+options[0]+"] "+options[1]:<TextField label="출발지"  fullWidth />}
-							       			id="start"
-							       			onChange={onSPortChange}
-				      					    loading={true}
-				      						//onClick={onPortSearchValue}
-							       			//onInputChange={onPortSearchValue}
-							       			renderInput={params => (
-							    				<TextField {...params} label="출발지"  fullWidth />
-							       			)}
-				      					/>
-						      		</Grid>
-					      			<Grid item xs={12} sm={12} md={6}>
-						      			<Autocomplete
-							       			options = {portData}
-							       			getOptionLabel = { options => "["+options.PORT_CODE+"] "+options.PORT_NAME}
-							       			id="end"
-							       			onChange={onEPortChange}
-							       			onInputChange={onPortSearchValue}
-							       			renderInput={params => (
-							        			<TextField {...params} label="도착지"  fullWidth />
-							        		)}
-						      			/>
-					      			</Grid> 	
-					      		</Grid>
-					      	</Grid>
-
-					        <Grid item xs={12} sm={12} md={12} >
-						        <Collapse in={expanded} timeout="auto" unmountOnExit>
-						              <Grid container spacing={3}>
-							    		<Grid item xs={12} sm={12} md={3}>
-							    			<CustomInput
-							        			labelText="BL No."
-							        			id="blNo"
-							        			inputProps={{onChange:event => setVesselName(event.target.value)}}
-							        			formControlProps={{fullWidth: true}}
-				      						/>
-						      			</Grid>
-					      				<Grid item xs={12} sm={12} md={3}>
-						      				<CustomInput
-							        			labelText="Vessel Name"
-							        			id="vesselName"
-							        			inputProps={{onChange:event => setVesselName(event.target.value)}}
-							        			formControlProps={{fullWidth: true}}
-						      				/>
-					      				</Grid>
-						      			<Grid item xs={12} sm={12} md ={6} style={{textAlignLast:'right'}}>
+    	<GridItem xs={12} sm={12} md={12}>
+        	<Card style={{marginBottom:'0px'}}>
+      			<CardHeader color="info" stats icon style={{paddingBottom:'2px'}}>
+					<CardIcon color="info" style={{height:'26px'}}>
+						<Icon style={{width:'26px',fontSize:'20px',lineHeight:'26px'}}>content_copy</Icon>
+				</CardIcon>
+				<h4 className={classes.cardTitleBlack}>Search To Tacking Info </h4>
+	  		</CardHeader>
+          	<CardBody style={{paddingBottom: '0px',paddingTop: '10px',paddingLeft: '15px',paddingRight: '15px'}}>
+          		<Grid item xs={12}>
+			     	<Grid container spacing={1}>
+			     		<Grid item xs={12} sm={9} md={10}>
+			      			<Grid container spacing={1}>
+								<Grid item xs={12} sm={12} md={12}>
+									<Grid container spacing={1}>
+										<Grid item xs={12} sm={12} md={3} style={{paddingBottom:'0px'}}>
+											<TextField id="blNo" label="BL No." onChange={event => setBlNo(event.target.value)} fullWidth />
+										</Grid>
+										<Grid item xs={12} sm={12} md={4} style={{paddingBottom:'0px'}}>
+											<TextField id="vslName" label="Vessel Name" onChange={event => setVesselName(event.target.value)} fullWidth />
+										</Grid>
+										<Grid item xs={12} sm={12} md ={5} style={{textAlignLast:'right',paddingTop:'20px',paddingBottom:'0px'}}>
 											<Button
 												color="info"
 												size="sm"
-												style={{width:'115px'}}
+												style={{width:'100px'}}
 												startIcon={<BackupIcon/>}
 												onClick={e=>setAnchorE1(e.currentTarget)}
 											>BL Upload</Button>
-								            &nbsp;
+											&nbsp;
 											<Button
-							  					color="info"
-							    				size="sm"
-							    				style={{width:'76px'}}
+												color="info"
+												size="sm"
+												style={{width:'70px'}}
 												startIcon={<StarIcon/>}
 												onClick={e=>setAnchorE2(e.currentTarget)}
 											>Star</Button>
-								            &nbsp;
+											&nbsp;
 											<Button
 												color="info"
-								  				size="sm"
-								  				style={{width:'76px'}}
+												size="sm"
+												style={{width:'70px'}}
 												startIcon={<MapIcon/>}
 												onClick={e=>setAnchorE3(e.currentTarget)}
 											>Map</Button>
 										</Grid>
 									</Grid>
-					            </Collapse>
-					      	</Grid>	
-				        </Grid>
-			        </Grid>
-			        <Grid item xs={12} sm={12} md style={{paddingTop:'0',paddingBottom:'10px'}}>
-			        	<Button color="info" onClick = {onSubmit}  fullWidth>Search</Button>
-			        </Grid>
-		      	</Grid>
-		      	<Grid item xs={12} style={{textAlignLast:'right',height:'28px'}}>
-		      		{expanded?<RemoveBox onClick = {handleExpandClick} style={{color:'#00acc1'}}/>:<AddBox onClick = {handleExpandClick} style={{color:'#00acc1'}}/>}
-
+					      		</Grid>
+								<Collapse in={expanded} timeout="auto" unmountOnExit style={{width:'100%'}}>
+									<Grid item xs={12}>
+										<Grid container spacing={1}>
+											<Grid item xs={12} sm={12} md={6}>
+												<Grid container spacing={1}>
+													<Grid item xs={12} sm={12} md={2}>
+														<CustomSelect
+															id="dateGb"
+															labelText = "구분"
+															setValue = {dateGbSet}
+															option = {["ETA","ETD"]}
+															inputProps={{onChange:event => setDateGbSet(event.target.value)}}
+															formControlProps={{fullWidth: true}}
+														/>
+													</Grid>
+													<Grid item xs={12} sm={12} md={10}>
+														<Grid container spacing={1}>
+															<Grid item xs={12} sm={12} md={6}> 
+																<CalendarBox
+																	labelText ="From"
+																	id="fromDate"
+																	format="yyyy-MM-dd"
+																	setValue={fromDate}
+																	onChangeValue={date => setFromDate(date)}
+																	formControlProps={{fullWidth: true}} 
+																/>
+															</Grid>
+															<Grid item xs={12} sm={12} md={6}>
+																<CalendarBox
+																	labelText ="To"
+																	id="toDate"
+																	format="yyyy-MM-dd"
+																	setValue={toDate}
+																	onChangeValue={date => setToDate(date)}
+																	formControlProps={{fullWidth: true}}
+																/>
+															</Grid>
+														</Grid>
+													</Grid>
+												</Grid>
+											</Grid>
+											<Grid item xs={12} sm={12} md={6}>
+												<Grid container spacing={1}>
+													<Grid item xs={12} sm={12} md={6}>
+														<Autocomplete
+															options = {portCode}
+															getOptionLabel = { options => options?"["+options[0]+"] "+options[1]:<TextField label="출발지"  fullWidth />}
+															id="start"
+															onChange={onSPortChange}
+															loading={true}
+															//onClick={onPortSearchValue}
+															//onInputChange={onPortSearchValue}
+															renderInput={params => (
+																<TextField {...params} label="출발지"  fullWidth />
+															)}
+														/>
+													</Grid>
+													<Grid item xs={12} sm={12} md={6}>
+														<Autocomplete
+															options = {portData}
+															getOptionLabel = { options => "["+options.PORT_CODE+"] "+options.PORT_NAME}
+															id="end"
+															onChange={onEPortChange}
+															onInputChange={onPortSearchValue}
+															renderInput={params => (
+																<TextField {...params} label="도착지"  fullWidth />
+															)}
+														/>
+													</Grid> 	
+												</Grid>
+											</Grid>
+										</Grid>
+									</Grid>
+								</Collapse>								
+				        	</Grid>
+			        	</Grid>
+						<Grid item xs={12} sm={12} md style={{paddingTop:'10px',paddingBottom:'10px',alignSelf:'flex-end'}}>
+							<Button color="info" onClick = {onSubmit}  fullWidth>Search</Button>							
+						</Grid>
+		      		</Grid>  
+		      	<Grid item xs={12} style={{textAlignLast:'center',height:'30px',paddingTop:'5px'}}>
+		      		{expanded?<ExpandLess onClick = {handleExpandClick} style={{color:'#00acc1'}}/>:<ExpandMore onClick = {handleExpandClick} style={{color:'#00acc1'}}/>}
 		      	</Grid>
 	      </Grid>
-          <FixedPlugin
+         {/* <FixedPlugin
 			//handleImageClick={handleImageClick}
 			//handleColorClick={handleColorClick}
 			//bgColor={color}
@@ -397,7 +394,7 @@ useEffect(() => {
 			handleFixedClick={handleFixedClick}
 			fixedClasses={fixedClasses}
 		   />
-          <Popover
+*/ }         <Popover
 	      	id={id_bl}
 	      	open={open_bl}
 	      	anchorEl={anchorE1}
@@ -432,19 +429,24 @@ useEffect(() => {
           </Popover>
           </CardBody>
         </Card>
-	    <Modal
+	   {/*  <Modal
 	     	open={openJoin}
 	    	onClose={handleJoinClose}
 	      ><JoinPage mode="0" onClose ={()=>setOpenJoin(false)} page="/svc" reTurnText="Login" />
-	     </Modal>
+	     </Modal> */}
+		 <Drawer anchor="top" open={openJoin} >
+            {/* <JoinPage mode="0" onClose ={()=>setOpenJoin(false)} page="/svc" reTurnText="Login" /> */}
+		    <Login onClose ={()=>setOpenJoin(false)} /> 
+         </Drawer>
       </GridItem>
       <GridItem xs={12}>
 		    <Card style={{marginTop:'5px',marginBottom:'5px'}}>
 				<CardBody style={{padding:'0px'}}>
 					<Table
 						tableHeaderColor="info"
-		                tableHead={["BL No", "I/E", "CARRIER", "VESSEL/VOYAGE","CURRENT","POL(ETD/ATD)","POD(ETA/ATA)","ACTION"]}
-		    			tableData={trackingList}
+		                tableHead={["BL No", "I/E", "CARRIER", "VESSEL/VOYAGE","CURRENT","POL(ETD/ATD)","POD(ETA/ATA)","PROGRESS","ACTION"]}
+						tableData={trackingList}
+						onClickHandle ={handleAddRow}
 		            /> 
 				</CardBody>
 			</Card>

@@ -25,8 +25,9 @@ import BackupIcon from "@material-ui/icons/Backup";
 import CancelIcon from "@material-ui/icons/CancelPresentation";
 import AddIcon from "@material-ui/icons/AddBox";
 import DetailTable from "views/DemDet/DetailTable.js";
-import axios from 'axios';
 
+import axios from 'axios';
+//import {ExcelFile, ExcelSheet} from "react-export-excel";
 const styles = {
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
@@ -72,7 +73,17 @@ const styles = {
 
 
 const useStyles = makeStyles(styles);
-
+{/*class Download extends React.Component {
+  
+  render() {
+    const { data, index } = this.props;
+    return (
+      <ExcelFile>
+        <ExcelSheet dataSet={data} name="Oraganization"/>
+      </ExcelFile>
+    )
+  }
+}*/}
 
 
 export default function DemDetList(props) {
@@ -107,16 +118,9 @@ export default function DemDetList(props) {
     setAnchorExcel(null);
   }
   const onSubmit = () => {
+    setDemDetList([]);
 	  //search
-	  axios.post("/loc/getDemDetList"
-			  //{ carrierCode:carrierCode,
-		//  								  startDate:moment(fromDate).format('YYYYMMDD'),
-		 // 								  endDate:moment(toDate).format('YYYYMMDD'),
-		  //								  startPort:sPort,
-		  //								  endPort:ePort,
-		  //								  vesselName:vesselName
-	  									//})
-        )
+	  axios.post("/loc/getDemDetList") 
       
 	    .then(res => setDemDetList(res.data))
 	    .catch(err => {
@@ -132,6 +136,7 @@ export default function DemDetList(props) {
   //console.log(paramData);
   
   const classes = useStyles();  
+  
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
@@ -149,7 +154,7 @@ export default function DemDetList(props) {
           <CardBody>
           
             <GridContainer>
-              <GridItem xs={12} sm={1}>
+              <GridItem xs={1} sm={1}>
                 <Autocomplete
                   options = {lineData}
                   getOptionLabel = { option => "["+option.carrier_code+"] "+option.carrier_hname}
@@ -163,7 +168,7 @@ export default function DemDetList(props) {
                   )}
                 />
               </GridItem>
-              <GridItem xs={12} sm={2} md={2}>
+              <GridItem xs={2} sm={2} md={2}>
                 <CustomInput
                   labelText="M-B/L NO"
                   id="mblNo"
@@ -172,7 +177,7 @@ export default function DemDetList(props) {
                 />
                 
               </GridItem>
-              <GridItem xs={12} sm={2} md={2}>
+              <GridItem xs={2} sm={2} md={2}>
                 <CustomInput
                   labelText="CNTR NO"
                   id="cntrNo"
@@ -183,26 +188,40 @@ export default function DemDetList(props) {
                 />
               </GridItem>
             
-              <GridItem xs={12} sm={7} md={7} style={{textAlignLast:'right'}}>
+              <GridItem xs={7} sm={7} md={7} style={{textAlignLast:'right'}}>
                 <Button color="info" onClick = {onSubmit} startIcon={<CancelIcon/>}>초기화</Button>
                 <Button color="info" onClick = {onSubmit} startIcon={<BackupIcon/>}>엑셀업로드</Button>
                 <Button color="info" onClick = {onSubmit} startIcon={<AddIcon/>}>추가</Button>
               </GridItem>
-              <GridItem xm={12} sm={12} md={12} style={{textAlignLast:'right',paddingRight:'0px'}}>
-              <Button color="info" onClick = {onSubmit}  >조회</Button>
-              <Button color="info" onClick = {onSubmit}  >저장</Button>
-              <Button color="info" onClick = {onSubmit}  >삭제</Button>
-              <Button color="info" onClick = {onSubmit}  >엑셀다운로드</Button>
-              <Button color="info" onClick = {onSubmit}  >상세보기</Button>
-            </GridItem>
+              
             </GridContainer>
-          <GridItem xm={12} sm={12} md={12}>
-          <DetailTable 
-            tableHeaderColor = "info"
-            tableHead = {["선택","선사", "CNTR NO", "DETENTION", "DEMURRAGE", "COMBINED","STORAGE","REMARKS","DO신청"]}
-            tableData = { demDetList }
-          />
-        </GridItem>
+          
+            
+          
+          
+          <CardContent className = {classes.card}>
+            
+            <GridContainer>
+              <GridItem xm={12} sm={12} md={12} style={{textAlignLast:'right'}}>
+                <Button color="info" onClick = {onSubmit}  >조회</Button>
+                <Button color="info" onClick = {onSubmit}  >저장</Button>
+                <Button color="info" onClick = {onSubmit}  >삭제</Button>
+                <Button color="info" //onClick = {Download} 
+                id='btnExport' >엑셀다운로드</Button>
+                <Button color="info" onClick = {onSubmit}  >상세보기</Button>
+              </GridItem>
+              
+              <GridItem xm={12} sm={12} md={12}>
+                <DetailTable 
+                  tableHeaderColor = "info"
+                  tableHead = {["선택","선사", "CNTR NO", "DETENTION", "DEMURRAGE", "COMBINED","STORAGE","REMARKS","DO신청"]}
+                  tableData = { demDetList }
+                />
+                
+              </GridItem>
+            </GridContainer>
+          </CardContent>
+        
       
           </CardBody>
         </Card>

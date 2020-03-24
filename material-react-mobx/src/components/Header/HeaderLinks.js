@@ -1,7 +1,5 @@
 /*eslint-disable*/
 import React,{useState} from "react";
-import DeleteIcon from "@material-ui/icons/Delete";
-import IconButton from "@material-ui/core/IconButton";
 // react components for routing our app without refresh
 import { Link } from "react-router-dom";
 
@@ -9,12 +7,11 @@ import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import Tooltip from "@material-ui/core/Tooltip";
 import LocationIcon from "@material-ui/icons/Map";
 import ScheduleIcon from "@material-ui/icons/WatchLater";
 import LoginIcon from "@material-ui/icons/VpnKey";
 // @material-ui/icons
-import { Apps, CloudDownload } from "@material-ui/icons";
+import { CloudDownload } from "@material-ui/icons";
 
 // core components
 import CustomDropdown from "components/CustomDropdown/CustomDropdown.js";
@@ -22,9 +19,8 @@ import Button from "components/CustomButtons/Button.js";
 
 import styles from "assets/jss/material-kit-react/components/headerLinksStyle.js";
 
-import Modal from '@material-ui/core/Modal';
-import JoinPage from "components/Form/Common/JoinPage.js";
-
+import Login from "views/LoginPage/LoginPage.js";
+import Drawer from '@material-ui/core/Drawer';
 
 const useStyles = makeStyles(styles);
 
@@ -52,33 +48,22 @@ export default function HeaderLinks(props) {
 	    };
 }, []);
   
-  const handleOpenJoin = () => {
-	  setOpenJoin(true);
-  };
-  
-  const handleJoinClose = () => {
-	  setOpenJoin(false);
-  }
-  
   
   return (
     <List className={classes.list}>
 	  <ListItem className={classes.listItem}>
 	    <Button
 	      //href="/login"
-	    	  onClick={handleOpenJoin}
+	    	  onClick={()=>setOpenJoin(true)}
 	      color="transparent"
 	      className={classes.navLink}
 	    ><LoginIcon/>
 	      Login
 	    </Button>
-	      <Modal
-      	//aria-labelledby="simple-modal-title"
-      	//aria-describedby="simple-modal-description"
-      	open={openJoin}
-        	onClose={handleJoinClose}
-          //onBackdropClick={handleJoinClose}
-        ><JoinPage mode="0" page="/" onClose ={()=>setOpenJoin(false)} reTurnText="Login"/></Modal>
+		 <Drawer anchor="top" open={openJoin} >
+            {/* <JoinPage mode="0" onClose ={()=>setOpenJoin(false)} page="/svc" reTurnText="Login" /> */}
+		    <Login onClose ={()=>setOpenJoin(false)} /> 
+     </Drawer>
 	  </ListItem>
       <ListItem className={classes.listItem}>
         <CustomDropdown

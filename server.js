@@ -20,19 +20,21 @@ const passportConfig = require('./passport');
 const bodyParser = require("body-parser");
 const dao = require('./database/');
 
+const apiService = require('./apiService/openApi');
+
 // const bcrypt = require('bcrypt');
 const { isLoggedIn, isNotLoggedIn } = require('./routes/middlewares');
 
 const app = express();
 // sequelize.sync();
 passportConfig(passport);
-//const swaggerRouter = require('./swagger/swaggerDoc'); //swagger 설정 정의
+const swaggerRouter = require('./swagger/swaggerDoc'); //swagger 설정 정의
 const sUser = require('./models/sessionUser');
 //console.log("sUser:",sUser);
 
 app.set('views', path.join(__dirname, 'views')); //템플리트 엔진을 사용 1
 app.set('view engine', 'pug'); //템플리트 엔진을 사용 2
-//app.use(swaggerRouter);//swagger API
+app.use(swaggerRouter);//swagger API
 app.use(morgan('dev')); //morgan: 요청에 대한 정보를 콘솔에 기록
 app.use(express.static(path.join(__dirname, 'public'))); //static: 정적인 파일을 제공, public 폴더에 정적 폴더를 넣는다.
 app.use(express.json());
@@ -113,9 +115,11 @@ app.route(/^((?!\/auth\/|\/login).)*$/s).all(function(req, res, next) {
 })
 */
 
-app.route(/^((?!\/auth\/|\/login).)*$/s).all(isLoggedIn,function(req, res, next) {    
+app.route(/^((?!\/auth\/|\/login))*$/s).all(isLoggedIn,function(req, res, next) {    
 	var path = req.params[0];
-	console.log("(server.js) path:",path);
+  console.log("(server.js) path:",path);
+  
+
     // if (req.isAuthenticated !== undefined && req.isAuthenticated()){
     //if (req.isAuthenticated()){
      // console.log('로그인 정보 남아 있음.', req.session.sUser);
@@ -147,6 +151,7 @@ app.route(/^((?!\/auth\/|\/login).)*$/s).all(isLoggedIn,function(req, res, next)
     console.log(req.originalUrl);
     next();
  } else {
+    
     var fullUrl = req.protocol + '://' + req.headers.host + req.originalUrl;
     console.log( fullUrl );
     console.log('로그인 정보 없음 예외 처리');
@@ -209,6 +214,9 @@ app.post("/com/getUserInfo", dao.pgusers.getUserInfo);
 
 app.post("/com/getUserInfoSample", dao.postgresql.getUserInfoSample);
 
+app.post("/com/getImpFlowSample", dao.oracle.getImpFlowSample);
+app.post("/com/getExpFlowSample", dao.oracle.getExpFlowSample);
+
 //app.get("/ora/getTestSimple", dao.oracle.getTestSimple);
 //app.get("/ora/getTestQuerySample", dao.oracle.getTestQuerySample);
 //app.get("/ora/getTestQueryParamSample", dao.oracle.getTestQueryParamSample);
@@ -228,6 +236,12 @@ app.post("/loc/getHotInfo", dao.tracking.getHotInfo);
 
 
 app.post("/loc/getDemDetList", dao.pgdemdet.getDemDetList);
+app.post("/loc/getTarrifList", dao.pgdemdet.getTarrifList);
+
+app.get("/api/apiSchedule", apiService.apiScheduleInfo);
+
+
+
 
 //에러 처리 미들웨어: error라는 템플릿 파일을 렌더링한다. 404에러가 발생하면 404처리 미들웨어에서 넣어준 값을 사용한다.
 app.use((req, res, next) => {
@@ -242,6 +256,9 @@ app.use((err, req, res) => {
     res.status(err.status || 500);
     res.render('error');
 });
+
+
+
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Listening on port ${port}`));

@@ -12,7 +12,7 @@ const swaggerOption = {
       info: {
         title:'Plism Plus API',
         version: '1.0.0',
-        termsOfService: 'http://localhost:5000',
+        termsOfService: 'www.plismplus.com',
         description: 'Plism Plus Open API'
       },
       basePath : '/',
@@ -31,7 +31,7 @@ const swaggerOption = {
 
   const specs = swaggerJsdoc(swaggerOption);
   router.use('/favicon.png', express.static('./favicon.png'));
-  router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, uiOption));
+  router.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(specs, uiOption));
   
   
   
