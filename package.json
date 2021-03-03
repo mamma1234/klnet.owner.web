@@ -32,7 +32,7 @@
     "passport-naver": "^1.0.6",
     "passport-twitter-oauth2": "^2.1.1",
     "pg": "^7.14.0",
-    "pug": "^2.0.4"
+    "pug": "^3.0.1"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
